@@ -1,0 +1,50 @@
+{
+  "component": "Input",
+  "version": "1.0.0",
+  "source": "src/components/Input",
+  "description": "Access-aware, controlled text input wrapper built on shadcn input primitive.",
+  "capabilities": {
+    "accessControl": true,
+    "accessibility": true,
+    "controlledValue": true,
+    "keyboardPropagationControl": true
+  },
+  "props": {
+    "name": { "type": "string", "required": true },
+    "value": {
+      "type": "string | number",
+      "required": false,
+      "default": "\"\""
+    },
+    "onChange": {
+      "type": "(e: ChangeEvent<HTMLInputElement>) => void",
+      "required": true
+    },
+    "label": { "type": "string", "required": false },
+    "required": { "type": "boolean", "required": false },
+    "error": { "type": "string", "required": false },
+    "helperText": { "type": "string", "required": false },
+    "disabled": { "type": "boolean", "required": false },
+    "accessRequirements": { "type": "string[]", "required": false },
+    "resolveAccess": {
+      "type": "(requirement: string, mode: \"view\" | \"edit\") => boolean",
+      "required": false
+    }
+  },
+  "states": {
+    "visibleWhenNoAccessConfig": "true",
+    "visibleWhenNoResolver": "true",
+    "hiddenWhenReadDenied": "true",
+    "disabledWhenWriteDenied": "true",
+    "disabledPropPrecedence": "true"
+  },
+  "accessibility": {
+    "ariaInvalidWhenError": "true",
+    "labelAssociatesWithInputId": "true"
+  },
+  "interaction": {
+    "stopsInputKeydownPropagation": "true",
+    "preservesConsumerOnKeyDown": "true"
+  },
+  "tests": ["src/components/Input/Input.test.tsx"]
+}

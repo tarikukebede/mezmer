@@ -1,0 +1,16 @@
+{
+  "version": "1.0.0",
+  "components": [
+    {
+      "name": "Input",
+      "contractPath": "ai/contracts/components/input.contract.json",
+      "sourcePath": "src/components/Input",
+      "capabilities": [
+        "accessControl",
+        "accessibility",
+        "controlledValue",
+        "keyboardPropagationControl"
+      ]
+    }
+  ]
+}
