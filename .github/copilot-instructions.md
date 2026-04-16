@@ -121,3 +121,33 @@
 - Reject suggestions that introduce host-app coupling into core modules.
 - Ask for clarification only when API stability, accessibility, or publishability is ambiguous.
 - Optimize for maintainability and consumer developer experience.
+
+## AI-First Contract Workflow
+
+- Treat this repository as dual-context: human-readable docs plus machine-readable contracts.
+- Baseline human context lives in `README.md`, `docs/CONTRIBUTING.md`, and `docs/ARCHITECTURE.md`.
+- Structured AI context lives under `ai/contracts`.
+- Structured AI context is mandatory for AI-assisted implementation; do not proceed without applicable contract context.
+
+## Enterprise AI Implementation Rules
+
+- Before editing a component, read its contract entry in `ai/contracts/index.json` and the component contract file.
+- Keep implementation, public types, and tests in sync with the contract states.
+- Do not introduce product-specific assumptions into contract artifacts.
+- Preserve stable public APIs; use additive changes by default.
+
+## Required Component Delivery Set
+
+For every new package component, include:
+
+- `ComponentName.tsx`
+- `types.ts`
+- `index.ts`
+- `ComponentName.test.tsx`
+- `ai/contracts/components/<component>.contract.json`
+
+Each component contract must define:
+
+- public prop requirements
+- permission and accessibility states
+- interaction guarantees that are validated by tests
