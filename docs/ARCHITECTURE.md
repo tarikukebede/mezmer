@@ -21,9 +21,10 @@ Mezmer uses a dual-context architecture for AI-assisted implementation:
 
 MCP note:
 
-- Mezmer is designed to be MCP-compatible through structured repository artifacts.
-- It does not currently include a dedicated MCP server in this repository.
-- MCP-enabled agents can consume `ai/contracts/index.json` and per-component/theme contracts to guide generation.
+- Mezmer exposes structured repository artifacts through a repository-local MCP server.
+- The MCP server reuses `ai/contracts/index.json`, component/theme contracts, docs, and validation scripts as its source of truth.
+- MCP-enabled agents can query that server instead of inferring behavior from raw repository traversal.
+- The server implementation lives in `scripts/mcp-server.mjs`.
 
 ## High-Level Structure
 

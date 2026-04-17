@@ -84,7 +84,17 @@ Theme metadata is intentionally machine-readable for AI systems:
 - `ai/contracts/themes/*.contract.json` defines theme contract metadata
 - `ai/theme.active.json` records workspace-selected theme state
 
-Mezmer does not currently include a standalone MCP server. The repository structure is designed so MCP-enabled agents can consume these files directly as structured context.
+Mezmer now includes a repository-local MCP server.
+
+For theme workflows, that server can expose the active theme state, theme registry metadata, and theme contract details without requiring tools to inspect the repository manually.
+
+Run it with:
+
+```bash
+pnpm mcp:server
+```
+
+For a broader overview of the MCP surface, see `docs/MCP-SERVER.md`.
 
 Recommended release checks:
 

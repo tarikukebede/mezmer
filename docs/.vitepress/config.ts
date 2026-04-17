@@ -18,6 +18,7 @@ export default withMermaid(
       logo: assetPath,
       nav: [
         { text: 'Guide', link: '/THEMING' },
+        { text: 'MCP', link: '/MCP-SERVER' },
         { text: 'Components', link: '/components/' },
         {
           text: 'GitHub',
@@ -31,6 +32,7 @@ export default withMermaid(
             { text: 'Home', link: '/' },
             { text: 'Theming', link: '/THEMING' },
             { text: 'Theme Configuration', link: '/THEME-CONFIGURATION' },
+            { text: 'MCP Server', link: '/MCP-SERVER' },
             { text: 'Architecture', link: '/ARCHITECTURE' },
           ],
         },
