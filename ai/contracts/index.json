@@ -11,6 +11,24 @@
         "controlledValue",
         "keyboardPropagationControl"
       ]
+    },
+    {
+      "name": "BaseTable",
+      "contractPath": "ai/contracts/components/base-table.contract.json",
+      "sourcePath": "src/components/BaseTable",
+      "capabilities": [
+        "accessControl",
+        "selection",
+        "pagination",
+        "sorting",
+        "placeholder"
+      ]
+    },
+    {
+      "name": "Icon",
+      "contractPath": "ai/contracts/components/icon.contract.json",
+      "sourcePath": "src/components/Icon",
+      "capabilities": ["iconRendering", "propForwarding", "classNameStyling"]
     }
   ],
   "themes": [
