@@ -49,6 +49,7 @@ export default withMermaid(
             { text: 'Button', link: '/components/button' },
             { text: 'Page', link: '/components/page' },
             { text: 'Search', link: '/components/search' },
+            { text: 'DropDown', link: '/components/drop-down' },
           ],
         },
       ],

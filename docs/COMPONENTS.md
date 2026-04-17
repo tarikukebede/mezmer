@@ -17,5 +17,6 @@ Direct links:
 - https://tarikukebede.github.io/mezmer/components/button
 - https://tarikukebede.github.io/mezmer/components/page
 - https://tarikukebede.github.io/mezmer/components/search
+- https://tarikukebede.github.io/mezmer/components/drop-down
 
 This keeps links stable for existing consumers while allowing component docs to grow independently.

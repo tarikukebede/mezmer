@@ -48,231 +48,267 @@ const requiredThemeTokens = [
   'radius',
 ];
 
-if (!exists(indexPath)) {
-  errors.push(`Missing contracts index: ${indexPath}`);
-} else {
-  const indexJson = readJson(indexPath);
+const compareAlphabetically = (left, right) => left.localeCompare(right);
 
-  if (indexJson) {
-    if (!Array.isArray(indexJson.components)) {
-      errors.push(`${indexPath} must contain a components array.`);
-    } else {
-      indexJson.components.forEach((entry, entryIndex) => {
-        const entryPrefix = `${indexPath} components[${entryIndex}]`;
+const validateCapabilities = (entryPrefix, entry, contract) => {
+  const contractCapabilities = Object.entries(contract.capabilities || {})
+    .filter(([, enabled]) => Boolean(enabled))
+    .map(([capability]) => capability)
+    .sort(compareAlphabetically);
 
-        if (!entry?.name || typeof entry.name !== 'string') {
-          errors.push(`${entryPrefix} is missing a string name.`);
-        }
+  const indexCapabilities = Array.isArray(entry.capabilities)
+    ? [...entry.capabilities].sort(compareAlphabetically)
+    : [];
 
-        if (!entry?.contractPath || typeof entry.contractPath !== 'string') {
-          errors.push(`${entryPrefix} is missing a string contractPath.`);
-          return;
-        }
-
-        if (!exists(entry.contractPath)) {
-          errors.push(
-            `${entryPrefix} points to missing contract: ${entry.contractPath}`,
-          );
-          return;
-        }
-
-        if (!entry?.sourcePath || typeof entry.sourcePath !== 'string') {
-          errors.push(`${entryPrefix} is missing a string sourcePath.`);
-        } else if (!isDirectory(entry.sourcePath)) {
-          errors.push(
-            `${entryPrefix} sourcePath is not a directory: ${entry.sourcePath}`,
-          );
-        }
-
-        const contract = readJson(entry.contractPath);
-        if (!contract) {
-          return;
-        }
-
-        if (contract.component !== entry.name) {
-          errors.push(
-            `${entryPrefix} name (${entry.name}) does not match contract.component (${contract.component}).`,
-          );
-        }
-
-        if (contract.source !== entry.sourcePath) {
-          errors.push(
-            `${entryPrefix} sourcePath (${entry.sourcePath}) does not match contract.source (${contract.source}).`,
-          );
-        }
-
-        if (!Array.isArray(contract.tests) || contract.tests.length === 0) {
-          errors.push(
-            `${entry.contractPath} must include at least one test file path in tests.`,
-          );
-        } else {
-          contract.tests.forEach((testPath) => {
-            if (typeof testPath !== 'string' || !exists(testPath)) {
-              errors.push(
-                `${entry.contractPath} references missing test file: ${String(testPath)}`,
-              );
-            }
-          });
-        }
-
-        const contractCapabilities = Object.entries(contract.capabilities || {})
-          .filter(([, enabled]) => Boolean(enabled))
-          .map(([capability]) => capability)
-          .sort();
-
-        const indexCapabilities = Array.isArray(entry.capabilities)
-          ? [...entry.capabilities].sort()
-          : [];
-
-        if (contractCapabilities.length !== indexCapabilities.length) {
-          errors.push(
-            `${entryPrefix} capabilities length mismatch between index and contract (${indexCapabilities.length} vs ${contractCapabilities.length}).`,
-          );
-        } else {
-          for (let i = 0; i < contractCapabilities.length; i += 1) {
-            if (contractCapabilities[i] !== indexCapabilities[i]) {
-              errors.push(
-                `${entryPrefix} capabilities mismatch: index=${indexCapabilities.join(',')} contract=${contractCapabilities.join(',')}.`,
-              );
-              break;
-            }
-          }
-        }
-      });
-    }
-
-    if (indexJson.themes !== undefined && !Array.isArray(indexJson.themes)) {
-      errors.push(`${indexPath} themes must be an array when provided.`);
-    }
-
-    if (Array.isArray(indexJson.themes)) {
-      const seenThemeIds = new Set();
-
-      indexJson.themes.forEach((themeEntry, themeEntryIndex) => {
-        const themeEntryPrefix = `${indexPath} themes[${themeEntryIndex}]`;
-
-        if (!themeEntry?.id || typeof themeEntry.id !== 'string') {
-          errors.push(`${themeEntryPrefix} is missing a string id.`);
-          return;
-        }
-
-        if (!/^[a-z0-9-]+$/.test(themeEntry.id)) {
-          errors.push(`${themeEntryPrefix} id must match ^[a-z0-9-]+$.`);
-        }
-
-        if (seenThemeIds.has(themeEntry.id)) {
-          errors.push(
-            `${themeEntryPrefix} has duplicate id: ${themeEntry.id}.`,
-          );
-        }
-        seenThemeIds.add(themeEntry.id);
-
-        if (
-          !themeEntry?.contractPath ||
-          typeof themeEntry.contractPath !== 'string'
-        ) {
-          errors.push(`${themeEntryPrefix} is missing a string contractPath.`);
-          return;
-        }
-
-        if (!exists(themeEntry.contractPath)) {
-          errors.push(
-            `${themeEntryPrefix} points to missing contract: ${themeEntry.contractPath}`,
-          );
-          return;
-        }
-
-        if (!themeEntry?.cssPath || typeof themeEntry.cssPath !== 'string') {
-          errors.push(`${themeEntryPrefix} is missing a string cssPath.`);
-        } else if (!exists(themeEntry.cssPath)) {
-          errors.push(
-            `${themeEntryPrefix} points to missing cssPath: ${themeEntry.cssPath}`,
-          );
-        }
-
-        const themeContract = readJson(themeEntry.contractPath);
-        if (!themeContract) {
-          return;
-        }
-
-        if (themeContract.id !== themeEntry.id) {
-          errors.push(
-            `${themeEntryPrefix} id (${themeEntry.id}) does not match contract.id (${themeContract.id}).`,
-          );
-        }
-
-        if (themeContract.cssPath !== themeEntry.cssPath) {
-          errors.push(
-            `${themeEntryPrefix} cssPath (${themeEntry.cssPath}) does not match contract.cssPath (${themeContract.cssPath}).`,
-          );
-        }
-
-        if (
-          !Array.isArray(themeContract.modes) ||
-          themeContract.modes.length === 0
-        ) {
-          errors.push(
-            `${themeEntry.contractPath} must include at least one mode in modes.`,
-          );
-        }
-
-        if (themeContract.tokenPrefix !== '--mz-') {
-          errors.push(
-            `${themeEntry.contractPath} tokenPrefix must be '--mz-'.`,
-          );
-        }
-
-        if (
-          !Array.isArray(themeContract.tokenCoverage) ||
-          themeContract.tokenCoverage.length === 0
-        ) {
-          errors.push(
-            `${themeEntry.contractPath} must include tokenCoverage as a non-empty array.`,
-          );
-        } else {
-          requiredThemeTokens.forEach((token) => {
-            if (!themeContract.tokenCoverage.includes(token)) {
-              errors.push(
-                `${themeEntry.contractPath} tokenCoverage is missing required token: ${token}.`,
-              );
-            }
-          });
-        }
-
-        if (themeContract.extendsTheme) {
-          const parentExists = indexJson.themes.some(
-            (candidateTheme) =>
-              candidateTheme.id === themeContract.extendsTheme,
-          );
-
-          if (!parentExists) {
-            errors.push(
-              `${themeEntry.contractPath} extendsTheme references unknown theme id: ${themeContract.extendsTheme}.`,
-            );
-          }
-        }
-      });
-
-      if (!exists(activeThemePath)) {
-        errors.push(`Missing active theme pointer: ${activeThemePath}`);
-      } else {
-        const activeThemeJson = readJson(activeThemePath);
-
-        if (activeThemeJson) {
-          if (
-            !activeThemeJson.themeId ||
-            typeof activeThemeJson.themeId !== 'string'
-          ) {
-            errors.push(`${activeThemePath} must contain a string themeId.`);
-          } else if (!seenThemeIds.has(activeThemeJson.themeId)) {
-            errors.push(
-              `${activeThemePath} themeId (${activeThemeJson.themeId}) is not registered in ${indexPath}.`,
-            );
-          }
-        }
+  if (contractCapabilities.length === indexCapabilities.length) {
+    for (let i = 0; i < contractCapabilities.length; i += 1) {
+      if (contractCapabilities[i] !== indexCapabilities[i]) {
+        errors.push(
+          `${entryPrefix} capabilities mismatch: index=${indexCapabilities.join(',')} contract=${contractCapabilities.join(',')}.`,
+        );
+        return;
       }
     }
+    return;
   }
+
+  errors.push(
+    `${entryPrefix} capabilities length mismatch between index and contract (${indexCapabilities.length} vs ${contractCapabilities.length}).`,
+  );
+};
+
+const validateContractTests = (entry) => {
+  if (Array.isArray(entry.contract.tests) && entry.contract.tests.length > 0) {
+    entry.contract.tests.forEach((testPath) => {
+      const isValidPath = typeof testPath === 'string' && exists(testPath);
+      if (isValidPath === false) {
+        errors.push(
+          `${entry.contractPath} references missing test file: ${String(testPath)}`,
+        );
+      }
+    });
+    return;
+  }
+
+  errors.push(
+    `${entry.contractPath} must include at least one test file path in tests.`,
+  );
+};
+
+const validateComponentEntry = (entry, entryIndex) => {
+  const entryPrefix = `${indexPath} components[${entryIndex}]`;
+
+  if (!entry?.name || typeof entry.name !== 'string') {
+    errors.push(`${entryPrefix} is missing a string name.`);
+  }
+
+  if (!entry?.contractPath || typeof entry.contractPath !== 'string') {
+    errors.push(`${entryPrefix} is missing a string contractPath.`);
+    return;
+  }
+
+  if (exists(entry.contractPath) === false) {
+    errors.push(
+      `${entryPrefix} points to missing contract: ${entry.contractPath}`,
+    );
+    return;
+  }
+
+  if (!entry?.sourcePath || typeof entry.sourcePath !== 'string') {
+    errors.push(`${entryPrefix} is missing a string sourcePath.`);
+  } else if (isDirectory(entry.sourcePath) === false) {
+    errors.push(
+      `${entryPrefix} sourcePath is not a directory: ${entry.sourcePath}`,
+    );
+  }
+
+  const contract = readJson(entry.contractPath);
+  if (contract === null) {
+    return;
+  }
+
+  if (contract.component !== entry.name) {
+    errors.push(
+      `${entryPrefix} name (${entry.name}) does not match contract.component (${contract.component}).`,
+    );
+  }
+
+  if (contract.source !== entry.sourcePath) {
+    errors.push(
+      `${entryPrefix} sourcePath (${entry.sourcePath}) does not match contract.source (${contract.source}).`,
+    );
+  }
+
+  validateContractTests({ contractPath: entry.contractPath, contract });
+  validateCapabilities(entryPrefix, entry, contract);
+};
+
+const validateThemeTokenCoverage = (themeEntry, themeContract) => {
+  if (
+    Array.isArray(themeContract.tokenCoverage) &&
+    themeContract.tokenCoverage.length > 0
+  ) {
+    requiredThemeTokens.forEach((token) => {
+      if (themeContract.tokenCoverage.includes(token) === false) {
+        errors.push(
+          `${themeEntry.contractPath} tokenCoverage is missing required token: ${token}.`,
+        );
+      }
+    });
+    return;
+  }
+
+  errors.push(
+    `${themeEntry.contractPath} must include tokenCoverage as a non-empty array.`,
+  );
+};
+
+const validateThemeEntry = (
+  themeEntry,
+  themeEntryIndex,
+  allThemes,
+  seenIds,
+) => {
+  const themeEntryPrefix = `${indexPath} themes[${themeEntryIndex}]`;
+
+  if (!themeEntry?.id || typeof themeEntry.id !== 'string') {
+    errors.push(`${themeEntryPrefix} is missing a string id.`);
+    return;
+  }
+
+  if (/^[a-z0-9-]+$/.test(themeEntry.id) === false) {
+    errors.push(`${themeEntryPrefix} id must match ^[a-z0-9-]+$.`);
+  }
+
+  if (seenIds.has(themeEntry.id)) {
+    errors.push(`${themeEntryPrefix} has duplicate id: ${themeEntry.id}.`);
+  }
+  seenIds.add(themeEntry.id);
+
+  if (
+    !themeEntry?.contractPath ||
+    typeof themeEntry.contractPath !== 'string'
+  ) {
+    errors.push(`${themeEntryPrefix} is missing a string contractPath.`);
+    return;
+  }
+
+  if (exists(themeEntry.contractPath) === false) {
+    errors.push(
+      `${themeEntryPrefix} points to missing contract: ${themeEntry.contractPath}`,
+    );
+    return;
+  }
+
+  if (!themeEntry?.cssPath || typeof themeEntry.cssPath !== 'string') {
+    errors.push(`${themeEntryPrefix} is missing a string cssPath.`);
+  } else if (exists(themeEntry.cssPath) === false) {
+    errors.push(
+      `${themeEntryPrefix} points to missing cssPath: ${themeEntry.cssPath}`,
+    );
+  }
+
+  const themeContract = readJson(themeEntry.contractPath);
+  if (themeContract === null) {
+    return;
+  }
+
+  if (themeContract.id !== themeEntry.id) {
+    errors.push(
+      `${themeEntryPrefix} id (${themeEntry.id}) does not match contract.id (${themeContract.id}).`,
+    );
+  }
+
+  if (themeContract.cssPath !== themeEntry.cssPath) {
+    errors.push(
+      `${themeEntryPrefix} cssPath (${themeEntry.cssPath}) does not match contract.cssPath (${themeContract.cssPath}).`,
+    );
+  }
+
+  if (
+    Array.isArray(themeContract.modes) === false ||
+    themeContract.modes.length === 0
+  ) {
+    errors.push(
+      `${themeEntry.contractPath} must include at least one mode in modes.`,
+    );
+  }
+
+  if (themeContract.tokenPrefix !== '--mz-') {
+    errors.push(`${themeEntry.contractPath} tokenPrefix must be '--mz-'.`);
+  }
+
+  validateThemeTokenCoverage(themeEntry, themeContract);
+
+  if (themeContract.extendsTheme) {
+    const parentExists = allThemes.some(
+      (candidateTheme) => candidateTheme.id === themeContract.extendsTheme,
+    );
+    if (parentExists === false) {
+      errors.push(
+        `${themeEntry.contractPath} extendsTheme references unknown theme id: ${themeContract.extendsTheme}.`,
+      );
+    }
+  }
+};
+
+const validateActiveTheme = (seenThemeIds) => {
+  if (exists(activeThemePath)) {
+    const activeThemeJson = readJson(activeThemePath);
+
+    if (activeThemeJson === null) {
+      return;
+    }
+
+    if (
+      !activeThemeJson.themeId ||
+      typeof activeThemeJson.themeId !== 'string'
+    ) {
+      errors.push(`${activeThemePath} must contain a string themeId.`);
+      return;
+    }
+
+    if (seenThemeIds.has(activeThemeJson.themeId) === false) {
+      errors.push(
+        `${activeThemePath} themeId (${activeThemeJson.themeId}) is not registered in ${indexPath}.`,
+      );
+    }
+    return;
+  }
+
+  errors.push(`Missing active theme pointer: ${activeThemePath}`);
+};
+
+const validateIndex = (indexJson) => {
+  if (Array.isArray(indexJson.components)) {
+    indexJson.components.forEach(validateComponentEntry);
+  } else {
+    errors.push(`${indexPath} must contain a components array.`);
+  }
+
+  const themesDeclared = indexJson.themes !== undefined;
+  const themesAreArray = Array.isArray(indexJson.themes);
+
+  if (themesDeclared && themesAreArray === false) {
+    errors.push(`${indexPath} themes must be an array when provided.`);
+  }
+
+  if (themesAreArray) {
+    const seenThemeIds = new Set();
+    indexJson.themes.forEach((themeEntry, index) => {
+      validateThemeEntry(themeEntry, index, indexJson.themes, seenThemeIds);
+    });
+    validateActiveTheme(seenThemeIds);
+  }
+};
+
+if (exists(indexPath)) {
+  const indexJson = readJson(indexPath);
+  if (indexJson !== null) {
+    validateIndex(indexJson);
+  }
+} else {
+  errors.push(`Missing contracts index: ${indexPath}`);
 }
 
 if (errors.length > 0) {

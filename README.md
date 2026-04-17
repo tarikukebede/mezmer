@@ -104,6 +104,7 @@ Current root exports:
 - Button
 - Page
 - Search
+- DropDown
 - version
 
 Type exports are also available from each component module (for example, `InputProps`, `CheckBoxProps`, `ChipProps`, and `ButtonProps`).

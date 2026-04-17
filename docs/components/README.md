@@ -19,6 +19,7 @@ This section contains consumer-facing documentation for each public component ex
 - [Button](./button.md)
 - [Page](./page.md)
 - [Search](./search.md)
+- [DropDown](./drop-down.md)
 
 ## Shared Access-Control Pattern
 

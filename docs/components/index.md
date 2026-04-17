@@ -13,6 +13,7 @@ Consumer-facing component documentation lives here.
 - [Button](./button.md)
 - [Page](./page.md)
 - [Search](./search.md)
+- [DropDown](./drop-down.md)
 
 ## Shared Access-Control Contract
 

@@ -92,6 +92,17 @@
         "inputComposition",
         "keyboardPropagationControl"
       ]
+    },
+    {
+      "name": "DropDown",
+      "contractPath": "ai/contracts/components/drop-down.contract.json",
+      "sourcePath": "src/components/DropDown",
+      "capabilities": [
+        "accessControl",
+        "emptyState",
+        "labelAndHelperText",
+        "optionRendering"
+      ]
     }
   ],
   "themes": [

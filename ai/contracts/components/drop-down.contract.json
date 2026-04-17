@@ -1,0 +1,84 @@
+{
+  "component": "DropDown",
+  "version": "1.0.0",
+  "source": "src/components/DropDown",
+  "description": "A theme-aware select wrapper with optional label, helper/error text, custom option rendering, and injectable access control.",
+  "capabilities": {
+    "accessControl": true,
+    "emptyState": true,
+    "labelAndHelperText": true,
+    "optionRendering": true
+  },
+  "props": {
+    "onChange": {
+      "type": "(value: string) => void",
+      "required": true
+    },
+    "options": {
+      "type": "{ label: string; value: string }[]",
+      "required": true
+    },
+    "value": {
+      "type": "string",
+      "required": false
+    },
+    "label": {
+      "type": "string",
+      "required": false
+    },
+    "placeholder": {
+      "type": "string",
+      "required": false,
+      "default": "\"Select an option\""
+    },
+    "renderOption": {
+      "type": "(option: DropDownOption) => ReactNode",
+      "required": false
+    },
+    "required": {
+      "type": "boolean",
+      "required": false
+    },
+    "disabled": {
+      "type": "boolean",
+      "required": false
+    },
+    "helperText": {
+      "type": "string",
+      "required": false
+    },
+    "error": {
+      "type": "string",
+      "required": false
+    },
+    "onOpenChange": {
+      "type": "(open: boolean) => void",
+      "required": false
+    },
+    "accessRequirements": {
+      "type": "string[]",
+      "required": false
+    },
+    "resolveAccess": {
+      "type": "(requirement: string, mode: \"view\" | \"edit\") => boolean",
+      "required": false
+    }
+  },
+  "states": {
+    "visibleWhenNoAccessConfig": "true",
+    "hiddenWhenViewDenied": "true",
+    "disabledWhenEditDenied": "true",
+    "emptyStateVisibleWhenNoOptions": "true",
+    "errorMessageVisibleWhenErrorProvided": "true"
+  },
+  "accessibility": {
+    "requiredMarkerRenderedWhenRequired": "true",
+    "errorStateSetsAriaInvalid": "true"
+  },
+  "interaction": {
+    "onChangeReceivesSelectedValue": "true",
+    "onOpenChangeReceivesOpenState": "true",
+    "renderOptionUsedForSelectedAndListItems": "true"
+  },
+  "tests": ["src/components/DropDown/DropDown.test.tsx"]
+}
