@@ -14,6 +14,7 @@ import type { BaseTablePaginationParams } from './types';
 interface TestRow {
   id: number;
   name: string;
+  inactive?: boolean;
 }
 
 const columns: Column<TestRow>[] = [
@@ -27,7 +28,7 @@ const columns: Column<TestRow>[] = [
 ];
 
 const rows: TestRow[] = [
-  { id: 1, name: 'Alpha' },
+  { id: 1, name: 'Alpha', inactive: true },
   { id: 2, name: 'Beta' },
 ];
 
@@ -62,10 +63,14 @@ describe('BaseTable', () => {
 
   it('calls onRowClicked when a row is clicked', () => {
     const onRowClicked = vi.fn();
+    const clickableRows: TestRow[] = [
+      { id: 1, name: 'Alpha', inactive: false },
+      { id: 2, name: 'Beta', inactive: false },
+    ];
 
     render(
       <BaseTable<TestRow>
-        data={rows}
+        data={clickableRows}
         columns={columns}
         paginationParams={paginationParams}
         onRowClicked={onRowClicked}
@@ -75,7 +80,35 @@ describe('BaseTable', () => {
     fireEvent.click(screen.getByText('Alpha'));
 
     expect(onRowClicked).toHaveBeenCalledTimes(1);
-    expect(onRowClicked).toHaveBeenCalledWith(rows[0]);
+    expect(onRowClicked).toHaveBeenCalledWith(clickableRows[0]);
+  });
+
+  it('does not trigger row click when row is inactive', () => {
+    const onRowClicked = vi.fn();
+    const columnsWithInactive: Column<TestRow>[] = [
+      {
+        id: 'name',
+        header: 'Name',
+        accessorKey: 'name',
+        type: CellType.TEXT,
+        isInactive: (_value, item) => Boolean(item.inactive),
+      },
+    ];
+
+    render(
+      <BaseTable<TestRow>
+        data={rows}
+        columns={columnsWithInactive}
+        paginationParams={paginationParams}
+        onRowClicked={onRowClicked}
+      />,
+    );
+
+    fireEvent.click(screen.getByText('Alpha'));
+    fireEvent.click(screen.getByText('Beta'));
+
+    expect(onRowClicked).toHaveBeenCalledTimes(1);
+    expect(onRowClicked).toHaveBeenCalledWith(rows[1]);
   });
 
   it('calls onSortChange with asc and desc directions', () => {
@@ -112,11 +145,20 @@ describe('BaseTable', () => {
 
   it('handles row selection and emits selected rows', async () => {
     const onSelectionChange = vi.fn();
+    const columnsWithInactive: Column<TestRow>[] = [
+      {
+        id: 'name',
+        header: 'Name',
+        accessorKey: 'name',
+        type: CellType.TEXT,
+        isInactive: (_value, item) => Boolean(item.inactive),
+      },
+    ];
 
     render(
       <BaseTable<TestRow>
         data={rows}
-        columns={columns}
+        columns={columnsWithInactive}
         enableSelection
         onSelectionChange={onSelectionChange}
         paginationParams={paginationParams}
@@ -124,7 +166,9 @@ describe('BaseTable', () => {
     );
 
     const checkboxes = screen.getAllByRole('checkbox');
-    fireEvent.click(checkboxes[1]);
+    expect((checkboxes[1] as HTMLInputElement).disabled).toBe(true);
+
+    fireEvent.click(checkboxes[2]);
 
     await waitFor(() => {
       expect(onSelectionChange).toHaveBeenCalled();
@@ -133,7 +177,7 @@ describe('BaseTable', () => {
     const latestCall =
       onSelectionChange.mock.calls[onSelectionChange.mock.calls.length - 1][0];
     expect(latestCall).toHaveLength(1);
-    expect(latestCall[0]).toEqual(rows[0]);
+    expect(latestCall[0]).toEqual(rows[1]);
   });
 
   it('shows placeholder when there is no data', () => {

@@ -1,4 +1,4 @@
-import { BaseTablePaginationParams } from '../../types';
+import { BaseTablePaginationParams } from '@components/BaseTable/types';
 
 export interface DataTablePaginationProps {
   enableSelection?: boolean;

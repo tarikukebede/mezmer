@@ -48,8 +48,8 @@ describe('Icon', () => {
 
     const renderedIcon = screen.getByTestId('icon-svg');
     expect(renderedIcon.getAttribute('class')).toContain('h-4');
-    expect(renderedIcon.getAttribute('data-size')).toBe('20');
-    expect(renderedIcon.getAttribute('data-stroke-width')).toBe('1.5');
+    expect(renderedIcon.dataset.size).toBe('20');
+    expect(renderedIcon.dataset.strokeWidth).toBe('1.5');
     expect(renderedIcon.getAttribute('aria-label')).toBe('Status icon');
   });
 });

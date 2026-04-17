@@ -4,10 +4,6 @@ import { BaseTableRow } from './BaseTableRow';
 import type { Column } from './types';
 import { CellType } from './components/BaseTableCell';
 
-const DotIcon = ({ className }: { className?: string }) => (
-  <span data-testid="dot-icon" className={className} />
-);
-
 type RowModel = {
   id: number;
   name: string;
@@ -142,7 +138,7 @@ describe('BaseTableRow', () => {
         header: 'Icon',
         accessorKey: 'active',
         type: CellType.ICON,
-        iconMapper: (value) => (value ? DotIcon : undefined),
+        iconNameMapper: (value) => (value ? 'Circle' : undefined),
       },
       {
         id: 'dimension',
@@ -161,6 +157,58 @@ describe('BaseTableRow', () => {
     );
 
     expect(screen.getAllByText('alpha user').length > 0).toBe(true);
-    expect(Boolean(screen.getByTestId('dot-icon'))).toBe(true);
+    expect(document.querySelectorAll('svg').length > 0).toBe(true);
+  });
+
+  it('marks row inactive and disables interactions', () => {
+    const onRowClick = vi.fn();
+    const onSelect = vi.fn();
+    const onEdit = vi.fn();
+
+    const columns: Column<RowModel>[] = [
+      {
+        id: 'name',
+        header: 'Name',
+        accessorKey: 'name',
+        type: CellType.TEXT,
+        isInactive: (_value, item) => item.id === 1,
+      },
+      {
+        id: 'actions',
+        header: 'Actions',
+        type: CellType.ACTIONS,
+        isInactive: (_value, item) => item.id === 1,
+        actions: [{ label: 'Edit', iconName: 'Pencil', onClick: onEdit }],
+      },
+    ];
+
+    render(
+      <table>
+        <tbody>
+          <BaseTableRow
+            item={rowItem}
+            columns={columns}
+            showSelection
+            onSelect={onSelect}
+            onClick={onRowClick}
+          />
+        </tbody>
+      </table>,
+    );
+
+    fireEvent.click(screen.getByText('alpha user'));
+    fireEvent.click(screen.getByRole('button', { name: 'Edit' }));
+    fireEvent.click(screen.getByLabelText('Select row'));
+
+    expect(onRowClick).not.toHaveBeenCalled();
+    expect(onEdit).not.toHaveBeenCalled();
+    expect(onSelect).not.toHaveBeenCalled();
+    expect(
+      (screen.getByLabelText('Select row') as HTMLInputElement).disabled,
+    ).toBe(true);
+    expect(
+      (screen.getByRole('button', { name: 'Edit' }) as HTMLButtonElement)
+        .disabled,
+    ).toBe(true);
   });
 });

@@ -29,6 +29,28 @@
       "contractPath": "ai/contracts/components/icon.contract.json",
       "sourcePath": "src/components/Icon",
       "capabilities": ["iconRendering", "propForwarding", "classNameStyling"]
+    },
+    {
+      "name": "Checkbox",
+      "contractPath": "ai/contracts/components/checkbox.contract.json",
+      "sourcePath": "src/components/Checkbox",
+      "capabilities": [
+        "accessControl",
+        "checkedState",
+        "labelAndHelperText",
+        "errorState"
+      ]
+    },
+    {
+      "name": "Image",
+      "contractPath": "ai/contracts/components/image.contract.json",
+      "sourcePath": "src/components/Image",
+      "capabilities": [
+        "accessControl",
+        "fallbackRendering",
+        "sizeVariants",
+        "imgPropsForwarding"
+      ]
     }
   ],
   "themes": [

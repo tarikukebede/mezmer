@@ -1,11 +1,13 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { cn } from '@lib/utils';
-import { Column } from '../../types';
+import { Image } from '@components/Image';
+import { Column } from '@components/BaseTable/components/BaseTableRow/types';
 import {
   formatDateValue,
   getNestedValue,
   getRawValue,
   resolveIconComponent,
+  resolveLucideIconByName,
   toStatusLabel,
 } from './helper';
 
@@ -43,7 +45,7 @@ export const ActionCell = <T extends object>(
       return (
         <div className="flex items-center justify-end gap-2">
           {column.actions.map((action) => {
-            const Icon = action.icon;
+            const Icon = resolveLucideIconByName(action.iconName);
             return (
               <button
                 key={`${column.id}-${action.label}`}
@@ -78,10 +80,11 @@ export const ImageCell = <T extends object>(
       const source = getRawValue(row, column);
       const imageSource = typeof source === 'string' ? source : '';
       return imageSource ? (
-        <img
+        <Image
           src={imageSource}
           alt={column.header}
-          className="h-8 w-8 rounded object-cover"
+          size="sm"
+          className="rounded object-cover"
           loading="lazy"
         />
       ) : (

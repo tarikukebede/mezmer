@@ -1,6 +1,8 @@
 import type React from 'react';
 import type { Row } from '@tanstack/react-table';
-import { Column } from '../../types';
+import * as LucideIcons from 'lucide-react';
+import { Column } from '@components/BaseTable/components/BaseTableRow/types';
+import type { LucideIconName } from '@components/BaseTable/components/BaseTableRow/types';
 
 const getValueAtPath = (source: object, path: string): unknown => {
   const pathParts = path.split('.');
@@ -122,12 +124,43 @@ export const resolveIconComponent = <T extends object>(
   column: Column<T>,
   value: unknown,
 ): React.ComponentType<{ className?: string }> | undefined => {
-  if (column.iconMapper) {
-    const mappedIcon = column.iconMapper(value);
-    if (mappedIcon) {
-      return mappedIcon;
+  if (column.iconNameMapper) {
+    const mappedIconName = column.iconNameMapper(value);
+    if (mappedIconName) {
+      return resolveLucideIconByName(mappedIconName);
     }
   }
 
-  return column.icon;
+  if (column.iconName) {
+    return resolveLucideIconByName(column.iconName);
+  }
+
+  return undefined;
+};
+
+export const resolveLucideIconByName = (
+  iconName?: LucideIconName,
+): React.ComponentType<{ className?: string }> | undefined => {
+  if (!iconName) {
+    return undefined;
+  }
+
+  const candidate = (LucideIcons as Record<string, unknown>)[iconName];
+  if (!candidate) {
+    return undefined;
+  }
+
+  if (typeof candidate === 'function') {
+    return candidate as React.ComponentType<{ className?: string }>;
+  }
+
+  if (
+    typeof candidate === 'object' &&
+    candidate !== null &&
+    '$$typeof' in candidate
+  ) {
+    return candidate as React.ComponentType<{ className?: string }>;
+  }
+
+  return undefined;
 };

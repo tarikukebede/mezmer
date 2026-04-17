@@ -8,7 +8,8 @@
     "selection": true,
     "pagination": true,
     "sorting": true,
-    "placeholder": true
+    "placeholder": true,
+    "rowInactive": true
   },
   "props": {
     "data": { "type": "T[]", "required": true },
@@ -31,6 +32,18 @@
       "type": "(sortBy: string, sortOrder: \"asc\" | \"desc\") => void",
       "required": false
     },
+    "column.isInactive": {
+      "type": "boolean | ((value: unknown, item: T) => boolean)",
+      "required": false
+    },
+    "column.iconName": {
+      "type": "LucideIconName",
+      "required": false
+    },
+    "column.iconNameMapper": {
+      "type": "(value: unknown) => LucideIconName | undefined",
+      "required": false
+    },
     "accessRequirements": { "type": "string[]", "required": false },
     "resolveAccess": {
       "type": "(requirement: string, mode: \"view\" | \"edit\") => boolean",
@@ -42,6 +55,8 @@
     "visibleWhenNoAccessConfig": "true",
     "hiddenWhenViewDenied": "true",
     "selectionDisabledWhenEditDenied": "true",
+    "rowSelectionDisabledWhenInactive": "true",
+    "rowClickDisabledWhenInactive": "true",
     "placeholderVisibleWhenNoRows": "true"
   },
   "accessibility": {

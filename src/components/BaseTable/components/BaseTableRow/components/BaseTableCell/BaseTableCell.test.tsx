@@ -11,12 +11,8 @@ import {
   TextCell,
 } from './BaseTableCell';
 import { CellType } from './types';
-import type { Column } from '../../types';
+import type { Column } from '@components/BaseTable/components/BaseTableRow/types';
 import type { CellContext } from '@tanstack/react-table';
-
-const CircleIcon = ({ className }: { className?: string }) => (
-  <span data-testid="circle-icon" className={className} />
-);
 
 interface TestModel {
   id: number;
@@ -207,7 +203,7 @@ describe('BaseTableCell', () => {
       header: 'Icon',
       accessorKey: 'active',
       type: CellType.ICON,
-      iconMapper: (value) => (value ? CircleIcon : undefined),
+      iconNameMapper: (value) => (value ? 'Circle' : undefined),
     };
 
     renderCell(IconCell(column), {
@@ -221,7 +217,7 @@ describe('BaseTableCell', () => {
       getValue: () => undefined,
     });
 
-    expect(Boolean(screen.getByTestId('circle-icon'))).toBe(true);
+    expect(document.querySelectorAll('svg').length > 0).toBe(true);
   });
 
   it('MultiStatusCell renders primary status and count badge', () => {

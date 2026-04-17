@@ -12,12 +12,14 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { cn } from '@lib/utils';
+import { Checkbox } from '@components/Checkbox';
 import type {
   BaseTableAccessResolver,
   BaseTableSortOrder,
   TableProps,
 } from './types';
 import { transformColumns } from './helper';
+import { isRowInactive } from './components/BaseTableRow/helper';
 import TablePlaceholder from './components/BaseTablePlaceHolder/BaseTablePlaceHolder';
 import { DataTablePagination } from './components/Pagination/Pagination';
 
@@ -141,6 +143,10 @@ export const BaseTable = <T extends object>({
     const newSelection = table
       .getRowModel()
       .rows.reduce<Record<string, boolean>>((acc, row) => {
+        if (isRowInactive(row.original, availableColumns)) {
+          return acc;
+        }
+
         acc[row.id] = isChecked;
         return acc;
       }, {});
@@ -257,8 +263,12 @@ export const BaseTable = <T extends object>({
   }
 
   const rows = table.getRowModel().rows;
+  const selectableRows = rows.filter(
+    (row) => !isRowInactive(row.original, availableColumns),
+  );
   const allRowsSelected =
-    rows.length > 0 && rows.every((row) => rowSelection[row.id]);
+    selectableRows.length > 0 &&
+    selectableRows.every((row) => rowSelection[row.id]);
 
   return (
     <div
@@ -273,12 +283,13 @@ export const BaseTable = <T extends object>({
             <tr key={headerGroup.id} className="border-b">
               {enableSelection ? (
                 <th className="w-10 px-2 py-2 text-left">
-                  <input
-                    type="checkbox"
+                  <Checkbox
                     aria-label="Select all rows"
                     checked={allRowsSelected}
-                    onChange={(event) => handleSelectAll(event.target.checked)}
+                    onCheckChange={(checked) => handleSelectAll(checked)}
                     disabled={!hasEditPermission}
+                    name="select-all-rows"
+                    className="h-4 w-4"
                   />
                 </th>
               ) : null}
@@ -338,41 +349,58 @@ export const BaseTable = <T extends object>({
         </thead>
         <tbody className="relative min-h-[220px]">
           {rows.length ? (
-            rows.map((row) => (
-              <tr
-                key={row.id}
-                className={cn(
-                  'cursor-pointer border-b transition-colors hover:bg-muted/60',
-                  activeRow === row.id && 'bg-muted/70',
-                )}
-                data-state={row.getIsSelected() ? 'selected' : undefined}
-                onClick={() => handleRowClicked(row)}
-              >
-                {enableSelection ? (
-                  <td className="w-10 px-2 py-2">
-                    <input
-                      type="checkbox"
-                      aria-label="Select row"
-                      checked={Boolean(rowSelection[row.id])}
-                      onChange={(event) =>
-                        handleSelectRow(row.id, event.target.checked)
-                      }
-                      onClick={(event) => event.stopPropagation()}
-                      disabled={!hasEditPermission}
-                    />
-                  </td>
-                ) : null}
-                {row.getVisibleCells().map((cell) => (
-                  <td
-                    key={cell.id}
-                    className="max-w-[240px] truncate px-3 py-2 text-xs"
-                    title={String(cell.getValue() ?? '')}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))
+            rows.map((row) => {
+              const rowInactive = isRowInactive(row.original, availableColumns);
+
+              return (
+                <tr
+                  key={row.id}
+                  className={cn(
+                    'border-b transition-colors',
+                    rowInactive
+                      ? 'cursor-not-allowed opacity-60'
+                      : 'cursor-pointer hover:bg-muted/60',
+                    activeRow === row.id && 'bg-muted/70',
+                  )}
+                  data-state={row.getIsSelected() ? 'selected' : undefined}
+                  aria-disabled={rowInactive}
+                  onClick={() => {
+                    if (rowInactive) {
+                      return;
+                    }
+                    handleRowClicked(row);
+                  }}
+                >
+                  {enableSelection ? (
+                    <td className="w-10 px-2 py-2">
+                      <Checkbox
+                        aria-label="Select row"
+                        checked={Boolean(rowSelection[row.id])}
+                        onCheckChange={(checked) =>
+                          handleSelectRow(row.id, checked)
+                        }
+                        onClick={(event) => event.stopPropagation()}
+                        disabled={!hasEditPermission || rowInactive}
+                        name={`${row.id}-select`}
+                        className="h-4 w-4"
+                      />
+                    </td>
+                  ) : null}
+                  {row.getVisibleCells().map((cell) => (
+                    <td
+                      key={cell.id}
+                      className="max-w-[240px] truncate px-3 py-2 text-xs"
+                      title={String(cell.getValue() ?? '')}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              );
+            })
           ) : (
             <tr className="hover:bg-transparent">
               <td

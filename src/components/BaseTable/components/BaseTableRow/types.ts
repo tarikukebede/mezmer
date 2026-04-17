@@ -1,6 +1,8 @@
 import React from 'react';
+import * as LucideIcons from 'lucide-react';
 import { CellType } from './components/BaseTableCell';
 import { CellContext } from '@tanstack/react-table';
+import type { IconVariant } from '@components/Icon/types';
 
 export interface RowProps<T extends object> {
   item: T;
@@ -11,12 +13,13 @@ export interface RowProps<T extends object> {
   showSelection?: boolean;
 }
 
-export enum IconVariant {
-  PRIMARY = 'primary',
-  DANGER = 'danger',
-  SUCCESS = 'success',
-  WARNING = 'warning',
-}
+export type LucideIconName = {
+  [K in keyof typeof LucideIcons]: (typeof LucideIcons)[K] extends React.ComponentType<{
+    className?: string;
+  }>
+    ? K
+    : never;
+}[keyof typeof LucideIcons];
 
 type NestedKeyOf<T> = {
   [K in keyof T & (string | number)]: T[K] extends object | undefined
@@ -33,11 +36,10 @@ export interface Column<T extends object> {
   header: string;
   accessorKey?: NestedKeyOf<T>;
   type: CellType;
+  isInactive?: boolean | ((value: unknown, item: T) => boolean);
   actions?: RowAction<T>[];
-  icon?: React.ComponentType<{ className?: string }>;
-  iconMapper?: (
-    value: unknown,
-  ) => React.ComponentType<{ className?: string }> | undefined;
+  iconName?: LucideIconName;
+  iconNameMapper?: (value: unknown) => LucideIconName | undefined;
   width?: string;
   sortable?: boolean;
   filterable?: boolean;
@@ -51,7 +53,7 @@ export interface Column<T extends object> {
 
 export interface RowAction<T extends object> {
   label: string;
-  icon?: React.ComponentType<{ className?: string }>;
+  iconName?: LucideIconName;
   iconVariant?: IconVariant;
   onClick: (item: T) => void;
   accessRequirements?: string[];
