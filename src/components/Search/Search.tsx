@@ -33,7 +33,7 @@ export function Search(props: Readonly<SearchProps>) {
         placeholder={placeholder}
         onChange={(event) => onChange?.(event.target.value)}
         onKeyDown={handleKeyDown}
-        {...(value !== undefined ? { value } : {})}
+        {...(value === undefined ? {} : { value })}
         className={cn(
           'pl-9 placeholder:text-xs placeholder:text-muted-foreground/60',
           inputClassName,

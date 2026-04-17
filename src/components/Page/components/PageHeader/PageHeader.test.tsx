@@ -110,12 +110,14 @@ describe('PageHeader', () => {
     const createButton = screen.getByTestId('action-Create');
     const exportButton = screen.getByTestId('action-Export');
 
-    expect(createButton.getAttribute('data-variant')).toBe('default');
-    expect(createButton.getAttribute('data-access-requirements')).toBe(
+    expect((createButton as HTMLButtonElement).dataset.variant).toBe('default');
+    expect((createButton as HTMLButtonElement).dataset.accessRequirements).toBe(
       'project:create',
     );
-    expect(exportButton.getAttribute('data-variant')).toBe('outlined');
-    expect(exportButton.getAttribute('data-has-icon')).toBe('true');
+    expect((exportButton as HTMLButtonElement).dataset.variant).toBe(
+      'outlined',
+    );
+    expect((exportButton as HTMLButtonElement).dataset.hasIcon).toBe('true');
     expect((exportButton as HTMLButtonElement).disabled).toBe(true);
 
     fireEvent.click(createButton);

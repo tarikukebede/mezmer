@@ -11,8 +11,8 @@ const errors = [];
 
 const toKebabCase = (value) =>
   value
-    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
-    .replace(/_/g, '-')
+    .replaceAll(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .replaceAll('_', '-')
     .toLowerCase();
 
 const ensureFile = (absolutePath, message) => {
@@ -21,9 +21,7 @@ const ensureFile = (absolutePath, message) => {
   }
 };
 
-if (!fs.existsSync(indexPath)) {
-  errors.push('Missing contracts index: ai/contracts/index.json');
-} else {
+if (fs.existsSync(indexPath)) {
   const indexJson = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
   const components = Array.isArray(indexJson.components)
     ? indexJson.components
@@ -58,6 +56,8 @@ if (!fs.existsSync(indexPath)) {
       );
     }
   }
+} else {
+  errors.push('Missing contracts index: ai/contracts/index.json');
 }
 
 if (errors.length > 0) {
