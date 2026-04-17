@@ -21,7 +21,8 @@
         "selection",
         "pagination",
         "sorting",
-        "placeholder"
+        "placeholder",
+        "rowInactive"
       ]
     },
     {
