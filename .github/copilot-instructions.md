@@ -156,6 +156,8 @@ For every new package component, include:
 - `ComponentName.tsx`
 - `types.ts`
 - `index.ts`
+- optional `styles.ts` when the component has public variants or style maps
+- optional `helpers.ts` when local pure helpers improve readability or reuse
 - `ComponentName.test.tsx`
 - `ai/contracts/components/<component>.contract.json`
 - `docs/components/<component>.md`
@@ -175,18 +177,29 @@ For every new package component, documentation updates must also include:
 
 Every time a new public component is added, do not treat the work as complete until all of the following are done:
 
-- create the component folder under `src/components/ComponentName`
+- create the component folder under `src/components/ComponentName` using PascalCase folder naming only
 - add the component implementation, public types, component barrel export, and behavior test
+- add `styles.ts` when public variants or class maps are part of the component contract
+- add `helpers.ts` when access resolution or pure local utilities are needed
+- keep file casing and imports consistent so the workspace never mixes `ComponentName` and `componentName` paths
+- add or update any required shadcn/ui primitive wrappers under `src/components/ui` and keep the styling setup aligned with `components.json`, `tailwind.config.ts`, `postcss.config.js`, and `src/styles.css` when the primitive surface changes
+- ensure the component uses package-owned semantic tokens or shared primitives instead of product-specific colors or branding
 - add the component export to the package entrypoint in `src/index.ts`
 - add the component entry to `ai/contracts/index.json` with the correct `name`, `contractPath`, `sourcePath`, and capability list
-- add `ai/contracts/components/<component>.contract.json` and keep its component name, source path, capabilities, and test file paths aligned with the index entry
+- add `ai/contracts/components/<component>.contract.json` and keep its component name, source path, capabilities, prop metadata, states, interaction guarantees, and test file paths aligned with the index entry
 - add `docs/components/<component>.md` and add its link to `docs/components/README.md`
 - add the component link to `docs/components/index.md` and `docs/COMPONENTS.md`
 - add the component to the root API list in `README.md` when publicly exported
-- ensure the docs include consumer usage, public props, accessibility behavior, and access-control behavior where applicable
+- ensure the docs include consumer usage, public props, accessibility behavior, tested interaction guarantees, and access-control behavior where applicable
+- update `docs/.vitepress/config.ts` so the component appears in the docs site sidebar/navigation used by GitHub Pages
+- run `pnpm docs:build` and verify the generated docs site includes the new component page and navigation entry before treating GitHub Pages coverage as complete
 - run `pnpm validate:contracts`
 - run `pnpm validate:component-docs`
+- run `pnpm lint`
+- run `pnpm tsc --noEmit`
 - run `pnpm test` for behavior coverage
-- run `pnpm mcp:server` and verify MCP `list_components` returns the new component (the MCP surface is index-driven)
+- run `pnpm test:ct` when the component has browser-dependent interaction that merits Playwright coverage
+- run `pnpm mcp:server` and verify MCP `list_components` returns the new component and its docs/contract are discoverable from the index-driven MCP surface
+- run `pnpm build` when the component changes package exports, public API shape, styles, or publishable output
 
-If the component changes package exports, public API shape, or publishable output, also run `pnpm tsc --noEmit` and `pnpm build` before considering the task complete.
+If any item above is skipped, explicitly document why it was not required or could not be completed before considering the component work done.

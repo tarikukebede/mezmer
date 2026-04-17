@@ -46,6 +46,7 @@ export default withMermaid(
             { text: 'Image', link: '/components/image' },
             { text: 'BaseTable', link: '/components/base-table' },
             { text: 'Chip', link: '/components/chip' },
+            { text: 'Button', link: '/components/button' },
           ],
         },
       ],
