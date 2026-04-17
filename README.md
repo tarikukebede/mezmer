@@ -11,6 +11,7 @@ A reusable, publishable React UI component library focused on enterprise-safe AP
 - [Peer Dependencies](#peer-dependencies)
 - [Quick Start](#quick-start)
 - [Public API](#public-api)
+- [Component Docs](https://github.com/tarikukebede/mezmer/blob/main/docs/components/README.md)
 - [Styling](#styling)
 - [Theming Guide](docs/THEMING.md)
 - [Theme Configuration](docs/THEME-CONFIGURATION.md)
@@ -81,23 +82,18 @@ function Example() {
 Current root exports:
 
 - Input
-- InputProps
-- InputAccessMode
-- InputAccessResolver
+- Checkbox
+- Icon
+- Image
+- BaseTable
+- Chip
 - version
 
-### Input Props Summary
+Type exports are also available from each component module (for example, `InputProps`, `CheckBoxProps`, and `ChipProps`).
 
-Required:
+For consumer-facing props, examples, and behavior notes for every exported component, see https://github.com/tarikukebede/mezmer/blob/main/docs/components/README.md.
 
-- name: string
-- onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-
-Common optional props:
-
-- type, label, value, error, helperText, required
-- accessRequirements, resolveAccess
-- all standard input attributes except overridden name/value/onChange/type behavior
+`docs/COMPONENTS.md` remains as a stable compatibility entrypoint that forwards to the scalable per-component docs structure.
 
 ## Styling
 
