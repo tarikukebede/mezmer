@@ -6,20 +6,23 @@ A reusable, publishable React UI component library focused on enterprise-safe AP
 
 ## Table of Contents
 
-- Overview
-- Installation
-- Peer Dependencies
-- Quick Start
-- Public API
-- Styling
-- Access Control Model
-- AI-First Contract Workflow
-- Project Structure
-- Development
-- Testing
-- Release Checklist
-- Contributing
-- License
+- [Overview](#overview)
+- [Installation](#installation)
+- [Peer Dependencies](#peer-dependencies)
+- [Quick Start](#quick-start)
+- [Public API](#public-api)
+- [Styling](#styling)
+- [Theming Guide](docs/THEMING.md)
+- [Theme Configuration](docs/THEME-CONFIGURATION.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Access Control Model](#access-control-model)
+- [AI-First Contract Workflow](#ai-first-contract-workflow)
+- [Project Structure](#project-structure)
+- [Development](#development)
+- [Testing](#testing)
+- [Release Checklist](#release-checklist)
+- [Contributing](docs/CONTRIBUTING.md)
+- [License](#license)
 
 ## Overview
 
@@ -126,6 +129,8 @@ pnpm theme:create --id brand-x --from default
 
 Theme metadata and active selection are stored in `ai/contracts/themes/*` and `ai/theme.active.json` for deterministic AI workflows.
 
+For workspace-level setup, generated files, and runtime mode behavior, see `docs/THEME-CONFIGURATION.md`.
+
 ## Access Control Model
 
 Input authorization is injectable and domain-neutral:
@@ -166,6 +171,7 @@ ai/contracts/
 docs/
   CONTRIBUTING.md
   ARCHITECTURE.md
+  THEME-CONFIGURATION.md
 ```
 
 ## Development
