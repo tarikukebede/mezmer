@@ -13,6 +13,9 @@ hero:
       text: AI Workflow
       link: /ARCHITECTURE
     - theme: alt
+      text: Installation Guide
+      link: /INSTALLATION
+    - theme: alt
       text: Component Docs
       link: /components/
     - theme: alt
@@ -131,6 +134,8 @@ Mezmer bakes in practices commonly required in enterprise environments:
 ```bash
 pnpm add @tarikukebede/mezmer
 ```
+
+For a full setup walkthrough (peer dependencies, style imports, and troubleshooting), see [Installation Guide](/INSTALLATION).
 
 ## Use
 
