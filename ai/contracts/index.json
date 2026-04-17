@@ -103,6 +103,17 @@
         "labelAndHelperText",
         "optionRendering"
       ]
+    },
+    {
+      "name": "DetailsCard",
+      "contractPath": "ai/contracts/components/details-card.contract.json",
+      "sourcePath": "src/components/DetailsCard",
+      "capabilities": [
+        "tabSections",
+        "headerActions",
+        "loadingState",
+        "accessControl"
+      ]
     }
   ],
   "themes": [

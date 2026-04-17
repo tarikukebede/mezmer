@@ -1,0 +1,86 @@
+{
+  "component": "DetailsCard",
+  "version": "1.0.0",
+  "source": "src/components/DetailsCard",
+  "description": "A reusable details surface with a header action area, optional custom content, and tabbed content sections.",
+  "capabilities": {
+    "tabSections": true,
+    "headerActions": true,
+    "loadingState": true,
+    "accessControl": true
+  },
+  "props": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "icon": {
+      "type": "LucideIcon",
+      "required": true
+    },
+    "isLoading": {
+      "type": "boolean",
+      "required": true
+    },
+    "data": {
+      "type": "T",
+      "required": false
+    },
+    "tabs": {
+      "type": "DetailsCardBodyTab[]",
+      "required": false,
+      "default": "[]"
+    },
+    "renderCustomContent": {
+      "type": "() => ReactNode",
+      "required": false
+    },
+    "onSave": {
+      "type": "(data: T | null) => void",
+      "required": false
+    },
+    "onDelete": {
+      "type": "(data: T | null) => void",
+      "required": false
+    },
+    "onClose": {
+      "type": "() => void",
+      "required": false
+    },
+    "saveAccessRequirements": {
+      "type": "string[]",
+      "required": false
+    },
+    "deleteAccessRequirements": {
+      "type": "string[]",
+      "required": false
+    },
+    "customButtons": {
+      "type": "CustomButton<T>[]",
+      "required": false,
+      "default": "[]"
+    }
+  },
+  "states": {
+    "headerAlwaysVisible": "true",
+    "customContentVisibleWhenProvided": "true",
+    "tabsVisibleWhenProvided": "true",
+    "loadingStateVisibleWhenIsLoading": "true"
+  },
+  "accessibility": {
+    "tablistRoleProvided": "true",
+    "tabRoleAndSelectionStateProvided": "true",
+    "tabpanelRoleProvided": "true",
+    "loadingRegionUsesStatusRole": "true"
+  },
+  "interaction": {
+    "saveDeleteAndCustomActionsReceiveDataOrNull": "true",
+    "tabSelectionSwitchesVisiblePanel": "true",
+    "buttonActionsRespectAccessRequirements": "true"
+  },
+  "tests": [
+    "src/components/DetailsCard/DetailsCard.test.tsx",
+    "src/components/DetailsCard/components/DetailsCardHeader/DetailsCardHeader.test.tsx",
+    "src/components/DetailsCard/components/DetailsCardBody/DetailsCardBody.test.tsx"
+  ]
+}

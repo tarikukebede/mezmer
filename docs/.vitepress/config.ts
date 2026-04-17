@@ -52,6 +52,7 @@ export default withMermaid(
             { text: 'Page', link: '/components/page' },
             { text: 'Search', link: '/components/search' },
             { text: 'DropDown', link: '/components/drop-down' },
+            { text: 'DetailsCard', link: '/components/details-card' },
           ],
         },
       ],

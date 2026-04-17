@@ -10,5 +10,6 @@ export * from './components/Button';
 export * from './components/Page';
 export * from './components/Search';
 export * from './components/DropDown';
+export * from './components/DetailsCard';
 
 export const version = '0.1.0';
