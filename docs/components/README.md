@@ -10,7 +10,6 @@ This section contains consumer-facing documentation for each public component ex
 
 ## Components
 
-- [Input](./input.md)
 - [BaseTable](./base-table.md)
 - [Button](./button.md)
 - [Checkbox](./checkbox.md)

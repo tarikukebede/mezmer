@@ -170,7 +170,7 @@ Each component contract must define:
 
 For every new package component, documentation updates must also include:
 
-- a link entry in `docs/components/README.md`
+- a link entry in `docs/components/README.md`, kept in alphabetical A-Z order
 - a consumer-facing usage example in `docs/components/<component>.md`
 
 ## New Component Completion Checklist
@@ -187,11 +187,11 @@ Every time a new public component is added, do not treat the work as complete un
 - add the component export to the package entrypoint in `src/index.ts`
 - add the component entry to `ai/contracts/index.json` with the correct `name`, `contractPath`, `sourcePath`, and capability list
 - add `ai/contracts/components/<component>.contract.json` and keep its component name, source path, capabilities, prop metadata, states, interaction guarantees, and test file paths aligned with the index entry
-- add `docs/components/<component>.md` and add its link to `docs/components/README.md`
-- add the component link to `docs/components/index.md` and `docs/COMPONENTS.md`
+- add `docs/components/<component>.md` and add its link to `docs/components/README.md` in alphabetical A-Z order
+- add the component link to `docs/components/index.md` and `docs/COMPONENTS.md` in alphabetical A-Z order
 - add the component to the root API list in `README.md` when publicly exported
 - ensure the docs include consumer usage, public props, accessibility behavior, tested interaction guarantees, and access-control behavior where applicable
-- update `docs/.vitepress/config.ts` so the component appears in the docs site sidebar/navigation used by GitHub Pages
+- update `docs/.vitepress/config.ts` so the component appears in the docs site sidebar/navigation used by GitHub Pages in alphabetical A-Z order
 - run `pnpm docs:build` and verify the generated docs site includes the new component page and navigation entry before treating GitHub Pages coverage as complete
 - run `pnpm validate:contracts`
 - run `pnpm validate:component-docs`
