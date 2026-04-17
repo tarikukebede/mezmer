@@ -92,7 +92,6 @@ export const BaseTableRow = <T extends object>({
           </span>
         );
       }
-      case CellType.DIMENSION:
       case CellType.DIMENSTION: {
         return (
           <span className="text-xs text-muted-foreground">

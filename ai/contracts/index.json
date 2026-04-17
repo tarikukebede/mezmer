@@ -52,6 +52,19 @@
         "sizeVariants",
         "imgPropsForwarding"
       ]
+    },
+    {
+      "name": "Chip",
+      "contractPath": "ai/contracts/components/chip.contract.json",
+      "sourcePath": "src/components/Chip",
+      "capabilities": [
+        "chipRendering",
+        "sizeVariants",
+        "iconRendering",
+        "removableInteraction",
+        "propForwarding",
+        "accessControl"
+      ]
     }
   ],
   "themes": [
