@@ -46,6 +46,7 @@ export default withMermaid(
             { text: 'Button', link: '/components/button' },
             { text: 'Checkbox', link: '/components/checkbox' },
             { text: 'Chip', link: '/components/chip' },
+            { text: 'DatePicker', link: '/components/date-picker' },
             { text: 'DetailsCard', link: '/components/details-card' },
             { text: 'DropDown', link: '/components/drop-down' },
             { text: 'Icon', link: '/components/icon' },

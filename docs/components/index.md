@@ -2,11 +2,11 @@
 
 Consumer-facing component documentation lives here.
 
-- [Input](./input.md)
 - [BaseTable](./base-table.md)
 - [Button](./button.md)
 - [Checkbox](./checkbox.md)
 - [Chip](./chip.md)
+- [DatePicker](./date-picker.md)
 - [DetailsCard](./details-card.md)
 - [DropDown](./drop-down.md)
 - [Icon](./icon.md)

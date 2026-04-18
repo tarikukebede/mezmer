@@ -102,6 +102,7 @@ Current root exports:
 - BaseTable
 - Chip
 - Button
+- DatePicker
 - Page
 - Search
 - DropDown

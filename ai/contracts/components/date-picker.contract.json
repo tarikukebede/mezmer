@@ -1,0 +1,46 @@
+{
+  "component": "DatePicker",
+  "version": "1.0.0",
+  "source": "src/components/DatePicker",
+  "description": "Access-aware date picker wrapper built on shadcn popover and calendar primitives.",
+  "capabilities": {
+    "accessControl": true,
+    "controlledValue": true,
+    "calendarSelection": true,
+    "labelAndHelperText": true
+  },
+  "props": {
+    "name": { "type": "string", "required": true },
+    "value": { "type": "string", "required": false },
+    "onChange": {
+      "type": "(change: { target: { name: string; value: string | undefined } }) => void",
+      "required": true
+    },
+    "label": { "type": "string", "required": false },
+    "required": { "type": "boolean", "required": false },
+    "helperText": { "type": "string", "required": false },
+    "error": { "type": "string", "required": false },
+    "placeholder": { "type": "string", "required": false },
+    "disabled": { "type": "boolean", "required": false },
+    "accessRequirements": { "type": "string[]", "required": false },
+    "resolveAccess": {
+      "type": "(requirement: string, mode: \"view\" | \"edit\") => boolean",
+      "required": false
+    }
+  },
+  "states": {
+    "visibleWhenNoAccessConfig": "true",
+    "hiddenWhenViewDenied": "true",
+    "disabledWhenEditDenied": "true",
+    "disabledPropPrecedence": "true"
+  },
+  "accessibility": {
+    "labelAssociatesWithTriggerByHtmlFor": "true",
+    "ariaInvalidWhenError": "true"
+  },
+  "interaction": {
+    "emitsLocalDateValueOnSelection": "true",
+    "supportsControlledOpenState": "true"
+  },
+  "tests": ["src/components/DatePicker/DatePicker.test.tsx"]
+}

@@ -14,6 +14,7 @@ This section contains consumer-facing documentation for each public component ex
 - [Button](./button.md)
 - [Checkbox](./checkbox.md)
 - [Chip](./chip.md)
+- [DatePicker](./date-picker.md)
 - [DetailsCard](./details-card.md)
 - [DropDown](./drop-down.md)
 - [Icon](./icon.md)

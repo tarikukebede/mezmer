@@ -67,6 +67,17 @@
       ]
     },
     {
+      "name": "DatePicker",
+      "contractPath": "ai/contracts/components/date-picker.contract.json",
+      "sourcePath": "src/components/DatePicker",
+      "capabilities": [
+        "accessControl",
+        "controlledValue",
+        "calendarSelection",
+        "labelAndHelperText"
+      ]
+    },
+    {
       "name": "Button",
       "contractPath": "ai/contracts/components/button.contract.json",
       "sourcePath": "src/components/Button",
