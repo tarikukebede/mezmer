@@ -1,5 +1,6 @@
 import { defineConfig } from 'vitepress';
 import { withMermaid } from 'vitepress-plugin-mermaid';
+import { fileURLToPath, URL } from 'node:url';
 
 const repoName = process.env.GITHUB_REPOSITORY?.split('/')[1] ?? 'mezmer';
 const docsBase = process.env.GITHUB_ACTIONS ? `/${repoName}/` : '/';
@@ -11,6 +12,20 @@ export default withMermaid(
     description:
       'Reusable React UI component library focused on accessibility and contract-driven APIs.',
     base: docsBase,
+    vite: {
+      resolve: {
+        alias: {
+          '@': fileURLToPath(new URL('../../src', import.meta.url)),
+          '@components': fileURLToPath(
+            new URL('../../src/components', import.meta.url),
+          ),
+          '@lib': fileURLToPath(new URL('../../src/lib', import.meta.url)),
+          '@ui': fileURLToPath(
+            new URL('../../src/components/ui', import.meta.url),
+          ),
+        },
+      },
+    },
     head: [['link', { rel: 'icon', href: assetPath }]],
     cleanUrls: true,
     lastUpdated: true,
@@ -19,6 +34,7 @@ export default withMermaid(
       nav: [
         { text: 'Installation', link: '/INSTALLATION' },
         { text: 'Guide', link: '/THEMING' },
+        { text: 'Theme Playground', link: '/THEME-PLAYGROUND' },
         { text: 'MCP', link: '/MCP-SERVER' },
         { text: 'Components', link: '/components/' },
         {
@@ -33,6 +49,7 @@ export default withMermaid(
             { text: 'Home', link: '/' },
             { text: 'Installation', link: '/INSTALLATION' },
             { text: 'Theming', link: '/THEMING' },
+            { text: 'Theme Playground', link: '/THEME-PLAYGROUND' },
             { text: 'Theme Configuration', link: '/THEME-CONFIGURATION' },
             { text: 'MCP Server', link: '/MCP-SERVER' },
             { text: 'Architecture', link: '/ARCHITECTURE' },

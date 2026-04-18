@@ -47,6 +47,8 @@ import '@tarikukebede/mezmer/styles.css';
 import '@tarikukebede/mezmer/themes/slate.css';
 ```
 
+For an interactive docs demo with runtime theme switching, see `docs/THEME-PLAYGROUND.md`.
+
 ## AI-Friendly Commands
 
 List themes:
