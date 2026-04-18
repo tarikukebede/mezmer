@@ -532,6 +532,29 @@ export function ThemePlayground() {
     () => BUILT_IN_THEMES.find((candidate) => candidate.id === theme) ?? null,
     [theme],
   );
+  const themeSelectorOptions = useMemo(
+    () =>
+      BUILT_IN_THEMES.map((builtInTheme) => ({
+        id: builtInTheme.id,
+        label: builtInTheme.label,
+        swatch: BUILT_IN_THEME_SWATCHES[builtInTheme.id][mode],
+        note: BUILT_IN_THEME_SWATCHES[builtInTheme.id].note,
+        disabled: false,
+      })),
+    [mode],
+  );
+  const modeOptions: Array<{ value: Mode; label: string }> = [
+    { value: 'light', label: 'Light' },
+    { value: 'dark', label: 'Dark' },
+  ];
+  const galleryModeOptions: Array<{
+    value: GalleryPreviewMode;
+    label: string;
+  }> = [
+    { value: 'follow', label: 'Follow active mode' },
+    { value: 'light', label: 'Light swatches' },
+    { value: 'dark', label: 'Dark swatches' },
+  ];
   const activeThemeDescription = useMemo(() => {
     if (activeBuiltInTheme) {
       return BUILT_IN_THEME_SWATCHES[activeBuiltInTheme.id].note;
@@ -675,71 +698,133 @@ export function ThemePlayground() {
   };
 
   return (
-    <section className="rounded-3xl border border-border/70 bg-card p-6 text-card-foreground shadow-sm">
-      <div className="space-y-6">
-        <div className="rounded-2xl border border-border/70 bg-background p-5 shadow-sm">
-          <div className="max-w-2xl">
-            <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-              Customizer
-            </p>
-            <h3 className="text-base font-semibold">Theme Selector</h3>
-            <p className="mt-1 text-sm leading-6 text-muted-foreground">
-              Choose a theme, switch mode, and reset back to a clean baseline.
-            </p>
+    <section className="rounded-[2rem] border border-border/60 bg-gradient-to-b from-background via-background to-muted/10 p-5 text-card-foreground shadow-[0_18px_50px_-32px_rgba(15,23,42,0.45)] sm:p-6">
+      <div className="space-y-5">
+        <div className="rounded-[1.5rem] border border-border/60 bg-background/95 p-5 shadow-[0_10px_30px_-24px_rgba(15,23,42,0.45)] backdrop-blur">
+          <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
+            <div className="max-w-2xl">
+              <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                Customizer
+              </p>
+              <h3 className="text-lg font-semibold tracking-tight">
+                Theme Selector
+              </h3>
+              <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                Choose a palette, switch the preview mode, and keep the controls
+                light and easy to scan.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              {modeOptions.map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => setMode(option.value)}
+                  className={`inline-flex items-center rounded-full border px-3.5 py-1.5 text-sm font-medium transition ${
+                    mode === option.value
+                      ? 'border-foreground/15 bg-foreground text-background shadow-sm'
+                      : 'border-border/70 bg-background text-muted-foreground hover:border-foreground/15 hover:text-foreground'
+                  }`}
+                  aria-pressed={mode === option.value}
+                >
+                  {option.label}
+                </button>
+              ))}
+              <button
+                type="button"
+                onClick={handleResetCustomizer}
+                className="inline-flex items-center rounded-full border border-border/70 bg-background px-3.5 py-1.5 text-sm font-medium text-muted-foreground transition hover:border-foreground/15 hover:text-foreground"
+              >
+                Reset
+              </button>
+            </div>
           </div>
 
-          <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-            {BUILT_IN_THEMES.map((builtInTheme) => {
-              const selectorSwatch =
-                BUILT_IN_THEME_SWATCHES[builtInTheme.id][mode];
+          <div className="mt-5 flex flex-wrap gap-2.5">
+            {themeSelectorOptions.map((option) => {
+              const isActive = theme === option.id;
 
               return (
-                <Button
-                  key={builtInTheme.id}
+                <button
+                  key={option.id}
                   type="button"
-                  variant={theme === builtInTheme.id ? 'default' : 'outline'}
-                  onClick={() => setTheme(builtInTheme.id)}
-                  className="h-11 w-full justify-between px-4 text-sm"
+                  onClick={() => setTheme(option.id)}
+                  className={`group inline-flex min-w-[10.5rem] items-center gap-3 rounded-2xl border px-3.5 py-3 text-left transition ${
+                    isActive
+                      ? 'border-foreground/15 bg-muted/60 shadow-sm'
+                      : 'border-border/70 bg-background/80 hover:border-foreground/15 hover:bg-muted/30'
+                  }`}
+                  aria-pressed={isActive}
                 >
-                  <span className="min-w-0 truncate">{builtInTheme.label}</span>
-                  <span className="ml-3 flex shrink-0 items-center gap-1.5">
+                  <span className="flex shrink-0 items-center gap-1.5">
                     <span
                       className="h-3 w-3 rounded-full border"
                       style={{
-                        backgroundColor: selectorSwatch.primary,
-                        borderColor: selectorSwatch.border,
+                        backgroundColor: option.swatch.primary,
+                        borderColor: option.swatch.border,
                       }}
                     />
                     <span
                       className="h-3 w-3 rounded-full border"
                       style={{
-                        backgroundColor: selectorSwatch.accent,
-                        borderColor: selectorSwatch.border,
+                        backgroundColor: option.swatch.accent,
+                        borderColor: option.swatch.border,
                       }}
                     />
                   </span>
-                </Button>
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-medium text-foreground">
+                      {option.label}
+                    </span>
+                    <span className="mt-0.5 block truncate text-xs text-muted-foreground">
+                      {option.note}
+                    </span>
+                  </span>
+                  {isActive ? (
+                    <span className="shrink-0 rounded-full bg-foreground px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-background">
+                      Live
+                    </span>
+                  ) : null}
+                </button>
               );
             })}
-            <Button
+            <button
               type="button"
-              variant={theme === 'ai-brand' ? 'default' : 'outline'}
               onClick={() => setTheme('ai-brand')}
               disabled={!generatedThemeCss}
-              className="h-11 w-full justify-between px-4 text-sm"
+              className={`inline-flex min-w-[10.5rem] items-center gap-3 rounded-2xl border px-3.5 py-3 text-left transition ${
+                theme === 'ai-brand'
+                  ? 'border-foreground/15 bg-muted/60 shadow-sm'
+                  : 'border-border/70 bg-background/80 hover:border-foreground/15 hover:bg-muted/30'
+              } ${
+                generatedThemeCss
+                  ? 'text-foreground'
+                  : 'cursor-not-allowed opacity-55'
+              }`}
+              aria-pressed={theme === 'ai-brand'}
             >
-              <span className="min-w-0 truncate">AI Brand</span>
-              <span className="ml-3 flex shrink-0 items-center gap-1.5">
+              <span className="flex shrink-0 items-center gap-1.5">
                 <span className="h-3 w-3 rounded-full border border-border bg-primary" />
                 <span className="h-3 w-3 rounded-full border border-border bg-accent" />
               </span>
-            </Button>
+              <span className="min-w-0 flex-1">
+                <span className="block truncate text-sm font-medium">
+                  AI Brand
+                </span>
+                <span className="mt-0.5 block truncate text-xs text-muted-foreground">
+                  {generatedThemeCss
+                    ? 'Generated from your brand inputs'
+                    : 'Generate a theme to enable'}
+                </span>
+              </span>
+            </button>
           </div>
         </div>
 
-        <div className="grid gap-6 xl:grid-cols-[18rem_minmax(0,1fr)]">
+        <div className="grid gap-5 xl:grid-cols-[17rem_minmax(0,1fr)]">
           <aside className="xl:sticky xl:top-6 xl:self-start">
-            <div className="space-y-4 rounded-2xl border border-border/70 bg-background p-5 shadow-sm">
+            <div className="space-y-4 rounded-[1.5rem] border border-border/60 bg-background/95 p-5 shadow-[0_10px_30px_-24px_rgba(15,23,42,0.45)]">
               <div>
                 <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                   Status
@@ -751,46 +836,28 @@ export function ThemePlayground() {
                 </p>
               </div>
 
-              <div className="space-y-3 rounded-xl border border-border/70 bg-muted/35 p-3.5">
-                <div className="grid gap-2 sm:grid-cols-[1fr_auto] xl:grid-cols-1">
-                  <div className="inline-grid grid-cols-2 rounded-lg border border-border bg-background p-1 shadow-inner">
-                    <button
-                      type="button"
-                      onClick={() => setMode('light')}
-                      className={`rounded-md px-3 py-2 text-sm font-medium transition ${
-                        mode === 'light'
-                          ? 'bg-card text-foreground shadow-sm'
-                          : 'text-muted-foreground hover:text-foreground'
-                      }`}
-                      aria-pressed={mode === 'light'}
-                    >
-                      Light
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setMode('dark')}
-                      className={`rounded-md px-3 py-2 text-sm font-medium transition ${
-                        mode === 'dark'
-                          ? 'bg-card text-foreground shadow-sm'
-                          : 'text-muted-foreground hover:text-foreground'
-                      }`}
-                      aria-pressed={mode === 'dark'}
-                    >
-                      Dark
-                    </button>
-                  </div>
-                  <Button
-                    type="button"
-                    label="Reset"
-                    variant="outline"
-                    onClick={handleResetCustomizer}
-                    className="h-10 px-3.5 text-sm xl:w-full"
-                  />
-                </div>
+              <div className="space-y-3 rounded-2xl border border-border/60 bg-muted/20 p-4">
                 <Chip label={`Theme: ${activeThemeLabel}`} />
+                <div className="flex flex-wrap gap-2">
+                  {modeOptions.map((option) => (
+                    <button
+                      key={`status-${option.value}`}
+                      type="button"
+                      onClick={() => setMode(option.value)}
+                      className={`inline-flex items-center rounded-full border px-3 py-1.5 text-xs font-medium transition ${
+                        mode === option.value
+                          ? 'border-foreground/15 bg-background text-foreground shadow-sm'
+                          : 'border-border/70 bg-transparent text-muted-foreground hover:border-foreground/15 hover:text-foreground'
+                      }`}
+                      aria-pressed={mode === option.value}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
               </div>
 
-              <div className="rounded-xl border border-border/70 bg-muted/35 p-4">
+              <div className="rounded-2xl border border-border/60 bg-muted/20 p-4">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                   Active Theme
                 </p>
@@ -835,7 +902,7 @@ export function ThemePlayground() {
           </aside>
 
           <div className="space-y-6">
-            <div className="rounded-2xl border border-border/70 bg-background p-5 shadow-sm">
+            <div className="rounded-[1.5rem] border border-border/60 bg-background/95 p-5 shadow-[0_10px_30px_-24px_rgba(15,23,42,0.45)]">
               <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
                 <div className="max-w-2xl">
                   <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
@@ -854,7 +921,7 @@ export function ThemePlayground() {
                     onChange={(event) => setGalleryFilter(event.target.value)}
                     placeholder="Filter themes"
                     aria-label="Filter themes"
-                    className="w-full rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm sm:min-w-56"
+                    className="w-full rounded-full border border-input bg-background px-4 py-2.5 text-sm sm:min-w-56"
                   />
                   <p className="shrink-0 text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
                     {filteredBuiltInThemes.length} theme
@@ -863,46 +930,25 @@ export function ThemePlayground() {
                 </div>
               </div>
 
-              <div className="mt-4 grid gap-2 rounded-xl border border-border bg-muted/35 p-2 sm:grid-cols-3">
-                <button
-                  type="button"
-                  onClick={() => setGalleryMode('follow')}
-                  className={`rounded-lg px-3 py-2.5 text-sm font-medium transition ${
-                    galleryMode === 'follow'
-                      ? 'bg-background text-foreground shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                  aria-pressed={galleryMode === 'follow'}
-                >
-                  Follow Active Mode
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setGalleryMode('light')}
-                  className={`rounded-lg px-3 py-2.5 text-sm font-medium transition ${
-                    galleryMode === 'light'
-                      ? 'bg-background text-foreground shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                  aria-pressed={galleryMode === 'light'}
-                >
-                  Light Swatches
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setGalleryMode('dark')}
-                  className={`rounded-lg px-3 py-2.5 text-sm font-medium transition ${
-                    galleryMode === 'dark'
-                      ? 'bg-background text-foreground shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                  aria-pressed={galleryMode === 'dark'}
-                >
-                  Dark Swatches
-                </button>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {galleryModeOptions.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => setGalleryMode(option.value)}
+                    className={`inline-flex items-center rounded-full border px-3.5 py-1.5 text-sm font-medium transition ${
+                      galleryMode === option.value
+                        ? 'border-foreground/15 bg-muted text-foreground shadow-sm'
+                        : 'border-border/70 bg-background text-muted-foreground hover:border-foreground/15 hover:text-foreground'
+                    }`}
+                    aria-pressed={galleryMode === option.value}
+                  >
+                    {option.label}
+                  </button>
+                ))}
               </div>
 
-              <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+              <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                 {filteredBuiltInThemes.map((builtInTheme) => {
                   const swatch =
                     BUILT_IN_THEME_SWATCHES[builtInTheme.id][
@@ -914,10 +960,10 @@ export function ThemePlayground() {
                       key={`gallery-${builtInTheme.id}`}
                       type="button"
                       onClick={() => setTheme(builtInTheme.id)}
-                      className={`group min-h-32 rounded-xl border p-4 text-left transition duration-150 ${
+                      className={`group rounded-[1.25rem] border px-4 py-3.5 text-left transition duration-150 ${
                         theme === builtInTheme.id
-                          ? 'border-primary shadow-sm ring-1 ring-primary'
-                          : 'border-border hover:border-primary/50 hover:shadow-sm'
+                          ? 'border-foreground/20 shadow-sm ring-1 ring-foreground/10'
+                          : 'border-border/70 hover:border-foreground/20 hover:shadow-sm'
                       }`}
                       style={{ backgroundColor: swatch.surface }}
                     >
@@ -994,7 +1040,7 @@ export function ThemePlayground() {
             </div>
 
             <div className="grid gap-4 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
-              <div className="space-y-4 rounded-2xl border border-border/70 bg-background p-5 shadow-sm">
+              <div className="space-y-4 rounded-[1.5rem] border border-border/60 bg-background/95 p-5 shadow-[0_10px_30px_-24px_rgba(15,23,42,0.45)]">
                 <div>
                   <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                     Preview
@@ -1021,7 +1067,7 @@ export function ThemePlayground() {
                 />
               </div>
 
-              <div className="space-y-4 rounded-2xl border border-border/70 bg-background p-5 shadow-sm">
+              <div className="space-y-4 rounded-[1.5rem] border border-border/60 bg-background/95 p-5 shadow-[0_10px_30px_-24px_rgba(15,23,42,0.45)]">
                 <div>
                   <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                     Compose
@@ -1030,7 +1076,7 @@ export function ThemePlayground() {
                     Building Block Example
                   </h3>
                 </div>
-                <div className="rounded-2xl border border-border/70 bg-card p-5 shadow-sm">
+                <div className="rounded-[1.25rem] border border-border/60 bg-card p-5 shadow-[0_10px_30px_-24px_rgba(15,23,42,0.45)]">
                   <p className="text-base font-medium">Team Access Review</p>
                   <p className="mt-1 text-sm leading-6 text-muted-foreground">
                     This card uses the same semantic tokens as primitive
@@ -1053,7 +1099,7 @@ export function ThemePlayground() {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-border/70 bg-background p-5 shadow-sm">
+            <div className="rounded-[1.5rem] border border-border/60 bg-background/95 p-5 shadow-[0_10px_30px_-24px_rgba(15,23,42,0.45)]">
               <div className="max-w-2xl">
                 <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                   Generate
