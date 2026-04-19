@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Button,
   Checkbox,
@@ -256,26 +256,20 @@ function PreviewCard(props: PreviewCardProps) {
   } = props;
 
   const title = mode === 'light' ? 'Light Surface' : 'Dark Surface';
-  const badge = mode === 'light' ? 'Light' : 'Dark';
 
   return (
     <article className={`mz-preview-card${mode === 'dark' ? ' dark' : ''}`}>
       <div className="mz-preview-card__surface">
         <div className="mz-preview-card__head">
           <div>
-            <p className="mz-preview-card__eyebrow">Theme Preview</p>
             <h4 className="mz-preview-card__title">{title}</h4>
           </div>
-          <span className="mz-preview-card__badge">{badge}</span>
         </div>
 
         <div className="mz-preview-card__stack">
           <section className="mz-preview-card__section">
             <div className="mz-preview-card__section-head">
               <h5 className="mz-preview-card__section-title">Inputs</h5>
-              <p className="mz-preview-card__section-text">
-                Text entry, search, date, and selection controls
-              </p>
             </div>
             <div className="mz-preview-card__component-grid">
               <div className="mz-preview-card__component-item">
@@ -326,9 +320,6 @@ function PreviewCard(props: PreviewCardProps) {
           <section className="mz-preview-card__section">
             <div className="mz-preview-card__section-head">
               <h5 className="mz-preview-card__section-title">Actions</h5>
-              <p className="mz-preview-card__section-text">
-                Toggle, call-to-action buttons, and status chips
-              </p>
             </div>
 
             <div className="mz-preview-card__component-row">
@@ -363,9 +354,6 @@ function PreviewCard(props: PreviewCardProps) {
           <section className="mz-preview-card__section">
             <div className="mz-preview-card__section-head">
               <h5 className="mz-preview-card__section-title">Tokens</h5>
-              <p className="mz-preview-card__section-text">
-                Semantic color slots consumed by all components
-              </p>
             </div>
 
             <div
@@ -398,10 +386,6 @@ export function ThemePlayground() {
   const [startDate, setStartDate] = useState('2026-04-19');
   const [selectedCountry, setSelectedCountry] = useState('');
   const [acceptedTerms, setAcceptedTerms] = useState(false);
-
-  const activeThemeIndex = THEME_OPTIONS.findIndex(
-    (option) => option.id === theme,
-  );
 
   const setThemeByIndex = (index: number) => {
     const normalizedIndex =
@@ -459,12 +443,6 @@ export function ThemePlayground() {
     globalThis.localStorage.setItem(MODE_STORAGE_KEY, mode);
   }, [mode]);
 
-  const activeTheme = useMemo(
-    () =>
-      THEME_OPTIONS.find((option) => option.id === theme) ?? THEME_OPTIONS[0],
-    [theme],
-  );
-
   return (
     <section className="mz-theme-playground" aria-label="Theme playground">
       <header className="mz-theme-playground__header">
@@ -511,9 +489,6 @@ export function ThemePlayground() {
             >
               <span className="mz-theme-option__head">
                 <span className="mz-theme-option__label">{option.label}</span>
-                {isActive ? (
-                  <span className="mz-theme-option__live">Live</span>
-                ) : null}
               </span>
 
               <span className="mz-theme-option__swatches" aria-hidden="true">
@@ -552,12 +527,6 @@ export function ThemePlayground() {
           onAcceptedTermsChange={setAcceptedTerms}
         />
       </div>
-
-      <footer className="mz-theme-playground__footer">
-        Active theme: <strong>{activeTheme.label}</strong> (
-        {activeThemeIndex + 1}/{THEME_OPTIONS.length}) · Mode:{' '}
-        <strong>{mode}</strong>
-      </footer>
     </section>
   );
 }
