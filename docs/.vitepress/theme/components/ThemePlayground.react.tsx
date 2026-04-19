@@ -166,6 +166,8 @@ const BUILT_IN_THEME_SWATCHES: Record<BuiltInThemeId, ThemeSwatchEntry> = {
 const THEME_STORAGE_KEY = 'mezmer-docs-theme';
 const MODE_STORAGE_KEY = 'mezmer-docs-mode';
 const THEME_STYLESHEET_ID = 'mezmer-docs-theme-stylesheet';
+const LEGACY_PREVIEW_THEME_STYLESHEET_ID =
+  'mezmer-docs-component-preview-theme';
 const AI_THEME_STORAGE_KEY = 'mezmer-docs-ai-theme-css';
 const AI_THEME_STYLE_ID = 'mezmer-docs-ai-theme-style';
 const DEFAULT_BRAND_NAME = 'Acme Systems';
@@ -484,6 +486,13 @@ export function ThemePlayground() {
     setTheme(resolveInitialTheme());
     setMode(resolveInitialMode());
 
+    const legacyPreviewStylesheet = document.getElementById(
+      LEGACY_PREVIEW_THEME_STYLESHEET_ID,
+    );
+    if (legacyPreviewStylesheet) {
+      legacyPreviewStylesheet.remove();
+    }
+
     const storedAiThemeCss =
       globalThis.localStorage.getItem(AI_THEME_STORAGE_KEY);
     if (storedAiThemeCss) {
@@ -501,7 +510,6 @@ export function ThemePlayground() {
   }, [theme]);
 
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', mode === 'dark');
     globalThis.localStorage.setItem(MODE_STORAGE_KEY, mode);
   }, [mode]);
 
@@ -698,7 +706,11 @@ export function ThemePlayground() {
   };
 
   return (
-    <section className="rounded-[2rem] border border-border/60 bg-gradient-to-b from-background via-background to-muted/10 p-5 text-card-foreground shadow-[0_18px_50px_-32px_rgba(15,23,42,0.45)] sm:p-6">
+    <section
+      className={`rounded-[2rem] border border-border/60 bg-gradient-to-b from-background via-background to-muted/10 p-5 text-card-foreground shadow-[0_18px_50px_-32px_rgba(15,23,42,0.45)] sm:p-6 ${
+        mode === 'dark' ? 'dark' : ''
+      }`}
+    >
       <div className="space-y-5">
         <div className="rounded-[1.5rem] border border-border/60 bg-background/95 p-5 shadow-[0_10px_30px_-24px_rgba(15,23,42,0.45)] backdrop-blur">
           <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">

@@ -61,18 +61,6 @@ type ExampleTabsProps = Readonly<{
   component: ComponentExampleId;
 }>;
 
-type BuiltInThemeId =
-  | 'corporate'
-  | 'default'
-  | 'forest'
-  | 'midnight'
-  | 'ocean'
-  | 'sand'
-  | 'slate'
-  | 'sunset';
-
-type PreviewMode = 'light' | 'dark';
-
 type ServiceSearchCandidate = {
   name: string;
   owner: string;
@@ -118,50 +106,6 @@ const TSX_KEYWORDS = new Set([
   'of',
   'as',
 ]);
-
-const BUILT_IN_THEMES: Array<{ id: BuiltInThemeId; label: string }> = [
-  { id: 'corporate', label: 'Corporate' },
-  { id: 'default', label: 'Default' },
-  { id: 'forest', label: 'Forest' },
-  { id: 'midnight', label: 'Midnight' },
-  { id: 'ocean', label: 'Ocean' },
-  { id: 'sand', label: 'Sand' },
-  { id: 'slate', label: 'Slate' },
-  { id: 'sunset', label: 'Sunset' },
-];
-
-const PREVIEW_THEME_STYLESHEET_ID = 'mezmer-docs-component-preview-theme';
-
-function getThemeStylesheetHref(theme: BuiltInThemeId): string {
-  const basePath =
-    (import.meta as ImportMeta & { env?: { BASE_URL?: string } }).env
-      ?.BASE_URL || '/';
-  return `${basePath}themes/${theme}.css`;
-}
-
-function ensurePreviewThemeStylesheet(theme: BuiltInThemeId): void {
-  const href = getThemeStylesheetHref(theme);
-  let link = document.getElementById(
-    PREVIEW_THEME_STYLESHEET_ID,
-  ) as HTMLLinkElement | null;
-
-  if (!link) {
-    link = document.createElement('link');
-    link.id = PREVIEW_THEME_STYLESHEET_ID;
-    link.rel = 'stylesheet';
-    document.head.appendChild(link);
-  }
-
-  if (link.href !== href) {
-    link.href = href;
-  }
-}
-
-function readRootToken(name: string): string {
-  return getComputedStyle(document.documentElement)
-    .getPropertyValue(name)
-    .trim();
-}
 
 function classifyToken(token: string): TokenKind {
   if (token.startsWith('//')) {
@@ -1645,14 +1589,6 @@ import { ButtonVariant, Page, Search } from '@tarikukebede/mezmer';
 function ExampleTabsContent({ component }: ExampleTabsProps): JSX.Element {
   const [activeTab, setActiveTab] = useState<'preview' | 'code'>('preview');
   const [copyState, setCopyState] = useState<'idle' | 'done' | 'error'>('idle');
-  const [previewTheme, setPreviewTheme] = useState<BuiltInThemeId>('default');
-  const [previewMode, setPreviewMode] = useState<PreviewMode>('light');
-  const [activeStyleMeta, setActiveStyleMeta] = useState({
-    font: '',
-    radius: '',
-    button: '',
-    control: '',
-  });
 
   const example = useMemo(() => EXAMPLES[component], [component]);
   const Preview = example.render;
@@ -1665,25 +1601,6 @@ function ExampleTabsContent({ component }: ExampleTabsProps): JSX.Element {
   const codePanelId = `${component}-code-panel`;
   const previewTabId = `${component}-preview-tab`;
   const codeTabId = `${component}-code-tab`;
-
-  useEffect(() => {
-    ensurePreviewThemeStylesheet(previewTheme);
-  }, [previewTheme]);
-
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', previewMode === 'dark');
-
-    const frame = requestAnimationFrame(() => {
-      setActiveStyleMeta({
-        font: readRootToken('--mz-font-sans') || 'system',
-        radius: readRootToken('--mz-radius') || '-',
-        button: readRootToken('--mz-button-height') || '-',
-        control: readRootToken('--mz-control-height') || '-',
-      });
-    });
-
-    return () => cancelAnimationFrame(frame);
-  }, [previewMode, previewTheme]);
 
   async function copyCode(): Promise<void> {
     try {
@@ -1741,64 +1658,11 @@ function ExampleTabsContent({ component }: ExampleTabsProps): JSX.Element {
         className="component-example-tabs__panel"
       >
         {activeTab === 'preview' ? (
-          <>
-            <fieldset
-              className="component-example-tabs__theme-controls"
-              aria-label="Theme preview controls"
-            >
-              <label className="component-example-tabs__theme-label">
-                <span>Theme</span>
-                <select
-                  className="component-example-tabs__theme-select"
-                  value={previewTheme}
-                  onChange={(event) =>
-                    setPreviewTheme(event.target.value as BuiltInThemeId)
-                  }
-                >
-                  {BUILT_IN_THEMES.map((theme) => (
-                    <option key={theme.id} value={theme.id}>
-                      {theme.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <div
-                className="component-example-tabs__mode-toggle"
-                aria-label="Preview mode"
-              >
-                <button
-                  type="button"
-                  className={`component-example-tabs__button ${
-                    previewMode === 'light' ? 'is-active' : ''
-                  }`}
-                  onClick={() => setPreviewMode('light')}
-                >
-                  Light
-                </button>
-                <button
-                  type="button"
-                  className={`component-example-tabs__button ${
-                    previewMode === 'dark' ? 'is-active' : ''
-                  }`}
-                  onClick={() => setPreviewMode('dark')}
-                >
-                  Dark
-                </button>
-              </div>
-              <div className="component-example-tabs__style-meta">
-                <span>Font: {activeStyleMeta.font.split(',')[0]}</span>
-                <span>Radius: {activeStyleMeta.radius}</span>
-                <span>Button: {activeStyleMeta.button}</span>
-                <span>Control: {activeStyleMeta.control}</span>
-              </div>
-            </fieldset>
-
-            <div
-              className={`component-example-tabs__preview component-example-tabs__preview--${component}`}
-            >
-              <Preview />
-            </div>
-          </>
+          <div
+            className={`component-example-tabs__preview component-example-tabs__preview--${component}`}
+          >
+            <Preview />
+          </div>
         ) : null}
       </div>
 
