@@ -1565,7 +1565,9 @@ function ExampleTabsContent({ component }: ExampleTabsProps): JSX.Element {
         className="component-example-tabs__panel"
       >
         {activeTab === 'preview' ? (
-          <div className="component-example-tabs__preview">
+          <div
+            className={`component-example-tabs__preview component-example-tabs__preview--${component}`}
+          >
             <Preview />
           </div>
         ) : null}

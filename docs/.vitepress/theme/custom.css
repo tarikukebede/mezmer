@@ -1,5 +1,6 @@
 :root {
   --vp-layout-max-width: 1600px;
+  --vp-sidebar-width: 304px;
 }
 
 /* Remove VitePress inner width clamps so docs can use the wider center column. */
@@ -21,7 +22,7 @@
   margin: 0 auto;
 }
 
-/* Keep examples usable when content still exceeds viewport width. */
-.component-example-tabs__preview {
+/* Keep wide table demos usable without clipping popovers in other previews. */
+.component-example-tabs__preview--base-table {
   overflow-x: auto;
 }
