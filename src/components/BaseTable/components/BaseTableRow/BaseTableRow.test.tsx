@@ -96,7 +96,7 @@ describe('BaseTableRow', () => {
     expect(Boolean(screen.getByText('review'))).toBe(true);
   });
 
-  it('renders action buttons and calls action callback', () => {
+  it('renders action menu items and calls action callback', () => {
     const onEdit = vi.fn();
     const columns: Column<RowModel>[] = [
       {
@@ -115,8 +115,44 @@ describe('BaseTableRow', () => {
       </table>,
     );
 
-    fireEvent.click(screen.getByRole('button', { name: 'Edit' }));
+    fireEvent.pointerDown(
+      screen.getByRole('button', { name: 'Open row actions' }),
+    );
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Edit' }));
     expect(onEdit).toHaveBeenCalledWith(rowItem);
+  });
+
+  it('applies action variant highlight to menu item text', () => {
+    const columns: Column<RowModel>[] = [
+      {
+        id: 'actions',
+        header: 'Actions',
+        type: CellType.ACTIONS,
+        actions: [
+          {
+            label: 'Delete',
+            iconName: 'Trash2',
+            variant: 'danger',
+            onClick: vi.fn(),
+          },
+        ],
+      },
+    ];
+
+    render(
+      <table>
+        <tbody>
+          <BaseTableRow item={rowItem} columns={columns} />
+        </tbody>
+      </table>,
+    );
+
+    fireEvent.pointerDown(
+      screen.getByRole('button', { name: 'Open row actions' }),
+    );
+
+    const deleteLabel = screen.getByText('Delete');
+    expect(deleteLabel.className.includes('text-destructive')).toBe(true);
   });
 
   it('renders status/chip/icon/dimension types', () => {
@@ -197,7 +233,6 @@ describe('BaseTableRow', () => {
     );
 
     fireEvent.click(screen.getByText('alpha user'));
-    fireEvent.click(screen.getByRole('button', { name: 'Edit' }));
     fireEvent.click(screen.getByLabelText('Select row'));
 
     expect(onRowClick).not.toHaveBeenCalled();
@@ -207,8 +242,11 @@ describe('BaseTableRow', () => {
       (screen.getByLabelText('Select row') as HTMLInputElement).disabled,
     ).toBe(true);
     expect(
-      (screen.getByRole('button', { name: 'Edit' }) as HTMLButtonElement)
-        .disabled,
+      (
+        screen.getByRole('button', {
+          name: 'Open row actions',
+        }) as HTMLButtonElement
+      ).disabled,
     ).toBe(true);
   });
 });

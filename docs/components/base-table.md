@@ -31,6 +31,24 @@ import { BaseTable } from '@tarikukebede/mezmer';
 - `accessRequirements?: string[]`
 - `resolveAccess?: (requirement: string, mode: 'view' | 'edit') => boolean`
 
+### Action Menu Highlighting
+
+For `CellType.ACTIONS`, each action can include a `variant` to highlight the icon and label in the expanded menu.
+
+- `variant?: 'primary' | 'success' | 'warning' | 'danger'`
+
+```tsx
+{
+  id: 'actions',
+  header: 'Actions',
+  type: CellType.ACTIONS,
+  actions: [
+    { label: 'Inspect', iconName: 'Search', variant: 'primary', onClick: () => {} },
+    { label: 'Delete', iconName: 'Trash2', variant: 'danger', onClick: () => {} },
+  ],
+}
+```
+
 ## Accessibility
 
 - Selection checkboxes expose accessible labels for header and rows.

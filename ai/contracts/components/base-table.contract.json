@@ -46,6 +46,10 @@
       "type": "(value: unknown) => LucideIconName | undefined",
       "required": false
     },
+    "column.actions[].variant": {
+      "type": "\"primary\" | \"success\" | \"warning\" | \"danger\"",
+      "required": false
+    },
     "accessRequirements": { "type": "string[]", "required": false },
     "resolveAccess": {
       "type": "(requirement: string, mode: \"view\" | \"edit\") => boolean",

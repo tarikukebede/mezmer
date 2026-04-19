@@ -192,6 +192,36 @@ describe('BaseTable', () => {
     expect(Boolean(screen.getByText('Nothing to show'))).toBe(true);
   });
 
+  it('renders the action column as a menu without a visible header', () => {
+    const onEdit = vi.fn();
+    const actionColumns: Column<TestRow>[] = [
+      ...columns,
+      {
+        id: 'actions',
+        header: 'Actions',
+        type: CellType.ACTIONS,
+        actions: [{ label: 'Edit', onClick: onEdit }],
+      },
+    ];
+
+    render(
+      <BaseTable<TestRow>
+        data={rows}
+        columns={actionColumns}
+        queryParams={queryParams}
+      />,
+    );
+
+    expect(screen.queryByRole('columnheader', { name: 'Actions' })).toBeNull();
+
+    fireEvent.pointerDown(
+      screen.getAllByRole('button', { name: 'Open row actions' })[0],
+    );
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Edit' }));
+
+    expect(onEdit).toHaveBeenCalledWith(rows[0]);
+  });
+
   it('returns null when view access is denied', () => {
     const { container } = render(
       <BaseTable<TestRow>

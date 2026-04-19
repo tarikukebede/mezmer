@@ -1,7 +1,16 @@
+import React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
+import { MoreVertical } from 'lucide-react';
 import { cn } from '@lib/utils';
 import { Image } from '@components/Image';
 import { Column } from '@components/BaseTable/components/BaseTableRow/types';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@components/ui/dropdown-menu';
 import {
   formatDateValue,
   getNestedValue,
@@ -10,19 +19,82 @@ import {
   resolveLucideIconByName,
   toStatusLabel,
 } from './helper';
+import { statusToneClass } from '@components/BaseTable/components/BaseTableRow/helper';
+
+interface ActionMenuProps<T extends object> {
+  column: Column<T>;
+  item: T;
+  disabled?: boolean;
+}
+
+const ActionMenu = <T extends object>({
+  column,
+  item,
+  disabled = false,
+}: ActionMenuProps<T>) => {
+  const actions = column.actions;
+
+  if (!actions?.length) {
+    return null;
+  }
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        aria-label="Open row actions"
+        aria-haspopup="menu"
+        className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+        disabled={disabled}
+        onClick={(event) => event.stopPropagation()}
+      >
+        <MoreVertical className="h-4 w-4" />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        align="end"
+        className="w-48"
+        onClick={(event) => event.stopPropagation()}
+      >
+        {actions.map((action, index) => {
+          const Icon = resolveLucideIconByName(action.iconName);
+          const toneClass = statusToneClass(
+            action.variant ?? action.iconVariant,
+          );
+
+          return (
+            <React.Fragment key={`${column.id}-${action.label}`}>
+              <DropdownMenuItem
+                className="text-xs"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  action.onClick(item);
+                }}
+              >
+                {Icon ? (
+                  <Icon className={cn('h-3.5 w-3.5', toneClass)} />
+                ) : null}
+                <span className={toneClass}>{action.label}</span>
+              </DropdownMenuItem>
+              {index < actions.length - 1 ? <DropdownMenuSeparator /> : null}
+            </React.Fragment>
+          );
+        })}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
 
 export const TextCell = <T extends object>(column: Column<T>): ColumnDef<T> => {
   return {
     id: column.id,
     accessorKey: column.accessorKey,
     header: column.header,
-    cell: column.cell
-      ? column.cell
-      : ({ row }) => (
-          <span className={cn('block truncate text-xs', column.className)}>
-            {getNestedValue(row, column)}
-          </span>
-        ),
+    cell:
+      column.cell ??
+      (({ row }) => (
+        <span className={cn('block truncate text-xs', column.className)}>
+          {getNestedValue(row, column)}
+        </span>
+      )),
     enableSorting: Boolean(column.sortable),
     enableHiding: Boolean(column.filterable),
   };
@@ -34,36 +106,10 @@ export const ActionCell = <T extends object>(
   return {
     id: column.id,
     accessorKey: column.accessorKey,
-    header: column.header,
+    header: () => null,
     enableSorting: false,
     enableHiding: Boolean(column.filterable),
-    cell: ({ row }) => {
-      if (!column.actions?.length) {
-        return null;
-      }
-
-      return (
-        <div className="flex items-center justify-end gap-2">
-          {column.actions.map((action) => {
-            const Icon = resolveLucideIconByName(action.iconName);
-            return (
-              <button
-                key={`${column.id}-${action.label}`}
-                type="button"
-                className="inline-flex items-center gap-1 rounded-md border px-2 py-1 text-xs hover:bg-muted"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  action.onClick(row.original);
-                }}
-              >
-                {Icon ? <Icon className="h-3.5 w-3.5" /> : null}
-                {action.label}
-              </button>
-            );
-          })}
-        </div>
-      );
-    },
+    cell: ({ row }) => <ActionMenu column={column} item={row.original} />,
   };
 };
 
@@ -128,24 +174,24 @@ export const ChipCell = <T extends object>(column: Column<T>): ColumnDef<T> => {
     header: column.header,
     enableColumnFilter: Boolean(column.filterable),
     enableHiding: Boolean(column.filterable),
-    cell: column.cell
-      ? column.cell
-      : ({ row }) => {
-          const displayValue = getNestedValue(row, column);
-          const rawValue = getRawValue(row, column);
-          const conditionalStyle = column.styler ? column.styler(rawValue) : '';
-          return (
-            <span
-              className={cn(
-                'inline-flex rounded-full bg-muted px-2 py-0.5 text-xs capitalize text-muted-foreground',
-                column.className,
-                conditionalStyle,
-              )}
-            >
-              {displayValue}
-            </span>
-          );
-        },
+    cell:
+      column.cell ??
+      (({ row }) => {
+        const displayValue = getNestedValue(row, column);
+        const rawValue = getRawValue(row, column);
+        const conditionalStyle = column.styler ? column.styler(rawValue) : '';
+        return (
+          <span
+            className={cn(
+              'inline-flex rounded-full bg-muted px-2 py-0.5 text-xs capitalize text-muted-foreground',
+              column.className,
+              conditionalStyle,
+            )}
+          >
+            {displayValue}
+          </span>
+        );
+      }),
   };
 };
 
@@ -158,25 +204,25 @@ export const StatusCell = <T extends object>(
     header: column.header,
     enableColumnFilter: Boolean(column.filterable),
     enableHiding: Boolean(column.filterable),
-    cell: column.cell
-      ? column.cell
-      : ({ row }) => {
-          const rawValue = getRawValue(row, column);
-          const label = toStatusLabel(rawValue);
-          const conditionalStyle = column.styler ? column.styler(rawValue) : '';
+    cell:
+      column.cell ??
+      (({ row }) => {
+        const rawValue = getRawValue(row, column);
+        const label = toStatusLabel(rawValue);
+        const conditionalStyle = column.styler ? column.styler(rawValue) : '';
 
-          return (
-            <span
-              className={cn(
-                'inline-flex rounded-full bg-muted px-2 py-0.5 text-xs capitalize text-muted-foreground',
-                column.className,
-                conditionalStyle,
-              )}
-            >
-              {label}
-            </span>
-          );
-        },
+        return (
+          <span
+            className={cn(
+              'inline-flex rounded-full bg-muted px-2 py-0.5 text-xs capitalize text-muted-foreground',
+              column.className,
+              conditionalStyle,
+            )}
+          >
+            {label}
+          </span>
+        );
+      }),
   };
 };
 
@@ -187,29 +233,29 @@ export const IconCell = <T extends object>(column: Column<T>): ColumnDef<T> => {
     header: column.header,
     enableSorting: Boolean(column.sortable),
     enableHiding: Boolean(column.filterable),
-    cell: column.cell
-      ? column.cell
-      : ({ row }) => {
-          const rawValue = getRawValue(row, column);
-          const Icon = resolveIconComponent(column, rawValue);
-          const title = getNestedValue(row, column);
+    cell:
+      column.cell ??
+      (({ row }) => {
+        const rawValue = getRawValue(row, column);
+        const Icon = resolveIconComponent(column, rawValue);
+        const title = getNestedValue(row, column);
 
-          if (!Icon) {
-            return <span className="text-xs text-muted-foreground">-</span>;
-          }
+        if (!Icon) {
+          return <span className="text-xs text-muted-foreground">-</span>;
+        }
 
-          return (
-            <span
-              className={cn(
-                'inline-flex h-6 w-6 items-center justify-center rounded text-muted-foreground',
-                column.className,
-              )}
-              title={title}
-            >
-              <Icon className="h-4 w-4" />
-            </span>
-          );
-        },
+        return (
+          <span
+            className={cn(
+              'inline-flex h-6 w-6 items-center justify-center rounded text-muted-foreground',
+              column.className,
+            )}
+            title={title}
+          >
+            <Icon className="h-4 w-4" />
+          </span>
+        );
+      }),
   };
 };
 
@@ -220,20 +266,20 @@ export const DateCell = <T extends object>(column: Column<T>): ColumnDef<T> => {
     header: column.header,
     enableColumnFilter: Boolean(column.filterable),
     enableHiding: Boolean(column.filterable),
-    cell: column.cell
-      ? column.cell
-      : ({ row }) => {
-          const rawValue = getRawValue(row, column);
-          const dateValue = formatDateValue(rawValue);
-          return (
-            <span
-              className="block truncate text-xs text-muted-foreground"
-              title={dateValue}
-            >
-              {dateValue}
-            </span>
-          );
-        },
+    cell:
+      column.cell ??
+      (({ row }) => {
+        const rawValue = getRawValue(row, column);
+        const dateValue = formatDateValue(rawValue);
+        return (
+          <span
+            className="block truncate text-xs text-muted-foreground"
+            title={dateValue}
+          >
+            {dateValue}
+          </span>
+        );
+      }),
   };
 };
 
@@ -291,32 +337,32 @@ export const MultiStatusCell = <T extends object>(
     header: column.header,
     enableColumnFilter: Boolean(column.filterable),
     enableHiding: Boolean(column.filterable),
-    cell: column.cell
-      ? column.cell
-      : ({ row }) => {
-          const statuses = getRawValue(row, column);
+    cell:
+      column.cell ??
+      (({ row }) => {
+        const statuses = getRawValue(row, column);
 
-          if (!Array.isArray(statuses) || statuses.length === 0) {
-            return <span className="text-xs text-muted-foreground">-</span>;
-          }
+        if (!Array.isArray(statuses) || statuses.length === 0) {
+          return <span className="text-xs text-muted-foreground">-</span>;
+        }
 
-          const labels = statuses.map((status) =>
-            typeof status === 'string' ? status : String(status),
-          );
+        const labels = statuses.map((status) =>
+          typeof status === 'string' ? status : String(status),
+        );
 
-          return (
-            <div className="flex items-center gap-2" title={labels.join(', ')}>
-              <span className="text-xs capitalize text-muted-foreground">
-                {labels[0]}
+        return (
+          <div className="flex items-center gap-2" title={labels.join(', ')}>
+            <span className="text-xs capitalize text-muted-foreground">
+              {labels[0]}
+            </span>
+            {labels.length > 1 ? (
+              <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-muted px-1.5 text-xs text-muted-foreground">
+                +{labels.length - 1}
               </span>
-              {labels.length > 1 ? (
-                <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-muted px-1.5 text-xs text-muted-foreground">
-                  +{labels.length - 1}
-                </span>
-              ) : null}
-            </div>
-          );
-        },
+            ) : null}
+          </div>
+        );
+      }),
   };
 };
 

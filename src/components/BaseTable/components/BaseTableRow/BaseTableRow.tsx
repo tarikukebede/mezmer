@@ -1,7 +1,16 @@
 import React from 'react';
+import { MoreVertical } from 'lucide-react';
 import { cn } from '@lib/utils';
 import { Checkbox } from '@components/Checkbox';
 import { Image } from '@components/Image';
+import { Button } from '@components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@components/ui/dropdown-menu';
 import { RowProps } from './types';
 import { CellType } from './components/BaseTableCell';
 import {
@@ -147,44 +156,64 @@ export const BaseTableRow = <T extends object>({
         );
       }
       case CellType.ACTIONS: {
-        if (!column.actions?.length) {
+        const actions = column.actions;
+
+        if (!actions?.length) {
           return <span className="text-xs text-muted-foreground">-</span>;
         }
 
         return (
-          <div className="flex flex-wrap items-center justify-end gap-1">
-            {column.actions.map((action) => {
-              const Icon = resolveLucideIconByName(action.iconName);
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="ml-auto h-8 w-8"
+                aria-label="Open row actions"
+                aria-haspopup="menu"
+                disabled={rowInactive}
+                onClick={(event) => event.stopPropagation()}
+              >
+                <MoreVertical className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="w-48"
+              onClick={(event) => event.stopPropagation()}
+            >
+              {actions.map((action, index) => {
+                const Icon = resolveLucideIconByName(action.iconName);
+                const toneClass = statusToneClass(
+                  action.variant ?? action.iconVariant,
+                );
 
-              return (
-                <button
-                  key={`${column.id}-${action.label}`}
-                  type="button"
-                  className="inline-flex items-center gap-1 rounded border px-2 py-1 text-xs hover:bg-muted"
-                  disabled={rowInactive}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    if (rowInactive) {
-                      return;
-                    }
-                    action.onClick(item);
-                  }}
-                >
-                  {Icon ? (
-                    <Icon
-                      className={cn(
-                        'h-3.5 w-3.5',
-                        statusToneClass(action.iconVariant),
-                      )}
-                    />
-                  ) : null}
-                  <span className={statusToneClass(action.iconVariant)}>
-                    {action.label}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+                return (
+                  <React.Fragment key={`${column.id}-${action.label}`}>
+                    <DropdownMenuItem
+                      className="text-xs"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        if (rowInactive) {
+                          return;
+                        }
+                        action.onClick(item);
+                      }}
+                    >
+                      {Icon ? (
+                        <Icon className={cn('h-3.5 w-3.5', toneClass)} />
+                      ) : null}
+                      <span className={toneClass}>{action.label}</span>
+                    </DropdownMenuItem>
+                    {index < actions.length - 1 ? (
+                      <DropdownMenuSeparator />
+                    ) : null}
+                  </React.Fragment>
+                );
+              })}
+            </DropdownMenuContent>
+          </DropdownMenu>
         );
       }
       default:
@@ -232,10 +261,16 @@ export const BaseTableRow = <T extends object>({
         </TableCell>
       ) : null}
       {columns.map((column) => {
+        const isActionColumn = column.type === CellType.ACTIONS;
+
         return (
           <TableCell
             key={`${rowId}-${column.id}`}
-            className={cn('px-3 py-2 text-xs', column.className)}
+            className={cn(
+              'px-3 py-2 text-xs',
+              isActionColumn ? 'w-12 px-4 text-right' : undefined,
+              column.className,
+            )}
             style={{ width: column.width || columnWidth }}
           >
             {renderRowCellContent(column)}

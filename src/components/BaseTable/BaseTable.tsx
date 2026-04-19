@@ -18,6 +18,7 @@ import type {
   BaseTableSortOrder,
   TableProps,
 } from './types';
+import { CellType } from './components/BaseTableRow/components/BaseTableCell';
 import { transformColumns } from './helper';
 import { isRowInactive } from './components/BaseTableRow/helper';
 import TablePlaceholder from './components/BaseTablePlaceHolder/BaseTablePlaceHolder';
@@ -301,6 +302,7 @@ export const BaseTable = <T extends object>({
                 const column = availableColumns.find(
                   (item) => item.id === header.id,
                 );
+                const isActionColumn = column?.type === CellType.ACTIONS;
                 const isSortable = Boolean(column?.sortable && onSortChange);
                 const isSorted = sortBy === header.id;
                 let sortIndicator = '↕';
@@ -313,6 +315,7 @@ export const BaseTable = <T extends object>({
                     key={header.id}
                     className={cn(
                       'px-3 py-2 text-left text-xs font-semibold text-muted-foreground',
+                      isActionColumn && 'w-12 px-4',
                       isSortable &&
                         'cursor-pointer select-none hover:bg-muted/70',
                     )}
@@ -388,18 +391,34 @@ export const BaseTable = <T extends object>({
                       />
                     </td>
                   ) : null}
-                  {row.getVisibleCells().map((cell) => (
-                    <td
-                      key={cell.id}
-                      className="max-w-[240px] truncate px-3 py-2 text-xs"
-                      title={String(cell.getValue() ?? '')}
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </td>
-                  ))}
+                  {row.getVisibleCells().map((cell) => {
+                    const column = availableColumns.find(
+                      (item) => item.id === cell.column.id,
+                    );
+                    const isActionColumn = column?.type === CellType.ACTIONS;
+
+                    return (
+                      <td
+                        key={cell.id}
+                        className={cn(
+                          'px-3 py-2 text-xs',
+                          isActionColumn
+                            ? 'w-12 px-4 text-right'
+                            : 'max-w-[240px] truncate',
+                        )}
+                        title={
+                          isActionColumn
+                            ? undefined
+                            : String(cell.getValue() ?? '')
+                        }
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </td>
+                    );
+                  })}
                 </tr>
               );
             })

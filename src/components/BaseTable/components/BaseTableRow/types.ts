@@ -54,6 +54,7 @@ export interface Column<T extends object> {
 export interface RowAction<T extends object> {
   label: string;
   iconName?: LucideIconName;
+  variant?: IconVariant;
   iconVariant?: IconVariant;
   onClick: (item: T) => void;
   accessRequirements?: string[];

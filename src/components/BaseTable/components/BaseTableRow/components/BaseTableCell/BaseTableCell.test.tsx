@@ -144,7 +144,7 @@ describe('BaseTableCell', () => {
     expect(Boolean(screen.getByText('No'))).toBe(true);
   });
 
-  it('ActionCell triggers action handler', () => {
+  it('ActionCell opens a menu and triggers action handler', () => {
     const onAction = vi.fn();
     const rowData: TestModel = {
       id: 3,
@@ -171,8 +171,45 @@ describe('BaseTableCell', () => {
       getValue: () => undefined,
     });
 
-    fireEvent.click(screen.getByRole('button', { name: 'Edit' }));
+    fireEvent.pointerDown(
+      screen.getByRole('button', { name: 'Open row actions' }),
+    );
+    fireEvent.click(screen.getByRole('menuitem', { name: 'Edit' }));
     expect(onAction).toHaveBeenCalledWith(rowData);
+  });
+
+  it('ActionCell applies variant highlight styles', () => {
+    const column: Column<TestModel> = {
+      id: 'actions',
+      header: 'Actions',
+      type: CellType.ACTIONS,
+      actions: [
+        {
+          label: 'Delete',
+          iconName: 'Trash2',
+          variant: 'danger',
+          onClick: vi.fn(),
+        },
+      ],
+    };
+
+    renderCell(ActionCell(column), {
+      original: {
+        id: 3,
+        name: 'Gamma',
+        active: true,
+        statuses: [],
+        createdAt: '2024-01-01',
+      },
+      getValue: () => undefined,
+    });
+
+    fireEvent.pointerDown(
+      screen.getByRole('button', { name: 'Open row actions' }),
+    );
+
+    const deleteLabel = screen.getByText('Delete');
+    expect(deleteLabel.className.includes('text-destructive')).toBe(true);
   });
 
   it('StatusCell renders status value', () => {
