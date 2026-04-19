@@ -2,9 +2,8 @@
 layout: home
 
 hero:
-  name: Mezmer
-  text: Clean React UI, Ready To Ship
-  tagline: Contract-driven components with accessibility and theme support.
+  text: AI-First React UI For Product Teams
+  tagline: Designed for AI-assisted delivery with strict contracts, proven patterns, and production-grade code standards.
   actions:
     - theme: brand
       text: Get Started
@@ -15,12 +14,12 @@ hero:
 ---
 
 <section class="home-center">
-  <p class="home-center__kicker">Minimal by design</p>
+  <p class="home-center__kicker">AI-first by design</p>
   <p class="home-center__message">
-    One package. Predictable APIs. No app-specific coupling.
+    Build faster with proven component patterns and predictable APIs.
   </p>
   <p class="home-center__sub">
-    Mezmer is a reusable component kit built on shadcn patterns for teams that want consistency without visual noise.
+    Mezmer is engineered for agent-assisted implementation from day one, using established React, TypeScript, and shadcn foundations with contract-aligned docs, tests, and quality gates.
   </p>
   <div class="home-center__links">
     <a href="/ARCHITECTURE">Architecture</a>
