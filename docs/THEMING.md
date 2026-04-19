@@ -33,6 +33,19 @@ Required tokens:
 - `--mz-ring`
 - `--mz-radius`
 
+Optional style tokens used by core components (recommended):
+
+- `--mz-font-sans`
+- `--mz-font-mono`
+- `--mz-button-height`
+- `--mz-button-padding-x`
+- `--mz-button-padding-y`
+- `--mz-button-font-size`
+- `--mz-button-font-weight`
+- `--mz-button-letter-spacing`
+- `--mz-button-shadow`
+- `--mz-button-shadow-hover`
+
 ## Using Built-In Themes
 
 ```tsx

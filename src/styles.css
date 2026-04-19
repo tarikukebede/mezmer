@@ -26,6 +26,34 @@
     --mz-input: var(--input, 214.3 31.8% 91.4%);
     --mz-ring: var(--ring, 221.2 83.2% 53.3%);
     --mz-radius: var(--radius, 0.5rem);
+    --mz-font-sans: var(
+      --font-sans,
+      'Inter',
+      'Segoe UI',
+      Roboto,
+      Helvetica,
+      Arial,
+      sans-serif
+    );
+    --mz-font-mono: var(
+      --font-mono,
+      'JetBrains Mono',
+      'SFMono-Regular',
+      Menlo,
+      Monaco,
+      Consolas,
+      'Liberation Mono',
+      'Courier New',
+      monospace
+    );
+    --mz-button-height: 2.625rem;
+    --mz-button-padding-x: 1rem;
+    --mz-button-padding-y: 0.625rem;
+    --mz-button-font-size: 0.875rem;
+    --mz-button-font-weight: 600;
+    --mz-button-letter-spacing: 0.01em;
+    --mz-button-shadow: 0 1px 2px hsl(var(--mz-foreground) / 0.08);
+    --mz-button-shadow-hover: 0 8px 16px hsl(var(--mz-foreground) / 0.14);
   }
 
   .dark {
@@ -48,6 +76,8 @@
     --mz-border: var(--border, 217.2 32.6% 17.5%);
     --mz-input: var(--input, 217.2 32.6% 17.5%);
     --mz-ring: var(--ring, 224.3 76.3% 48%);
+    --mz-button-shadow: 0 1px 2px hsl(0 0% 0% / 0.45);
+    --mz-button-shadow-hover: 0 10px 18px hsl(0 0% 0% / 0.5);
   }
 
   * {
@@ -55,6 +85,6 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
   }
 }

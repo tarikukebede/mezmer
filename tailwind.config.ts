@@ -6,6 +6,10 @@ export default {
   content: ['./src/**/*.{ts,tsx}'],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['var(--mz-font-sans)'],
+        mono: ['var(--mz-font-mono)'],
+      },
       colors: {
         border: 'hsl(var(--mz-border))',
         input: 'hsl(var(--mz-input))',

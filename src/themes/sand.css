@@ -19,6 +19,16 @@
   --mz-input: 38 30% 80%;
   --mz-ring: 28 74% 46%;
   --mz-radius: 0.75rem;
+  --mz-font-sans: 'Nunito Sans', 'Segoe UI', Roboto, sans-serif;
+  --mz-font-mono: 'JetBrains Mono', 'SFMono-Regular', ui-monospace, monospace;
+  --mz-button-height: 2.75rem;
+  --mz-button-padding-x: 1.0625rem;
+  --mz-button-padding-y: 0.6875rem;
+  --mz-button-font-size: 0.9rem;
+  --mz-button-font-weight: 600;
+  --mz-button-letter-spacing: 0.006em;
+  --mz-button-shadow: 0 1px 2px hsl(var(--mz-foreground) / 0.09);
+  --mz-button-shadow-hover: 0 8px 16px hsl(var(--mz-foreground) / 0.16);
 }
 
 .dark {
@@ -41,4 +51,6 @@
   --mz-border: 30 15% 27%;
   --mz-input: 30 15% 27%;
   --mz-ring: 30 82% 63%;
+  --mz-button-shadow: 0 1px 2px hsl(0 0% 0% / 0.46);
+  --mz-button-shadow-hover: 0 10px 18px hsl(0 0% 0% / 0.54);
 }

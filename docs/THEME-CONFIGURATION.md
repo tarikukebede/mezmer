@@ -39,6 +39,17 @@ For token definitions and consumer import examples, see `docs/THEMING.md`.
 
 It does not automatically apply `.dark` at runtime. Dark mode still depends on your runtime class strategy (Tailwind `darkMode: ['class']`), so the host app or preview shell must control the `.dark` class.
 
+## Typography And Component Style Tokens
+
+Themes support styling beyond color. In addition to color and radius tokens, the library consumes optional typography and component-shape tokens, including:
+
+- `--mz-font-sans` and `--mz-font-mono` for typeface control
+- button sizing and rhythm tokens (`--mz-button-height`, `--mz-button-padding-x`, `--mz-button-padding-y`)
+- button typography tokens (`--mz-button-font-size`, `--mz-button-font-weight`, `--mz-button-letter-spacing`)
+- button elevation tokens (`--mz-button-shadow`, `--mz-button-shadow-hover`)
+
+When creating a custom theme with `pnpm theme:create`, copy and tune these tokens in the generated CSS so components remain visually polished out of the box.
+
 ## Create A Custom Theme
 
 Run:

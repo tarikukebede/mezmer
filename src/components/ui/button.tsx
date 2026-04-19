@@ -12,19 +12,20 @@ export type ButtonPrimitiveVariant =
 export type ButtonPrimitiveSize = 'default' | 'sm' | 'lg' | 'icon';
 
 const BUTTON_VARIANT_CLASSES: Record<ButtonPrimitiveVariant, string> = {
-  default: 'bg-primary text-primary-foreground shadow-sm hover:bg-primary/90',
+  default: 'bg-primary text-primary-foreground hover:bg-primary/92',
   destructive:
-    'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90',
+    'bg-destructive text-destructive-foreground hover:bg-destructive/90',
   outline:
-    'border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground',
-  secondary:
-    'bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80',
-  ghost: 'hover:bg-accent hover:text-accent-foreground',
-  link: 'text-primary underline-offset-4 hover:underline',
+    'border border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground',
+  secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/85',
+  ghost:
+    'bg-transparent text-foreground shadow-none hover:bg-accent hover:text-accent-foreground hover:shadow-none',
+  link: 'h-auto rounded-none bg-transparent p-0 text-primary shadow-none underline-offset-4 hover:underline hover:shadow-none',
 };
 
 const BUTTON_SIZE_CLASSES: Record<ButtonPrimitiveSize, string> = {
-  default: 'h-10 px-4 py-2',
+  default:
+    'h-[var(--mz-button-height)] px-[var(--mz-button-padding-x)] py-[var(--mz-button-padding-y)] text-[length:var(--mz-button-font-size)] font-[var(--mz-button-font-weight)] tracking-[var(--mz-button-letter-spacing)]',
   sm: 'h-9 rounded-md px-3',
   lg: 'h-11 rounded-md px-8',
   icon: 'h-10 w-10',
@@ -51,10 +52,12 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonPrimitiveProps>(
         ref={ref}
         type={type}
         className={cn(
-          'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium',
-          'ring-offset-background transition-colors',
+          'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md',
+          'ring-offset-background shadow-[var(--mz-button-shadow)]',
+          'transition-[background-color,color,border-color,box-shadow,transform] duration-200',
+          'hover:shadow-[var(--mz-button-shadow-hover)] active:translate-y-[1px]',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-          'disabled:pointer-events-none disabled:opacity-50',
+          'disabled:pointer-events-none disabled:translate-y-0 disabled:opacity-50 disabled:shadow-none',
           '[&_svg]:pointer-events-none [&_svg]:shrink-0',
           BUTTON_VARIANT_CLASSES[variant],
           BUTTON_SIZE_CLASSES[size],
