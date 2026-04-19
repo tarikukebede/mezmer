@@ -74,6 +74,7 @@ export default withMermaid(
           text: 'Components',
           items: [
             { text: 'Overview', link: '/components/' },
+            { text: 'Autocomplete', link: '/components/autocomplete' },
             { text: 'BaseTable', link: '/components/base-table' },
             { text: 'Button', link: '/components/button' },
             { text: 'Checkbox', link: '/components/checkbox' },

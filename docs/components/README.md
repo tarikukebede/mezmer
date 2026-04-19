@@ -10,6 +10,7 @@ This section contains consumer-facing documentation for each public component ex
 
 ## Components
 
+- [Autocomplete](./autocomplete.md)
 - [BaseTable](./base-table.md)
 - [Button](./button.md)
 - [Checkbox](./checkbox.md)

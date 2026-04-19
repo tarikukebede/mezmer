@@ -2,6 +2,18 @@
   "version": "1.0.0",
   "components": [
     {
+      "name": "Autocomplete",
+      "contractPath": "ai/contracts/components/autocomplete.contract.json",
+      "sourcePath": "src/components/Autocomplete",
+      "capabilities": [
+        "accessControl",
+        "asyncSearch",
+        "optionSelection",
+        "pagination",
+        "customOptionRendering"
+      ]
+    },
+    {
       "name": "Input",
       "contractPath": "ai/contracts/components/input.contract.json",
       "sourcePath": "src/components/Input",

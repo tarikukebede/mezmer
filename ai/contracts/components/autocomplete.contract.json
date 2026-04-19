@@ -1,0 +1,89 @@
+{
+  "component": "Autocomplete",
+  "version": "1.0.0",
+  "source": "src/components/Autocomplete",
+  "description": "Async, paginated autocomplete input with injectable data loading and optional access control.",
+  "capabilities": {
+    "accessControl": true,
+    "asyncSearch": true,
+    "optionSelection": true,
+    "pagination": true,
+    "customOptionRendering": true
+  },
+  "props": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "value": {
+      "type": "T['id'] | null",
+      "required": true
+    },
+    "onSelectOption": {
+      "type": "(item: T | null) => void",
+      "required": true
+    },
+    "searchOptions": {
+      "type": "(params: { query: string; page: number; size: number; pageSize?: number }) => Promise<{ items: T[]; currentPage: number; totalPages: number; totalItems: number }>",
+      "required": true
+    },
+    "getOptionById": {
+      "type": "(id: T['id']) => Promise<T | null>",
+      "required": false
+    },
+    "label": {
+      "type": "string",
+      "required": false
+    },
+    "placeholder": {
+      "type": "string",
+      "required": false,
+      "default": "\"Search...\""
+    },
+    "pageSize": {
+      "type": "number",
+      "required": false,
+      "default": "10"
+    },
+    "renderOption": {
+      "type": "(item: T) => ReactNode",
+      "required": false
+    },
+    "getOptionLabel": {
+      "type": "(item: T) => string",
+      "required": false
+    },
+    "emptyMessage": {
+      "type": "string",
+      "required": false,
+      "default": "\"No results found\""
+    },
+    "accessRequirements": {
+      "type": "string[]",
+      "required": false
+    },
+    "resolveAccess": {
+      "type": "(requirement: string, mode: \"view\" | \"edit\") => boolean",
+      "required": false
+    }
+  },
+  "states": {
+    "visibleWhenNoAccessConfig": "true",
+    "hiddenWhenViewDenied": "true",
+    "disabledWhenEditDenied": "true",
+    "emptyStateVisibleWhenNoResults": "true",
+    "dropdownOpensOnInputFocus": "true"
+  },
+  "accessibility": {
+    "comboboxRoleApplied": "true",
+    "requiredMarkerRenderedWhenRequired": "true",
+    "optionsExposePressedState": "true"
+  },
+  "interaction": {
+    "searchCalledWithQueryAndPagination": "true",
+    "selectionCallsOnSelectOption": "true",
+    "clearInputCallsOnSelectOptionWithNull": "true",
+    "loadsSelectedOptionByIdWhenResolverProvided": "true"
+  },
+  "tests": ["src/components/Autocomplete/Autocomplete.test.tsx"]
+}

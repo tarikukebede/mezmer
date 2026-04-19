@@ -8,6 +8,7 @@ For scalable, per-component documentation, use the docs hub:
 
 Direct links:
 
+- https://tarikukebede.github.io/mezmer/components/autocomplete
 - https://tarikukebede.github.io/mezmer/components/base-table
 - https://tarikukebede.github.io/mezmer/components/button
 - https://tarikukebede.github.io/mezmer/components/checkbox

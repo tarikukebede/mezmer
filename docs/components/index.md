@@ -2,6 +2,7 @@
 
 Consumer-facing component documentation lives here.
 
+- [Autocomplete](./autocomplete.md)
 - [BaseTable](./base-table.md)
 - [Button](./button.md)
 - [Checkbox](./checkbox.md)
