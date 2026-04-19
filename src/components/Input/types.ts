@@ -18,6 +18,7 @@ export type InputProps = BaseInputProps & {
   name: string;
   value?: string | number;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  endAdornment?: React.ReactNode;
   error?: string;
   helperText?: string;
   required?: boolean;

@@ -397,7 +397,7 @@ function AutocompletePreview(): JSX.Element {
         }}
         onSelectOption={(item) => setSelectedId(item?.id ?? null)}
         renderOption={(item) => (
-          <div className="flex items-center gap-2 border-b border-border/70 pb-2 last:border-0 last:pb-0">
+          <div className="flex items-center gap-2">
             <UserCircle2 className="h-4 w-4 shrink-0 text-muted-foreground" />
             <div className="min-w-0 flex-1">
               <div className="truncate text-sm font-medium text-foreground">

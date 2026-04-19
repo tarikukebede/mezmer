@@ -242,11 +242,27 @@ export function Autocomplete<T extends AutocompleteOptionBase>(
           onChange={onQueryChange}
           placeholder={placeholder}
           disabled={resolvedDisabled}
-          className={cn('pr-8', resolvedDisabled && 'bg-accent')}
+          className={cn(resolvedDisabled && 'bg-accent')}
           label={label}
           required={required}
           helperText={helperText}
           error={error}
+          endAdornment={
+            <button
+              type="button"
+              onClick={handleDropdownClick}
+              disabled={resolvedDisabled}
+              aria-label={isOpen ? 'Close options' : 'Open options'}
+              className={cn(
+                'inline-flex h-5 w-5 items-center justify-center text-muted-foreground transition-transform',
+                !resolvedDisabled && 'cursor-pointer',
+                resolvedDisabled && 'cursor-not-allowed opacity-60',
+                isOpen && 'rotate-180',
+              )}
+            >
+              <ChevronDown className="h-4 w-4" />
+            </button>
+          }
           onFocus={() => {
             if (!resolvedDisabled) {
               setIsOpen(true);
@@ -257,15 +273,6 @@ export function Autocomplete<T extends AutocompleteOptionBase>(
           aria-controls={listboxId}
           aria-expanded={isOpen}
         />
-        <ChevronDown
-          className={cn(
-            'absolute right-2 top-[70%] -translate-y-1/2',
-            'text-muted-foreground transition-transform cursor-pointer h-4 w-4',
-            resolvedDisabled && 'cursor-not-allowed opacity-60',
-            isOpen && 'rotate-180',
-          )}
-          onClick={handleDropdownClick}
-        />
       </div>
       {isOpen && (
         <div className="absolute top-[calc(100%+4px)] left-0 w-full z-10 rounded-md border shadow-md bg-background">
@@ -274,13 +281,16 @@ export function Autocomplete<T extends AutocompleteOptionBase>(
             className="max-h-[240px]"
             onScroll={handleScroll}
           >
-            <ul className="p-1">
+            <ul className="m-0 list-none p-1" role="listbox">
               {items.map((item) => (
-                <li key={item.id}>
+                <li
+                  key={item.id}
+                  className="m-0 list-none border-b border-border last:border-b-0"
+                >
                   <button
                     type="button"
                     onClick={() => handleItemClick(item)}
-                    className="w-full text-left cursor-pointer hover:bg-accent/50 rounded-sm transition-colors border-b border-border last:border-0 p-2 bg-background"
+                    className="w-full rounded-sm bg-background p-2 text-left transition-colors hover:bg-accent/50"
                     aria-pressed={selectedItem?.id === item.id}
                   >
                     {renderOption ? renderOption(item) : getLabel(item)}
@@ -288,15 +298,15 @@ export function Autocomplete<T extends AutocompleteOptionBase>(
                 </li>
               ))}
               {isLoading && (
-                <div className="py-2 space-y-2">
+                <li className="list-none py-2 space-y-2">
                   <Skeleton className="h-8 w-full" />
                   <Skeleton className="h-8 w-full" />
-                </div>
+                </li>
               )}
               {showEmptyState && (
-                <div className="text-muted-foreground text-center p-2">
+                <li className="list-none p-2 text-center text-muted-foreground">
                   {emptyMessage}
-                </div>
+                </li>
               )}
             </ul>
           </ScrollArea>
