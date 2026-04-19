@@ -49,14 +49,7 @@ export default withMermaid(
       logo: assetPath,
       nav: [
         { text: 'Installation', link: '/INSTALLATION' },
-        {
-          text: 'Theme',
-          items: [
-            { text: 'Overview', link: '/THEMING' },
-            { text: 'Theme', link: '/THEME-PLAYGROUND' },
-            { text: 'Theme Config', link: '/THEME-CONFIGURATION' },
-          ],
-        },
+        { text: 'Theme', link: '/THEMING' },
         { text: 'MCP', link: '/MCP-SERVER' },
         { text: 'Components', link: '/components/' },
         {
@@ -76,11 +69,7 @@ export default withMermaid(
         },
         {
           text: 'Theme',
-          items: [
-            { text: 'Overview', link: '/THEMING' },
-            { text: 'Theme', link: '/THEME-PLAYGROUND' },
-            { text: 'Theme Config', link: '/THEME-CONFIGURATION' },
-          ],
+          items: [{ text: 'Guide', link: '/THEMING' }],
         },
         {
           text: 'Components',

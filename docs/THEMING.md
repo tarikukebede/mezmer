@@ -1,5 +1,13 @@
 # Theming Guide
 
+Preview, configure, and validate Mezmer themes from one page.
+
+## Live Preview
+
+Use the interactive playground below to switch themes at runtime and review component rendering.
+
+<ThemePlayground />
+
 ## Goals
 
 - Ship pre-built themes out of the box.
@@ -100,8 +108,6 @@ import '@tarikukebede/mezmer/styles.css';
 import '@tarikukebede/mezmer/themes/sunset.css';
 ```
 
-For an interactive docs demo with runtime theme switching, see `docs/THEME-PLAYGROUND.md`.
-
 ## AI-Friendly Commands
 
 List themes:
@@ -134,3 +140,102 @@ This command creates:
 `src/styles.css` bridges shadcn tokens (`--background`, `--primary`, and others) to Mezmer tokens (`--mz-*`). If your host app already defines shadcn tokens, components can render correctly without rewriting component code.
 
 For full control, set `--mz-*` tokens directly in your app theme CSS.
+
+## Theme Configuration Workflow
+
+This section explains how theme selection, theme files, and runtime mode behavior are configured in this workspace.
+
+### Configuration Files
+
+- `ai/contracts/index.json`: source of truth for available theme entries (`id`, `contractPath`, `cssPath`).
+- `ai/contracts/themes/*.contract.json`: contract metadata for each theme.
+- `ai/theme.schema.json`: JSON schema that validates theme contract structure.
+- `ai/theme.active.json`: current workspace-selected theme and preferred mode metadata.
+- `src/themes/active.css`: generated import file that points to the selected theme stylesheet.
+- `src/themes/default.css`, `src/themes/slate.css`: built-in theme token files.
+
+### Theme Selection Flow
+
+1. Run `pnpm theme:list` to inspect available themes from contracts.
+2. Run `pnpm theme:apply --theme <theme-id> [--mode light|dark|system]`.
+3. The script updates:
+   - `src/themes/active.css` to import the selected `src/themes/<id>.css`
+   - `ai/theme.active.json` with `themeId`, `mode`, and `updatedAt`
+4. Components pick up tokens via `src/styles.css` and Tailwind semantic utilities.
+
+### Runtime Mode Behavior
+
+`--mode` is stored as workspace metadata in `ai/theme.active.json`.
+
+It does not automatically apply `.dark` at runtime. Dark mode still depends on your runtime class strategy (Tailwind `darkMode: ['class']`), so the host app or preview shell must control the `.dark` class.
+
+### Typography And Component Style Tokens
+
+Themes support styling beyond color. In addition to color and radius tokens, the library consumes optional typography and component-shape tokens, including:
+
+- `--mz-font-sans` and `--mz-font-mono` for typeface control
+- button sizing and rhythm tokens (`--mz-button-height`, `--mz-button-padding-x`, `--mz-button-padding-y`)
+- button typography tokens (`--mz-button-font-size`, `--mz-button-font-weight`, `--mz-button-letter-spacing`)
+- button elevation tokens (`--mz-button-shadow`, `--mz-button-shadow-hover`)
+- control layout tokens (`--mz-control-height`, `--mz-control-padding-x`, `--mz-control-padding-y`, `--mz-control-font-size`)
+- control elevation tokens (`--mz-control-shadow`, `--mz-control-shadow-focus`)
+- checkbox shape tokens (`--mz-checkbox-size`, `--mz-checkbox-radius`)
+
+When creating a custom theme with `pnpm theme:create`, copy and tune these tokens in the generated CSS so components remain visually polished out of the box.
+
+### Validation And Quality Gates
+
+Run contract validation after theme changes:
+
+```bash
+pnpm validate:contracts
+```
+
+Theme-related CI checks in `.github/workflows/ci.yml` include:
+
+- `pnpm theme:list` to ensure registry metadata remains readable
+- `pnpm test:scripts` to verify theme script integration behavior
+- `pnpm validate:contracts` to confirm theme contract/index consistency
+- standard lint/type/test/build quality gates before release
+
+Docs publishing CI in `.github/workflows/docs-deploy.yml` builds VitePress and deploys documentation to GitHub Pages on `main`.
+
+### AI Context And MCP Compatibility
+
+Theme metadata is intentionally machine-readable for AI systems:
+
+- `ai/contracts/index.json` provides the theme registry
+- `ai/contracts/themes/*.contract.json` defines theme contract metadata
+- `ai/theme.active.json` records workspace-selected theme state
+
+Mezmer includes a repository-local MCP server.
+
+For theme workflows, that server can expose active theme state, theme registry metadata, and theme contract details without requiring tools to inspect the repository manually.
+
+Run it with:
+
+```bash
+pnpm mcp:server
+```
+
+For a broader overview of the MCP surface, see `docs/MCP-SERVER.md`.
+
+Recommended release checks:
+
+```bash
+pnpm lint
+pnpm tsc --noEmit
+pnpm test
+pnpm build
+```
+
+## Consumer Packaging Notes
+
+Published consumers usually import a concrete theme directly:
+
+```tsx
+import '@tarikukebede/mezmer/styles.css';
+import '@tarikukebede/mezmer/themes/default.css';
+```
+
+`src/themes/active.css` is primarily a workspace/development convenience for switching themes locally.

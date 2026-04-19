@@ -78,4 +78,4 @@ If your package manager reports peer conflicts:
 
 - Component docs: `/components/`
 - Theming setup: `/THEMING`
-- Theme configuration workflow: `/THEME-CONFIGURATION`
+- Theme configuration workflow: `/THEMING#theme-configuration-workflow`
