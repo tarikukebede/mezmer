@@ -387,40 +387,6 @@ export function ThemePlayground() {
   const [selectedCountry, setSelectedCountry] = useState('');
   const [acceptedTerms, setAcceptedTerms] = useState(false);
 
-  const setThemeByIndex = (index: number) => {
-    const normalizedIndex =
-      (index + THEME_OPTIONS.length) % THEME_OPTIONS.length;
-    setTheme(THEME_OPTIONS[normalizedIndex].id);
-  };
-
-  const handleThemeOptionKeyDown = (
-    event: React.KeyboardEvent<HTMLButtonElement>,
-    index: number,
-  ) => {
-    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
-      event.preventDefault();
-      setThemeByIndex(index + 1);
-      return;
-    }
-
-    if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
-      event.preventDefault();
-      setThemeByIndex(index - 1);
-      return;
-    }
-
-    if (event.key === 'Home') {
-      event.preventDefault();
-      setThemeByIndex(0);
-      return;
-    }
-
-    if (event.key === 'End') {
-      event.preventDefault();
-      setThemeByIndex(THEME_OPTIONS.length - 1);
-    }
-  };
-
   useEffect(() => {
     setTheme(resolveInitialTheme());
     setMode(resolveInitialMode());
@@ -446,6 +412,27 @@ export function ThemePlayground() {
   return (
     <section className="mz-theme-playground" aria-label="Theme playground">
       <header className="mz-theme-playground__header">
+        <div className="mz-theme-playground__selector-row">
+          <label
+            htmlFor="theme-selector"
+            className="mz-theme-playground__selector-label"
+          >
+            Theme
+          </label>
+          <select
+            id="theme-selector"
+            className="mz-theme-playground__selector"
+            value={theme}
+            onChange={(event) => setTheme(event.target.value as BuiltInThemeId)}
+          >
+            {THEME_OPTIONS.map((option) => (
+              <option key={option.id} value={option.id}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <fieldset className="mz-theme-playground__mode-toggle-group">
           <legend className="mz-theme-playground__sr-only">Preview mode</legend>
           <button
@@ -466,51 +453,6 @@ export function ThemePlayground() {
           </button>
         </fieldset>
       </header>
-
-      <div
-        className="mz-theme-playground__theme-grid"
-        role="radiogroup"
-        aria-label="Available themes"
-      >
-        {THEME_OPTIONS.map((option, index) => {
-          const isActive = option.id === theme;
-          const palette = option.light;
-
-          return (
-            <button
-              key={option.id}
-              type="button"
-              role="radio"
-              aria-checked={isActive}
-              tabIndex={isActive ? 0 : -1}
-              onClick={() => setTheme(option.id)}
-              onKeyDown={(event) => handleThemeOptionKeyDown(event, index)}
-              className={`mz-theme-option${isActive ? ' is-active' : ''}`}
-            >
-              <span className="mz-theme-option__head">
-                <span className="mz-theme-option__label">{option.label}</span>
-              </span>
-
-              <span className="mz-theme-option__swatches" aria-hidden="true">
-                <span
-                  className="mz-theme-option__dot"
-                  style={{ backgroundColor: palette.primary }}
-                />
-                <span
-                  className="mz-theme-option__dot"
-                  style={{ backgroundColor: palette.accent }}
-                />
-                <span
-                  className="mz-theme-option__dot"
-                  style={{ backgroundColor: palette.surface }}
-                />
-              </span>
-
-              <span className="mz-theme-option__note">{option.note}</span>
-            </button>
-          );
-        })}
-      </div>
 
       <div className="mz-theme-playground__preview-grid">
         <PreviewCard
