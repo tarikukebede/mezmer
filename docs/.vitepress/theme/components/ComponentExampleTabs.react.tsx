@@ -18,7 +18,16 @@ import {
 } from '../../../../src';
 import { CellType } from '../../../../src/components/BaseTable/components/BaseTableRow/components/BaseTableCell';
 import type { Column } from '../../../../src/components/BaseTable/components/BaseTableRow';
-import { Archive, Bell, Circle, Download, FileText, Plus } from 'lucide-react';
+import {
+  Archive,
+  Bell,
+  Circle,
+  Download,
+  FileText,
+  Mail,
+  Plus,
+  UserCircle2,
+} from 'lucide-react';
 
 export type ComponentExampleId =
   | 'autocomplete'
@@ -319,16 +328,46 @@ function wait(ms: number): Promise<void> {
 }
 
 function AutocompletePreview(): JSX.Element {
-  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [selectedId, setSelectedId] = useState<number | null>(2);
+  const [searchCallCount, setSearchCallCount] = useState(0);
+
+  const selectedUser =
+    MOCK_USERS.find((candidate) => candidate.id === selectedId) ?? null;
 
   return (
-    <div style={{ maxWidth: 480 }}>
+    <div className="space-y-3" style={{ maxWidth: 520 }}>
+      <div className="flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          className="rounded-md border bg-background px-2.5 py-1 text-xs hover:bg-muted"
+          onClick={() => setSelectedId(2)}
+        >
+          Set Jordan
+        </button>
+        <button
+          type="button"
+          className="rounded-md border bg-background px-2.5 py-1 text-xs hover:bg-muted"
+          onClick={() => setSelectedId(4)}
+        >
+          Set Taylor
+        </button>
+        <button
+          type="button"
+          className="rounded-md border bg-background px-2.5 py-1 text-xs text-muted-foreground hover:bg-muted"
+          onClick={() => setSelectedId(null)}
+        >
+          Clear value
+        </button>
+      </div>
+
       <Autocomplete<UserOption>
         name="assignee"
         label="Assignee"
         value={selectedId}
+        helperText="Search runs only after you open the dropdown."
         size={4}
         searchOptions={async ({ query, page, size }) => {
+          setSearchCallCount((previous) => previous + 1);
           await wait(120);
           const filtered = MOCK_USERS.filter((item) => {
             const needle = query.toLowerCase().trim();
@@ -358,12 +397,35 @@ function AutocompletePreview(): JSX.Element {
         }}
         onSelectOption={(item) => setSelectedId(item?.id ?? null)}
         renderOption={(item) => (
-          <div>
-            <div>{item.name}</div>
-            <div className="text-xs text-muted-foreground">{item.email}</div>
+          <div className="flex items-center gap-2 border-b border-border/70 pb-2 last:border-0 last:pb-0">
+            <UserCircle2 className="h-4 w-4 shrink-0 text-muted-foreground" />
+            <div className="min-w-0 flex-1">
+              <div className="truncate text-sm font-medium text-foreground">
+                {item.name}
+              </div>
+              <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                <Mail className="h-3.5 w-3.5" />
+                <span className="truncate">{item.email}</span>
+              </div>
+            </div>
           </div>
         )}
       />
+
+      <div className="rounded-md border border-dashed px-3 py-2 text-xs text-muted-foreground">
+        <div>
+          Selected value id:{' '}
+          <span className="font-medium text-foreground">
+            {selectedId ?? 'none'}
+          </span>
+          {selectedUser ? <span> ({selectedUser.name})</span> : null}
+        </div>
+        <div>
+          Search calls:{' '}
+          <span className="font-medium text-foreground">{searchCallCount}</span>{' '}
+          (starts incrementing once dropdown opens)
+        </div>
+      </div>
     </div>
   );
 }
@@ -1127,7 +1189,8 @@ function SearchPreview(): JSX.Element {
 const EXAMPLES: Record<ComponentExampleId, ExampleConfig> = {
   autocomplete: {
     render: AutocompletePreview,
-    code: `import { Autocomplete } from '@tarikukebede/mezmer';
+    code: `import { useState } from 'react';
+import { Autocomplete } from '@tarikukebede/mezmer';
 
 type User = {
   id: number;
@@ -1135,11 +1198,15 @@ type User = {
   email: string;
 };
 
+const [selectedId, setSelectedId] = useState<number | null>(2);
+
 <Autocomplete<User>
   name="assignee"
   label="Assignee"
-  value={null}
+  value={selectedId}
+  helperText="Search runs only after you open the dropdown"
   searchOptions={async ({ query, page, size }) => {
+    // Called after the list is opened; query changes then refetch results.
     const response = await fetch(
       \`/api/users?query=\${encodeURIComponent(query)}&page=\${page}&size=\${size}\`,
     );
@@ -1151,10 +1218,15 @@ type User = {
       totalItems: data.totalItems,
     };
   }}
-  onSelectOption={(item) => console.log(item)}
+  getOptionById={async (id) => {
+    const response = await fetch(\`/api/users/\${id}\`);
+    if (!response.ok) return null;
+    return (await response.json()) as User;
+  }}
+  onSelectOption={(item) => setSelectedId(item?.id ?? null)}
   renderOption={(item) => (
-    <div>
-      <div>{item.name}</div>
+    <div className="flex items-center gap-2 border-b border-border/70 pb-2 last:border-0 last:pb-0">
+      <div className="font-medium">{item.name}</div>
       <div className="text-xs text-muted-foreground">{item.email}</div>
     </div>
   )}
