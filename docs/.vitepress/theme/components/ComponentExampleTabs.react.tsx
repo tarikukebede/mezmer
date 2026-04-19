@@ -39,6 +39,101 @@ type ExampleConfig = {
   render: () => JSX.Element;
 };
 
+type TokenKind = 'keyword' | 'string' | 'comment' | 'number' | 'plain';
+
+type Token = {
+  value: string;
+  kind: TokenKind;
+};
+
+const TSX_KEYWORDS = new Set([
+  'import',
+  'from',
+  'type',
+  'interface',
+  'const',
+  'let',
+  'var',
+  'return',
+  'async',
+  'await',
+  'if',
+  'else',
+  'for',
+  'while',
+  'switch',
+  'case',
+  'default',
+  'break',
+  'continue',
+  'new',
+  'null',
+  'true',
+  'false',
+  'undefined',
+  'extends',
+  'implements',
+  'function',
+  'class',
+  'export',
+  'try',
+  'catch',
+  'finally',
+  'typeof',
+  'in',
+  'of',
+  'as',
+]);
+
+function highlightTsxLine(line: string): Token[] {
+  const tokenMatcher =
+    /(\/\/.*|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`|\b\d+(?:\.\d+)?\b|\b[A-Za-z_][A-Za-z0-9_]*\b)/g;
+
+  const tokens: Token[] = [];
+  let cursor = 0;
+  let match = tokenMatcher.exec(line);
+
+  while (match) {
+    const matched = match[0];
+    const start = match.index;
+
+    if (start > cursor) {
+      tokens.push({
+        value: line.slice(cursor, start),
+        kind: 'plain',
+      });
+    }
+
+    if (matched.startsWith('//')) {
+      tokens.push({ value: matched, kind: 'comment' });
+    } else if (
+      matched.startsWith('"') ||
+      matched.startsWith("'") ||
+      matched.startsWith('`')
+    ) {
+      tokens.push({ value: matched, kind: 'string' });
+    } else if (/^\d/.test(matched)) {
+      tokens.push({ value: matched, kind: 'number' });
+    } else if (TSX_KEYWORDS.has(matched)) {
+      tokens.push({ value: matched, kind: 'keyword' });
+    } else {
+      tokens.push({ value: matched, kind: 'plain' });
+    }
+
+    cursor = start + matched.length;
+    match = tokenMatcher.exec(line);
+  }
+
+  if (cursor < line.length) {
+    tokens.push({
+      value: line.slice(cursor),
+      kind: 'plain',
+    });
+  }
+
+  return tokens;
+}
+
 type UserOption = {
   id: number;
   name: string;
@@ -605,9 +700,32 @@ function ExampleTabsContent({
   component: ComponentExampleId;
 }): JSX.Element {
   const [activeTab, setActiveTab] = useState<'preview' | 'code'>('preview');
+  const [copyState, setCopyState] = useState<'idle' | 'done' | 'error'>('idle');
 
   const example = useMemo(() => EXAMPLES[component], [component]);
   const Preview = example.render;
+  const codeLines = useMemo(() => example.code.split('\n'), [example.code]);
+  const highlightedLines = useMemo(
+    () => codeLines.map((line) => highlightTsxLine(line)),
+    [codeLines],
+  );
+  const previewPanelId = `${component}-preview-panel`;
+  const codePanelId = `${component}-code-panel`;
+  const previewTabId = `${component}-preview-tab`;
+  const codeTabId = `${component}-code-tab`;
+
+  async function copyCode(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(example.code);
+      setCopyState('done');
+    } catch {
+      setCopyState('error');
+    }
+
+    setTimeout(() => {
+      setCopyState('idle');
+    }, 1500);
+  }
 
   return (
     <div className="component-example-tabs">
@@ -617,8 +735,10 @@ function ExampleTabsContent({
         aria-label="Example tabs"
       >
         <button
+          id={previewTabId}
           type="button"
           role="tab"
+          aria-controls={previewPanelId}
           aria-selected={activeTab === 'preview'}
           className={`component-example-tabs__button ${
             activeTab === 'preview' ? 'is-active' : ''
@@ -628,8 +748,10 @@ function ExampleTabsContent({
           Preview
         </button>
         <button
+          id={codeTabId}
           type="button"
           role="tab"
+          aria-controls={codePanelId}
           aria-selected={activeTab === 'code'}
           className={`component-example-tabs__button ${
             activeTab === 'code' ? 'is-active' : ''
@@ -640,19 +762,71 @@ function ExampleTabsContent({
         </button>
       </div>
 
-      {activeTab === 'preview' ? (
-        <div className="component-example-tabs__panel" role="tabpanel">
+      <div
+        id={previewPanelId}
+        role="tabpanel"
+        aria-labelledby={previewTabId}
+        hidden={activeTab !== 'preview'}
+        className="component-example-tabs__panel"
+      >
+        {activeTab === 'preview' ? (
           <div className="component-example-tabs__preview">
             <Preview />
           </div>
-        </div>
-      ) : (
-        <div className="component-example-tabs__panel" role="tabpanel">
-          <pre className="component-example-tabs__code">
-            <code>{example.code}</code>
-          </pre>
-        </div>
-      )}
+        ) : null}
+      </div>
+
+      <div
+        id={codePanelId}
+        role="tabpanel"
+        aria-labelledby={codeTabId}
+        hidden={activeTab !== 'code'}
+        className="component-example-tabs__panel"
+      >
+        {activeTab === 'code' ? (
+          <div className="component-example-tabs__code-viewer">
+            <div className="component-example-tabs__code-toolbar">
+              <span className="component-example-tabs__code-lang">tsx</span>
+              <button
+                type="button"
+                className="component-example-tabs__copy-btn"
+                onClick={copyCode}
+                aria-label="Copy code snippet"
+              >
+                {copyState === 'idle'
+                  ? 'Copy'
+                  : copyState === 'done'
+                    ? 'Copied'
+                    : 'Failed'}
+              </button>
+            </div>
+
+            <div className="component-example-tabs__code-scroll">
+              <ol className="component-example-tabs__code-lines">
+                {highlightedLines.map((lineTokens, index) => (
+                  <li key={`${component}-code-line-${index + 1}`}>
+                    <code>
+                      {lineTokens.length === 0 ? ' ' : null}
+                      {lineTokens.map((token, tokenIndex) => (
+                        <span
+                          key={`${component}-code-line-${index + 1}-token-${tokenIndex + 1}`}
+                          className={
+                            token.kind === 'plain'
+                              ? undefined
+                              : `component-example-tabs__token component-example-tabs__token--${token.kind}`
+                          }
+                        >
+                          {token.value}
+                        </span>
+                      ))}
+                    </code>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 }
