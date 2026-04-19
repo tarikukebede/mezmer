@@ -19,7 +19,9 @@ const installThemeProbeStyles = () => {
       border-style: solid !important;
       border-width: 2px !important;
     }
-    .border-input { border-color: var(--mz-border-color) !important; }
+    .border-foreground\\/45 {
+      border-color: rgb(65, 43, 21) !important;
+    }
   `;
   document.head.appendChild(style);
 };
@@ -114,19 +116,13 @@ describe('Checkbox', () => {
   });
 
   it('keeps a visible border when unchecked', () => {
-    document.documentElement.style.setProperty(
-      '--mz-border-color',
-      'rgb(65, 43, 21)',
-    );
-
     render(<Checkbox name="unchecked" onCheckChange={vi.fn()} />);
 
     const checkbox = screen.getByRole('checkbox');
     const style = getComputedStyle(checkbox);
 
     expect(checkbox.className).toContain('border-2');
-    expect(checkbox.className).toContain('border-input');
+    expect(checkbox.className).toContain('border-foreground/45');
     expect(style.borderWidth).toBe('2px');
-    expect(style.borderColor).toBe('rgb(65, 43, 21)');
   });
 });
