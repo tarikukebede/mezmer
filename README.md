@@ -43,6 +43,12 @@ Mezmer provides predefined, composable UI templates and higher-level components 
 
 It is intentionally assembled from multiple mature libraries (including shadcn/ui, TanStack Table, Redux Toolkit, React Hook Form, Zod, and Lucide) so AI systems and developers can produce production-ready code with consistent safeguards.
 
+Mezmer does not replace foundational libraries like Radix or shadcn/ui. It builds on top of best-of-breed libraries so each one can do what it does best (for example RTK Query, Redux Toolkit, Radix primitives, and TanStack Table), while Mezmer enforces concrete component structure and proven project patterns.
+
+In enterprise delivery, developers usually do not want to rebuild custom components for common workflows in every feature. They want prebuilt components and patterns with behaviors such as access-aware rendering, table pagination and search, predictable contracts, and repeatable structure across teams.
+
+This also improves AI-assisted development: instead of reinventing component patterns for each feature and spending cycles correcting generated output, teams can provide API specifications and let AI wire secure CRUD flows against Mezmer's standardized component, contract, and structure model.
+
 Core goals:
 
 - Stable and domain-neutral component APIs

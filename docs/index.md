@@ -75,6 +75,8 @@ Mezmer was primarily designed for AI-assisted software delivery.
 
 It is a predefined template system for enterprise UI delivery, not just a loose collection of isolated components.
 
+It is not a replacement for foundational libraries like Radix or shadcn/ui. Mezmer is a production layer that lets each library do what it does best (for example RTK Query, Redux Toolkit, Radix primitives, and TanStack Table) while enforcing concrete project structure and proven implementation patterns.
+
 The goal is to let AI tools generate production-ready UI code by default using:
 
 - predefined component contracts
@@ -83,6 +85,12 @@ The goal is to let AI tools generate production-ready UI code by default using:
 - accessibility-aware component behavior
 - test-backed interaction guarantees
 
+In enterprise teams, developers usually do not want to rebuild common capabilities in every project. They want prebuilt, production-grade components and patterns that work out of the box, such as:
+
+- access-aware inputs and actions
+- table workflows with pagination, search, and predictable state handling
+- standardized file structure, contracts, and composition patterns that scale across teams
+
 Developers can still use Mezmer directly like any modern React component library, but the architecture is intentionally optimized for AI + developer collaboration.
 
 ## Template-First Foundation
@@ -90,6 +98,8 @@ Developers can still use Mezmer directly like any modern React component library
 Mezmer combines proven open-source libraries into a single, contract-driven template layer so generated code is production-oriented from the start.
 
 This reduces ad hoc implementation differences and helps AI agents apply consistent patterns across projects.
+
+Without this layer, each new feature often becomes a custom component plus a custom pattern, and teams spend extra time steering AI output and re-validating generated code for security and standards compliance. With Mezmer, developers can focus AI on API specifications while the library enforces production-ready structure and reusable patterns, enabling secure CRUD delivery in a single pass.
 
 ## AI Setup In This Library
 
