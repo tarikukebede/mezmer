@@ -48,29 +48,4 @@ import { BaseModal, ButtonVariant } from '@tarikukebede/mezmer';
 
 ## Example
 
-```tsx
-import { BaseModal, ButtonVariant } from '@tarikukebede/mezmer';
-
-<BaseModal
-  isOpen={isOpen}
-  onClose={() => setIsOpen(false)}
-  title="Edit Profile"
-  description="Update profile settings"
-  onSave={() => console.log('save')}
-  saveAccessRequirements={['profile.update']}
-  resolveAccess={(requirement, mode) => {
-    if (mode === 'view') return requirement !== 'profile.hidden';
-    return requirement === 'profile.update';
-  }}
-  customButtons={[
-    {
-      label: 'Preview',
-      onClick: () => console.log('preview'),
-      variant: ButtonVariant.Outlined,
-      accessRequirements: ['profile.preview'],
-    },
-  ]}
->
-  <div className="text-sm text-foreground">Modal content goes here</div>
-</BaseModal>;
-```
+<ComponentExampleTabs component="base-modal" />

@@ -38,15 +38,4 @@ import { Button, ButtonVariant } from '@tarikukebede/mezmer';
 
 ## Example
 
-```tsx
-import { Download } from 'lucide-react';
-import { Button, ButtonVariant } from '@tarikukebede/mezmer';
-
-<Button
-  label="Export"
-  leftIcon={Download}
-  rightIcon={Download}
-  variant={ButtonVariant.Outlined}
-  onClick={() => console.log('export')}
-/>;
-```
+<ComponentExampleTabs component="button" />

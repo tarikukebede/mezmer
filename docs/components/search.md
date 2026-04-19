@@ -36,8 +36,4 @@ import { Search } from '@tarikukebede/mezmer';
 
 ## Example
 
-```tsx
-import { Search } from '@tarikukebede/mezmer';
-
-<Search placeholder="Search users" onChange={(value) => console.log(value)} />;
-```
+<ComponentExampleTabs component="search" />

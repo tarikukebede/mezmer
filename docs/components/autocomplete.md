@@ -46,40 +46,7 @@ import { Autocomplete } from '@tarikukebede/mezmer';
 
 ## Example
 
-```tsx
-import { Autocomplete } from '@tarikukebede/mezmer';
-
-type User = {
-  id: number;
-  name: string;
-  email: string;
-};
-
-<Autocomplete<User>
-  name="assignee"
-  label="Assignee"
-  value={null}
-  searchOptions={async ({ query, page, size }) => {
-    const response = await fetch(
-      `/api/users?query=${encodeURIComponent(query)}&page=${page}&size=${size}`,
-    );
-    const data = await response.json();
-    return {
-      items: data.items,
-      currentPage: data.currentPage,
-      totalPages: data.totalPages,
-      totalItems: data.totalItems,
-    };
-  }}
-  onSelectOption={(item) => console.log(item)}
-  renderOption={(item) => (
-    <div>
-      <div>{item.name}</div>
-      <div className="text-xs text-muted-foreground">{item.email}</div>
-    </div>
-  )}
-/>;
-```
+<ComponentExampleTabs component="autocomplete" />
 
 ## RTK Query Integration
 

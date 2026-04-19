@@ -43,29 +43,4 @@ import { Page } from '@tarikukebede/mezmer';
 
 ## Example
 
-```tsx
-import { Plus } from 'lucide-react';
-import { ButtonVariant, Page, Search } from '@tarikukebede/mezmer';
-
-<Page
-  searchPlaceholder="Search users"
-  onSearch={(value) => console.log(value)}
-  actions={[
-    {
-      name: 'Create User',
-      onClick: () => console.log('create'),
-      icon: Plus,
-      variant: ButtonVariant.Default,
-      accessRequirements: ['users.create'],
-    },
-  ]}
-  filterSlot={<div className="text-xs text-muted-foreground">Active only</div>}
->
-  <div className="rounded-md border p-4">Page content</div>
-</Page>;
-
-<Search
-  placeholder="Global search"
-  onChange={(value) => console.log('search term', value)}
-/>;
-```
+<ComponentExampleTabs component="page" />

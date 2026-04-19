@@ -42,17 +42,4 @@ import { DropDown } from '@tarikukebede/mezmer';
 
 ## Example
 
-```tsx
-import { DropDown } from '@tarikukebede/mezmer';
-
-<DropDown
-  label="Country"
-  value=""
-  placeholder="Select country"
-  options={[
-    { label: 'United States', value: 'US' },
-    { label: 'Canada', value: 'CA' },
-  ]}
-  onChange={(next) => console.log(next)}
-/>;
-```
+<ComponentExampleTabs component="drop-down" />

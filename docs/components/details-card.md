@@ -51,39 +51,4 @@ import { DetailsCard } from '@tarikukebede/mezmer';
 
 ## Example
 
-```tsx
-import { FileText, Archive } from 'lucide-react';
-import { ButtonVariant, DetailsCard } from '@tarikukebede/mezmer';
-
-interface UserDetails {
-  id: string;
-  email: string;
-}
-
-<DetailsCard<UserDetails>
-  title="User Details"
-  icon={FileText}
-  isLoading={false}
-  data={{ id: '42', email: 'owner@company.com' }}
-  tabs={[
-    { key: 'profile', label: 'Profile', component: <div>Profile content</div> },
-    {
-      key: 'security',
-      label: 'Security',
-      component: <div>Security content</div>,
-    },
-  ]}
-  onSave={(data) => console.log('save', data)}
-  onDelete={(data) => console.log('delete', data)}
-  onClose={() => console.log('close')}
-  customButtons={[
-    {
-      label: 'Archive',
-      icon: Archive,
-      variant: ButtonVariant.Outlined,
-      onClick: (data) => console.log('archive', data),
-      accessRequirements: ['users.archive'],
-    },
-  ]}
-/>;
-```
+<ComponentExampleTabs component="details-card" />

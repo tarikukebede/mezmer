@@ -29,14 +29,4 @@ import { Chip } from '@tarikukebede/mezmer';
 
 ## Example
 
-```tsx
-import { Circle } from 'lucide-react';
-
-<Chip
-  label="Synced"
-  icon={Circle}
-  variant="secondary"
-  size="md"
-  onRemove={() => console.log('remove')}
-/>;
-```
+<ComponentExampleTabs component="chip" />

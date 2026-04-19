@@ -45,20 +45,4 @@ import { DatePicker } from '@tarikukebede/mezmer';
 
 ## Example
 
-```tsx
-<DatePicker
-  name="startDate"
-  label="Start Date"
-  value="2026-04-18"
-  helperText="Choose a start date"
-  accessRequirements={['project.startDate.write']}
-  resolveAccess={(requirement, mode) => {
-    if (mode === 'view')
-      return requirement.endsWith('.read') || requirement.endsWith('.write');
-    return requirement.endsWith('.write');
-  }}
-  onChange={(change) => {
-    console.log(change.target.name, change.target.value);
-  }}
-/>
-```
+<ComponentExampleTabs component="date-picker" />

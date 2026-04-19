@@ -25,12 +25,4 @@ import { Icon } from '@tarikukebede/mezmer';
 
 ## Example
 
-```tsx
-import { Bell } from 'lucide-react';
-
-<Icon
-  icon={Bell}
-  className="h-4 w-4 text-muted-foreground"
-  aria-label="Alerts"
-/>;
-```
+<ComponentExampleTabs component="icon" />

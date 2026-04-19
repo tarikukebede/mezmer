@@ -34,11 +34,4 @@ import { Checkbox } from '@tarikukebede/mezmer';
 
 ## Example
 
-```tsx
-<Checkbox
-  name="acceptTerms"
-  label="Terms"
-  title="I agree to the terms"
-  onCheckChange={(checked) => console.log(checked)}
-/>
-```
+<ComponentExampleTabs component="checkbox" />

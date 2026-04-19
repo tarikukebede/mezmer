@@ -27,6 +27,4 @@ import { Image } from '@tarikukebede/mezmer';
 
 ## Example
 
-```tsx
-<Image src="/avatar.png" alt="User avatar" size="md" loading="lazy" />
-```
+<ComponentExampleTabs component="image" />

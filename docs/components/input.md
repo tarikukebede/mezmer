@@ -34,12 +34,4 @@ import { Input } from '@tarikukebede/mezmer';
 
 ## Example
 
-```tsx
-<Input
-  name="email"
-  label="Email"
-  value=""
-  onChange={() => {}}
-  placeholder="name@company.com"
-/>
-```
+<ComponentExampleTabs component="input" />
