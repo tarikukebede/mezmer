@@ -5,6 +5,25 @@ import { Checkbox } from './Checkbox';
 let canView = true;
 let canEdit = true;
 
+const installThemeProbeStyles = () => {
+  const styleId = 'checkbox-theme-probe-styles';
+  const existing = document.getElementById(styleId);
+  if (existing) {
+    return;
+  }
+
+  const style = document.createElement('style');
+  style.id = styleId;
+  style.textContent = `
+    .border-2 {
+      border-style: solid !important;
+      border-width: 2px !important;
+    }
+    .border-input { border-color: var(--mz-border-color) !important; }
+  `;
+  document.head.appendChild(style);
+};
+
 describe('Checkbox', () => {
   afterEach(() => {
     cleanup();
@@ -13,6 +32,7 @@ describe('Checkbox', () => {
   beforeEach(() => {
     canView = true;
     canEdit = true;
+    installThemeProbeStyles();
   });
 
   it('renders label, required marker, and title', () => {
@@ -91,5 +111,22 @@ describe('Checkbox', () => {
     expect(screen.getByRole('checkbox').className).toContain(
       'border-destructive',
     );
+  });
+
+  it('keeps a visible border when unchecked', () => {
+    document.documentElement.style.setProperty(
+      '--mz-border-color',
+      'rgb(65, 43, 21)',
+    );
+
+    render(<Checkbox name="unchecked" onCheckChange={vi.fn()} />);
+
+    const checkbox = screen.getByRole('checkbox');
+    const style = getComputedStyle(checkbox);
+
+    expect(checkbox.className).toContain('border-2');
+    expect(checkbox.className).toContain('border-input');
+    expect(style.borderWidth).toBe('2px');
+    expect(style.borderColor).toBe('rgb(65, 43, 21)');
   });
 });
