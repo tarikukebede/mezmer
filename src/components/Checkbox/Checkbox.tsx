@@ -1,4 +1,5 @@
 import { forwardRef, type ChangeEvent } from 'react';
+import { Check } from 'lucide-react';
 import { cn } from '@lib/utils';
 import { Label } from '@ui/label';
 import { CheckBoxProps } from './types';
@@ -47,21 +48,28 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckBoxProps>(
           </Label>
         )}
         <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            id={name}
-            name={name}
-            ref={ref}
-            aria-invalid={error ? 'true' : undefined}
-            onChange={handleChange}
-            disabled={resolvedDisabled}
-            className={cn(
-              checkboxBaseClassName,
-              error && 'border-destructive',
-              className,
-            )}
-            {...params}
-          />
+          <span className="relative inline-flex items-center justify-center">
+            <input
+              type="checkbox"
+              id={name}
+              name={name}
+              ref={ref}
+              aria-invalid={error ? 'true' : undefined}
+              onChange={handleChange}
+              disabled={resolvedDisabled}
+              className={cn(
+                checkboxBaseClassName,
+                'peer',
+                error && 'border-destructive',
+                className,
+              )}
+              {...params}
+            />
+            <Check
+              aria-hidden="true"
+              className="pointer-events-none absolute h-3 w-3 text-primary-foreground opacity-0 transition-opacity duration-150 peer-checked:opacity-100"
+            />
+          </span>
           {title && <span className="text-sm text-foreground">{title}</span>}
         </div>
         {error && <p className="text-xs text-destructive">{error}</p>}
