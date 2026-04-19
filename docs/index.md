@@ -3,11 +3,11 @@ layout: home
 
 hero:
   name: Mezmer
-  text: Contract-Driven React UI Kit
-  tagline: Minimal API surface. Strong defaults. Enterprise-ready patterns for AI and humans.
+  text: Predictable UI For Enterprise React
+  tagline: A minimal, contract-driven component kit built for fast delivery with clean APIs, strong accessibility, and AI-ready structure.
   image:
-    src: /mezmer-hero-ecosystem.svg
-    alt: Mezmer ecosystem
+    src: /mezmer-hero-diagram.svg
+    alt: Mezmer ecosystem diagram
   actions:
     - theme: brand
       text: Get Started
@@ -18,30 +18,40 @@ hero:
     - theme: alt
       text: Architecture
       link: /ARCHITECTURE
-    - theme: alt
-      text: MCP Server
-      link: /MCP-SERVER
 
 features:
-  - icon: <>
+  - icon: '🧩'
     title: Contract First
     details: Every public component is backed by machine-readable contracts to keep API, docs, and behavior aligned.
-  - icon: a11y
+  - icon: '♿'
     title: Accessible By Default
     details: Keyboard support, role semantics, and interaction guarantees are expected and tested.
-  - icon: paintbrush
+  - icon: '🎨'
     title: Theme Ready
     details: Token-driven styling with predictable overrides and multiple packaged themes.
-  - icon: robot
+  - icon: '🤖'
     title: AI Workflow Native
     details: Built for agent-assisted delivery with structure and validation, not prompt-only conventions.
-  - icon: flask
+  - icon: '🧪'
     title: Test Backed
     details: Vitest plus targeted component testing workflows keep behavior stable during changes.
-  - icon: package
+  - icon: '📦'
     title: Publishable Library
     details: ESM output, typed APIs, and explicit package boundaries for real-world consumer apps.
 ---
+
+<section class="hero-band">
+  <div class="hero-band__left">
+    <p class="hero-band__eyebrow">Trusted Building Blocks</p>
+    <p class="hero-band__copy">
+      Compose production-ready pages with domain-neutral APIs instead of project-specific one-offs.
+    </p>
+  </div>
+  <div class="hero-band__right">
+    <a href="/INSTALLATION">Install Guide</a>
+    <a href="/MCP-SERVER">MCP Workflow</a>
+  </div>
+</section>
 
 <section class="landing-shell">
   <div class="landing-grid">
@@ -62,22 +72,6 @@ features:
       </p>
       <a href="/MCP-SERVER">Read MCP server guide</a>
     </article>
-    <article class="landing-card">
-      <p class="landing-eyebrow">Why teams use Mezmer</p>
-      <ul>
-        <li>Domain-neutral component APIs</li>
-        <li>Access behavior via injectable callbacks</li>
-        <li>Contract and docs validation scripts</li>
-      </ul>
-    </article>
-  </div>
-  <div class="landing-steps">
-    <h2>Built for clean delivery</h2>
-    <ol>
-      <li>Install the package and import styles and a theme.</li>
-      <li>Compose domain-neutral components with explicit props.</li>
-      <li>Validate behavior with contract and docs checks.</li>
-    </ol>
   </div>
 </section>
 
@@ -98,8 +92,17 @@ Mezmer is built on React, TypeScript, shadcn/ui patterns, and tokenized styling 
 For architecture details and the complete stack rationale, see [Architecture](/ARCHITECTURE).
 
 <style scoped>
+:global(.VPHero) {
+  margin-top: 0.6rem;
+}
+
+:global(.VPHero .container) {
+  max-width: 1120px;
+}
+
 :global(.VPHero.has-image .container) {
   align-items: center;
+  column-gap: 2.25rem;
 }
 
 :global(.VPHero.has-image .image) {
@@ -107,25 +110,99 @@ For architecture details and the complete stack rationale, see [Architecture](/A
 }
 
 :global(.VPHero.has-image .image-container) {
-  width: min(42rem, 48vw);
+  width: min(35rem, 45vw);
   height: auto;
-}
-
-:global(.VPHero.has-image .image-bg) {
-  width: 100%;
-  height: 100%;
-  transform: none;
-  filter: blur(72px);
 }
 
 :global(.VPHero.has-image .image-src) {
   width: 100%;
-  max-width: 42rem;
   height: auto;
 }
 
+:global(.VPHero.has-image .image-bg) {
+  transform: none;
+  filter: blur(56px);
+}
+
+:global(.VPHero .name) {
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  letter-spacing: -0.02em;
+}
+
+:global(.VPHero .text) {
+  font-size: clamp(2.1rem, 4.8vw, 3.9rem);
+  letter-spacing: -0.04em;
+  line-height: 1.02;
+  max-width: 13ch;
+}
+
+:global(.VPHero .tagline) {
+  max-width: 62ch;
+  font-size: 1.02rem;
+}
+
+:global(.VPHero .actions) {
+  gap: 0.6rem;
+}
+
+:global(.VPHero .action .VPButton) {
+  border-radius: 999px;
+  min-height: 2.5rem;
+}
+
+.hero-band {
+  margin: 0.35rem 0 1.2rem;
+  padding: 0.95rem 1rem;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 16px;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  background:
+    radial-gradient(circle at 0% 0%, color-mix(in srgb, var(--vp-c-brand-1) 11%, transparent), transparent 43%),
+    var(--vp-c-bg-soft);
+}
+
+.hero-band__left {
+  min-width: 0;
+}
+
+.hero-band__eyebrow {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--vp-c-text-2);
+  font-weight: 700;
+}
+
+.hero-band__copy {
+  margin: 0.35rem 0 0;
+  color: var(--vp-c-text-2);
+}
+
+.hero-band__right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.hero-band__right a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0.38rem 0.72rem;
+  text-decoration: none;
+  border: 1px solid var(--vp-c-divider);
+  background: var(--vp-code-block-bg);
+}
+
 .landing-shell {
-  margin: 1.6rem 0 2.2rem;
+  margin: 0 0 2rem;
   display: grid;
   gap: 1rem;
 }
@@ -133,11 +210,11 @@ For architecture details and the complete stack rationale, see [Architecture](/A
 .landing-grid {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: 0.95rem;
+  gap: 1rem;
 }
 
 .landing-card {
-  grid-column: span 4;
+  grid-column: span 6;
   border: 1px solid var(--vp-c-divider);
   border-radius: 16px;
   padding: 1rem;
@@ -180,34 +257,6 @@ For architecture details and the complete stack rationale, see [Architecture](/A
   flex-wrap: wrap;
 }
 
-.landing-card ul {
-  margin: 0.6rem 0 0;
-  padding-left: 1.1rem;
-  color: var(--vp-c-text-2);
-}
-
-.landing-steps {
-  border: 1px solid var(--vp-c-divider);
-  border-radius: 16px;
-  padding: 1rem 1.05rem;
-  background: linear-gradient(
-    160deg,
-    color-mix(in srgb, var(--vp-c-brand-soft) 30%, transparent),
-    var(--vp-c-bg-soft)
-  );
-}
-
-.landing-steps h2 {
-  margin: 0;
-  font-size: 1.1rem;
-}
-
-.landing-steps ol {
-  margin: 0.65rem 0 0;
-  padding-left: 1.1rem;
-  color: var(--vp-c-text-2);
-}
-
 :global(.VPFeature) {
   border-radius: 14px;
   border: 1px solid var(--vp-c-divider);
@@ -220,7 +269,20 @@ For architecture details and the complete stack rationale, see [Architecture](/A
 
 @media (max-width: 820px) {
   :global(.VPHero.has-image .image-container) {
-    width: min(28rem, 100%);
+    width: min(30rem, 96vw);
+  }
+
+  :global(.VPHero .text) {
+    max-width: 16ch;
+  }
+
+  .hero-band {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-band__right {
+    justify-content: flex-start;
   }
 
   .landing-card,
