@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { Check, ChevronDown } from 'lucide-react';
 import { Input } from '@components/Input';
 import { ScrollArea } from '@ui/scroll-area';
 import { Skeleton } from '@ui/skeleton';
@@ -204,13 +204,7 @@ export function Autocomplete<T extends AutocompleteOptionBase>(
       return;
     }
 
-    setIsOpen((previous) => {
-      const next = !previous;
-      if (next) {
-        setSearchValue(AUTOCOMPLETE_EMPTY_QUERY);
-      }
-      return next;
-    });
+    setIsOpen((previous) => !previous);
   };
 
   const handleItemClick = (item: T) => {
@@ -268,7 +262,6 @@ export function Autocomplete<T extends AutocompleteOptionBase>(
           }
           onFocus={() => {
             if (!resolvedDisabled) {
-              setSearchValue(AUTOCOMPLETE_EMPTY_QUERY);
               setIsOpen(true);
             }
           }}
@@ -294,10 +287,16 @@ export function Autocomplete<T extends AutocompleteOptionBase>(
                   <button
                     type="button"
                     onClick={() => handleItemClick(item)}
-                    className="w-full rounded-sm bg-background p-2 text-left transition-colors hover:bg-accent/50"
+                    className="flex w-full items-center justify-between gap-2 rounded-sm bg-background p-2 text-left transition-colors hover:bg-accent/50"
                     aria-pressed={selectedItem?.id === item.id}
+                    aria-selected={selectedItem?.id === item.id}
                   >
-                    {renderOption ? renderOption(item) : getLabel(item)}
+                    <span className="min-w-0 flex-1">
+                      {renderOption ? renderOption(item) : getLabel(item)}
+                    </span>
+                    {selectedItem?.id === item.id ? (
+                      <Check className="h-4 w-4 shrink-0 text-primary" />
+                    ) : null}
                   </button>
                 </li>
               ))}

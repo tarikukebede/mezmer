@@ -327,12 +327,48 @@ function wait(ms: number): Promise<void> {
   });
 }
 
+async function dummySearchUsers(params: {
+  query: string;
+  page: number;
+  size: number;
+}): Promise<{
+  items: UserOption[];
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+}> {
+  await wait(180);
+
+  const needle = params.query.toLowerCase().trim();
+  const filtered = MOCK_USERS.filter((item) => {
+    if (!needle) {
+      return true;
+    }
+
+    return (
+      item.name.toLowerCase().includes(needle) ||
+      item.email.toLowerCase().includes(needle)
+    );
+  });
+
+  const start = (params.page - 1) * params.size;
+  const pagedItems = filtered.slice(start, start + params.size);
+
+  return {
+    items: pagedItems,
+    currentPage: params.page,
+    totalPages: Math.max(1, Math.ceil(filtered.length / params.size)),
+    totalItems: filtered.length,
+  };
+}
+
+async function dummyGetUserById(id: number): Promise<UserOption | null> {
+  await wait(80);
+  return MOCK_USERS.find((user) => user.id === id) ?? null;
+}
+
 function AutocompletePreview(): JSX.Element {
   const [selectedId, setSelectedId] = useState<number | null>(2);
-  const [searchCallCount, setSearchCallCount] = useState(0);
-
-  const selectedUser =
-    MOCK_USERS.find((candidate) => candidate.id === selectedId) ?? null;
 
   return (
     <div className="space-y-3" style={{ maxWidth: 520 }}>
@@ -364,37 +400,9 @@ function AutocompletePreview(): JSX.Element {
         name="assignee"
         label="Assignee"
         value={selectedId}
-        helperText="Search runs only after you open the dropdown."
         size={4}
-        searchOptions={async ({ query, page, size }) => {
-          setSearchCallCount((previous) => previous + 1);
-          await wait(120);
-          const filtered = MOCK_USERS.filter((item) => {
-            const needle = query.toLowerCase().trim();
-            if (!needle) {
-              return true;
-            }
-
-            return (
-              item.name.toLowerCase().includes(needle) ||
-              item.email.toLowerCase().includes(needle)
-            );
-          });
-
-          const start = (page - 1) * size;
-          const items = filtered.slice(start, start + size);
-
-          return {
-            items,
-            currentPage: page,
-            totalPages: Math.max(1, Math.ceil(filtered.length / size)),
-            totalItems: filtered.length,
-          };
-        }}
-        getOptionById={async (id) => {
-          await wait(50);
-          return MOCK_USERS.find((user) => user.id === id) ?? null;
-        }}
+        searchOptions={dummySearchUsers}
+        getOptionById={dummyGetUserById}
         onSelectOption={(item) => setSelectedId(item?.id ?? null)}
         renderOption={(item) => (
           <div className="flex items-center gap-2">
@@ -411,21 +419,6 @@ function AutocompletePreview(): JSX.Element {
           </div>
         )}
       />
-
-      <div className="rounded-md border border-dashed px-3 py-2 text-xs text-muted-foreground">
-        <div>
-          Selected value id:{' '}
-          <span className="font-medium text-foreground">
-            {selectedId ?? 'none'}
-          </span>
-          {selectedUser ? <span> ({selectedUser.name})</span> : null}
-        </div>
-        <div>
-          Search calls:{' '}
-          <span className="font-medium text-foreground">{searchCallCount}</span>{' '}
-          (starts incrementing once dropdown opens)
-        </div>
-      </div>
     </div>
   );
 }
@@ -1198,34 +1191,62 @@ type User = {
   email: string;
 };
 
+async function searchUsers(params: {
+  query: string;
+  page: number;
+  size: number;
+}) {
+  // Dummy API call (replace with fetch/RTK Query in real apps)
+  await new Promise((resolve) => setTimeout(resolve, 180));
+  const allUsers: User[] = [
+    { id: 1, name: 'Alex Rivera', email: 'alex@company.com' },
+    { id: 2, name: 'Jordan Kim', email: 'jordan@company.com' },
+    { id: 3, name: 'Sam Lee', email: 'sam@company.com' },
+    { id: 4, name: 'Taylor Morgan', email: 'taylor@company.com' },
+  ];
+
+  const needle = params.query.toLowerCase().trim();
+  const filtered = allUsers.filter((item) => {
+    if (!needle) return true;
+    return (
+      item.name.toLowerCase().includes(needle) ||
+      item.email.toLowerCase().includes(needle)
+    );
+  });
+
+  const start = (params.page - 1) * params.size;
+  const items = filtered.slice(start, start + params.size);
+
+  return {
+    items,
+    currentPage: params.page,
+    totalPages: Math.max(1, Math.ceil(filtered.length / params.size)),
+    totalItems: filtered.length,
+  };
+}
+
+async function getUserById(id: number): Promise<User | null> {
+  await new Promise((resolve) => setTimeout(resolve, 80));
+  const allUsers: User[] = [
+    { id: 1, name: 'Alex Rivera', email: 'alex@company.com' },
+    { id: 2, name: 'Jordan Kim', email: 'jordan@company.com' },
+    { id: 3, name: 'Sam Lee', email: 'sam@company.com' },
+    { id: 4, name: 'Taylor Morgan', email: 'taylor@company.com' },
+  ];
+  return allUsers.find((item) => item.id === id) ?? null;
+}
+
 const [selectedId, setSelectedId] = useState<number | null>(2);
 
 <Autocomplete<User>
   name="assignee"
   label="Assignee"
   value={selectedId}
-  helperText="Search runs only after you open the dropdown"
-  searchOptions={async ({ query, page, size }) => {
-    // Called after the list is opened; query changes then refetch results.
-    const response = await fetch(
-      \`/api/users?query=\${encodeURIComponent(query)}&page=\${page}&size=\${size}\`,
-    );
-    const data = await response.json();
-    return {
-      items: data.items,
-      currentPage: data.currentPage,
-      totalPages: data.totalPages,
-      totalItems: data.totalItems,
-    };
-  }}
-  getOptionById={async (id) => {
-    const response = await fetch(\`/api/users/\${id}\`);
-    if (!response.ok) return null;
-    return (await response.json()) as User;
-  }}
+  searchOptions={searchUsers}
+  getOptionById={getUserById}
   onSelectOption={(item) => setSelectedId(item?.id ?? null)}
   renderOption={(item) => (
-    <div className="flex items-center gap-2 border-b border-border/70 pb-2 last:border-0 last:pb-0">
+    <div className="flex items-center gap-2">
       <div className="font-medium">{item.name}</div>
       <div className="text-xs text-muted-foreground">{item.email}</div>
     </div>
