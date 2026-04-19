@@ -50,3 +50,67 @@ const rows: Row[] = [
   onSortChange={(sortBy, sortOrder) => console.log(sortBy, sortOrder)}
 />;
 ```
+
+## RTK Query Integration
+
+For server-side pagination and sorting, keep a single `paginationParams` state and trigger an RTK Query endpoint from it.
+
+```tsx
+import { useMemo, useState } from 'react';
+import { BaseTable } from '@tarikukebede/mezmer';
+import { useListServicesQuery } from './servicesApi';
+
+type Row = { id: number; name: string; status: string };
+
+type PaginationParams = {
+  page: number;
+  size: number;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+};
+
+const DEFAULT_PAGINATION_PARAMS: PaginationParams = {
+  page: 1,
+  size: 10,
+};
+
+export function ServicesTable() {
+  const [paginationParams, setPaginationParams] = useState(
+    DEFAULT_PAGINATION_PARAMS,
+  );
+
+  const { data, isFetching } = useListServicesQuery(paginationParams);
+
+  const rows = data?.items ?? [];
+  const totalPages = data?.totalPages ?? 1;
+  const totalItems = data?.totalItems ?? 0;
+
+  const columns = useMemo(
+    () => [
+      { key: 'name' as const, label: 'Name', sortable: true },
+      { key: 'status' as const, label: 'Status', sortable: true },
+    ],
+    [],
+  );
+
+  return (
+    <BaseTable<Row>
+      data={rows}
+      columns={columns}
+      isLoading={isFetching}
+      totalPages={totalPages}
+      totalItems={totalItems}
+      paginationParams={paginationParams}
+      onPaginationChange={setPaginationParams}
+      onSortChange={(sortBy, sortOrder) =>
+        setPaginationParams((previous) => ({
+          ...previous,
+          page: 1,
+          sortBy,
+          sortOrder,
+        }))
+      }
+    />
+  );
+}
+```

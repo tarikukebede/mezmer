@@ -49,7 +49,6 @@ export default withMermaid(
       nav: [
         { text: 'Installation', link: '/INSTALLATION' },
         { text: 'Guide', link: '/THEMING' },
-        { text: 'RTK Query', link: '/RTK-QUERY' },
         { text: 'Theme Playground', link: '/THEME-PLAYGROUND' },
         { text: 'MCP', link: '/MCP-SERVER' },
         { text: 'Components', link: '/components/' },
@@ -64,7 +63,6 @@ export default withMermaid(
           items: [
             { text: 'Home', link: '/' },
             { text: 'Installation', link: '/INSTALLATION' },
-            { text: 'RTK Query Integration', link: '/RTK-QUERY' },
             { text: 'Theming', link: '/THEMING' },
             { text: 'Theme Playground', link: '/THEME-PLAYGROUND' },
             { text: 'Theme Configuration', link: '/THEME-CONFIGURATION' },

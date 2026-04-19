@@ -83,4 +83,87 @@ type User = {
 
 ## RTK Query Integration
 
-For a full Redux Toolkit Query setup and adapter pattern using `searchOptions` and `getOptionById`, see [RTK Query Integration](../RTK-QUERY.md).
+Use RTK Query lazy hooks to implement `searchOptions` and `getOptionById` without coupling `Autocomplete` to your API layer.
+
+```tsx
+import { useCallback, useState } from 'react';
+import { Autocomplete } from '@tarikukebede/mezmer';
+import {
+  useLazyGetUserByIdQuery,
+  useLazySearchUsersQuery,
+  type UserOption,
+} from './usersApi';
+
+export function AssigneeField() {
+  const DEFAULT_PAGINATION_PARAMS = { page: 1, size: 20 };
+
+  const [selectedAssigneeId, setSelectedAssigneeId] = useState<number | null>(
+    null,
+  );
+  const [searchQuery, setSearchQuery] = useState('');
+  const [paginationParams, setPaginationParams] = useState(
+    DEFAULT_PAGINATION_PARAMS,
+  );
+
+  const [triggerSearchUsers] = useLazySearchUsersQuery();
+  const [triggerGetUserById] = useLazyGetUserByIdQuery();
+
+  const searchOptions = useCallback(
+    async ({
+      query,
+      page,
+      size,
+    }: {
+      query: string;
+      page: number;
+      size: number;
+    }) => {
+      setSearchQuery(query);
+      setPaginationParams({ page, size });
+
+      const result = await triggerSearchUsers(
+        { query, page, size },
+        true,
+      ).unwrap();
+
+      return {
+        items: result.items,
+        currentPage: result.currentPage,
+        totalPages: result.totalPages,
+        totalItems: result.totalItems,
+      };
+    },
+    [triggerSearchUsers],
+  );
+
+  const getOptionById = useCallback(
+    async (id: number) => {
+      try {
+        return await triggerGetUserById(id, true).unwrap();
+      } catch {
+        return null;
+      }
+    },
+    [triggerGetUserById],
+  );
+
+  return (
+    <div className="space-y-2">
+      <Autocomplete<UserOption>
+        name="assignee"
+        label="Assignee"
+        value={selectedAssigneeId}
+        onSelectOption={(item) => setSelectedAssigneeId(item?.id ?? null)}
+        searchOptions={searchOptions}
+        getOptionById={getOptionById}
+        placeholder="Search users"
+      />
+
+      <p className="text-xs text-muted-foreground">
+        Last request: query="{searchQuery}", page={paginationParams.page}, size=
+        {paginationParams.size}
+      </p>
+    </div>
+  );
+}
+```
