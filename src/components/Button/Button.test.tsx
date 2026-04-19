@@ -1,5 +1,5 @@
 import { createRef } from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { MoreVertical } from 'lucide-react';
 import { Button } from './Button';
@@ -129,5 +129,23 @@ describe('Button', () => {
 
     button = screen.getByRole('button', { name: 'Text' });
     expect(button.className).toContain('underline-offset-4');
+  });
+
+  it('applies unique class styles for every public button variant', () => {
+    const variantExpectations: Array<[ButtonVariant, string, string]> = [
+      [ButtonVariant.Primary, 'Primary', 'bg-gradient-to-b'],
+      [ButtonVariant.Default, 'Default', 'bg-card'],
+      [ButtonVariant.Dashed, 'Dashed', 'border-dashed'],
+      [ButtonVariant.Outlined, 'Outlined', 'bg-transparent'],
+      [ButtonVariant.Text, 'Text', 'rounded-none'],
+      [ButtonVariant.Destructive, 'Destructive', 'bg-destructive'],
+    ];
+
+    for (const [variant, label, expectedClass] of variantExpectations) {
+      render(<Button label={label} variant={variant} />);
+      const button = screen.getByRole('button', { name: label });
+      expect(button.className).toContain(expectedClass);
+      cleanup();
+    }
   });
 });

@@ -95,6 +95,10 @@
     @apply border-border;
   }
 
+  input[type='checkbox'] {
+    accent-color: hsl(var(--mz-primary));
+  }
+
   body {
     @apply bg-background text-foreground font-sans antialiased;
   }

@@ -11,14 +11,17 @@ export enum ButtonVariant {
 
 export const BUTTON_VARIANT_CLASS_NAMES: Record<ButtonVariant, string> = {
   [ButtonVariant.Primary]:
-    'bg-gradient-to-b from-primary to-primary/90 text-primary-foreground',
+    'bg-gradient-to-b from-primary to-primary/90 text-primary-foreground hover:from-primary/95 hover:to-primary/85',
   [ButtonVariant.Default]:
-    'border border-border bg-card text-card-foreground hover:bg-muted',
-  [ButtonVariant.Dashed]: 'border-dashed bg-background text-foreground',
-  [ButtonVariant.Outlined]: 'bg-background text-foreground',
+    'border border-border bg-card text-card-foreground hover:bg-muted/90',
+  [ButtonVariant.Dashed]:
+    'border-2 border-dashed border-border bg-background text-foreground hover:bg-muted/65',
+  [ButtonVariant.Outlined]:
+    'border border-border bg-transparent text-foreground hover:bg-accent/55 hover:text-accent-foreground',
   [ButtonVariant.Text]:
-    'h-auto rounded-none px-0 py-0 shadow-none hover:shadow-none',
-  [ButtonVariant.Destructive]: '',
+    'h-auto rounded-none px-0 py-0 text-primary shadow-none hover:text-primary/90 hover:shadow-none',
+  [ButtonVariant.Destructive]:
+    'bg-destructive text-destructive-foreground hover:bg-destructive/90',
 };
 
 export const BUTTON_VARIANT_MAPPING: Record<
