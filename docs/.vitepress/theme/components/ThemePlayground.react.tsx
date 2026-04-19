@@ -243,6 +243,10 @@ type PreviewServiceRow = {
   owner: string;
   status: 'active' | 'degraded' | 'planned';
   region: string;
+  createdAt: string;
+  alerts: number;
+  compliant: boolean;
+  tags: string[];
 };
 
 const PREVIEW_ASSIGNEES: PreviewAssignee[] = [
@@ -260,6 +264,7 @@ const PREVIEW_TABLE_COLUMNS: Column<PreviewServiceRow>[] = [
     accessorKey: 'name',
     type: CellType.TEXT,
     sortable: true,
+    isInactive: (_value, item) => item.status === 'planned',
   },
   {
     id: 'owner',
@@ -273,12 +278,49 @@ const PREVIEW_TABLE_COLUMNS: Column<PreviewServiceRow>[] = [
     header: 'Status',
     accessorKey: 'status',
     type: CellType.STATUS,
+    sortable: true,
   },
   {
     id: 'region',
     header: 'Region',
     accessorKey: 'region',
     type: CellType.CHIP,
+  },
+  {
+    id: 'createdAt',
+    header: 'Created',
+    accessorKey: 'createdAt',
+    type: CellType.DATE,
+    sortable: true,
+  },
+  {
+    id: 'alerts',
+    header: 'Alerts',
+    accessorKey: 'alerts',
+    type: CellType.ICON,
+    iconNameMapper: (value) => {
+      if (typeof value !== 'number') {
+        return 'ShieldCheck';
+      }
+
+      if (value > 4) {
+        return 'AlertTriangle';
+      }
+
+      return value > 0 ? 'TriangleAlert' : 'ShieldCheck';
+    },
+  },
+  {
+    id: 'compliant',
+    header: 'Compliant',
+    accessorKey: 'compliant',
+    type: CellType.BOOLEAN,
+  },
+  {
+    id: 'tags',
+    header: 'Tags',
+    accessorKey: 'tags',
+    type: CellType.MULTI_STATUS,
   },
   {
     id: 'actions',
@@ -320,6 +362,10 @@ const PREVIEW_TABLE_ROWS: PreviewServiceRow[] = [
     owner: 'Platform',
     status: 'active',
     region: 'US East',
+    createdAt: '2026-02-12',
+    alerts: 0,
+    compliant: true,
+    tags: ['stable', 'core'],
   },
   {
     id: 2,
@@ -327,6 +373,10 @@ const PREVIEW_TABLE_ROWS: PreviewServiceRow[] = [
     owner: 'Design Ops',
     status: 'active',
     region: 'EU West',
+    createdAt: '2026-03-03',
+    alerts: 1,
+    compliant: true,
+    tags: ['tokens', 'governed'],
   },
   {
     id: 3,
@@ -334,6 +384,10 @@ const PREVIEW_TABLE_ROWS: PreviewServiceRow[] = [
     owner: 'Frontend',
     status: 'degraded',
     region: 'US West',
+    createdAt: '2026-01-25',
+    alerts: 5,
+    compliant: false,
+    tags: ['preview', 'triage'],
   },
   {
     id: 4,
@@ -341,6 +395,10 @@ const PREVIEW_TABLE_ROWS: PreviewServiceRow[] = [
     owner: 'Developer Experience',
     status: 'planned',
     region: 'Global',
+    createdAt: '2026-04-02',
+    alerts: 0,
+    compliant: false,
+    tags: ['planned', 'automation'],
   },
   {
     id: 5,
@@ -348,6 +406,10 @@ const PREVIEW_TABLE_ROWS: PreviewServiceRow[] = [
     owner: 'Analytics',
     status: 'active',
     region: 'AP South',
+    createdAt: '2026-02-28',
+    alerts: 2,
+    compliant: true,
+    tags: ['observability', 'metrics'],
   },
 ];
 
