@@ -1,5 +1,5 @@
 :root {
-  --vp-layout-max-width: 1600px;
+  --vp-layout-max-width: 100%;
   --vp-sidebar-width: 304px;
 }
 
@@ -18,8 +18,22 @@
 /* Keep the docs center wide but not fully stretched, so the sidebar breathes. */
 .VPDoc.has-sidebar .content-container,
 .VPDoc.has-aside .content-container {
-  max-width: 1220px;
+  max-width: none;
   margin: 0 auto;
+}
+
+/* Remove the markdown prose max-width clamp inside docs pages. */
+.VPDoc .vp-doc,
+.VPDoc .vp-doc > div {
+  max-width: none;
+}
+
+/* Ensure VitePress inner content wrappers do not re-clamp width. */
+.VPContent,
+.VPContent .container,
+.VPContent .content,
+.VPContent .content-container {
+  max-width: none;
 }
 
 /* Keep wide table demos usable without clipping popovers in other previews. */

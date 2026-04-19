@@ -1,5 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Button, Chip, Input, Search } from '../../../../src';
+import {
+  Button,
+  Checkbox,
+  Chip,
+  DatePicker,
+  DropDown,
+  Icon,
+  Image,
+  Input,
+  Search,
+} from '../../../../src';
+import { Bell } from 'lucide-react';
 import './ThemePlayground.css';
 
 type BuiltInThemeId =
@@ -154,6 +165,7 @@ const THEME_OPTIONS: ThemeOption[] = [
 ];
 
 const THEME_STORAGE_KEY = 'mezmer-docs-theme';
+const MODE_STORAGE_KEY = 'mezmer-docs-mode';
 const THEME_STYLESHEET_ID = 'mezmer-docs-theme-stylesheet';
 const LEGACY_PREVIEW_THEME_STYLESHEET_ID =
   'mezmer-docs-component-preview-theme';
@@ -194,6 +206,15 @@ function resolveInitialTheme(): BuiltInThemeId {
   return 'default';
 }
 
+function resolveInitialMode(): Mode {
+  const stored = globalThis.localStorage.getItem(MODE_STORAGE_KEY);
+  if (stored === 'light' || stored === 'dark') {
+    return stored;
+  }
+
+  return 'light';
+}
+
 const TOKEN_SWATCHES: Array<{ label: string; token: string }> = [
   { label: 'Background', token: '--mz-background' },
   { label: 'Foreground', token: '--mz-foreground' },
@@ -207,24 +228,35 @@ const TOKEN_SWATCHES: Array<{ label: string; token: string }> = [
 
 type PreviewCardProps = Readonly<{
   mode: Mode;
-  title: string;
-  badge: string;
   email: string;
   searchValue: string;
+  startDate: string;
+  selectedCountry: string;
+  acceptedTerms: boolean;
   onEmailChange: (value: string) => void;
   onSearchChange: (value: string) => void;
+  onStartDateChange: (value: string) => void;
+  onSelectedCountryChange: (value: string) => void;
+  onAcceptedTermsChange: (value: boolean) => void;
 }>;
 
 function PreviewCard(props: PreviewCardProps) {
   const {
     mode,
-    title,
-    badge,
     email,
     searchValue,
+    startDate,
+    selectedCountry,
+    acceptedTerms,
     onEmailChange,
     onSearchChange,
+    onStartDateChange,
+    onSelectedCountryChange,
+    onAcceptedTermsChange,
   } = props;
+
+  const title = mode === 'light' ? 'Light Surface' : 'Dark Surface';
+  const badge = mode === 'light' ? 'Light' : 'Dark';
 
   return (
     <article className={`mz-preview-card${mode === 'dark' ? ' dark' : ''}`}>
@@ -238,47 +270,120 @@ function PreviewCard(props: PreviewCardProps) {
         </div>
 
         <div className="mz-preview-card__stack">
-          <Input
-            name={`theme-preview-email-${mode}`}
-            label="Email"
-            placeholder="name@company.com"
-            value={email}
-            onChange={(event) => onEmailChange(event.target.value)}
-          />
-
-          <Search
-            placeholder="Search components"
-            value={searchValue}
-            onChange={onSearchChange}
-          />
-
-          <div className="mz-preview-card__actions">
-            <Button label="Primary" />
-            <Button label="Secondary" variant="outline" />
-            <Button label="Ghost" variant="ghost" />
-          </div>
-
-          <div className="mz-preview-card__chips">
-            <Chip label="UI" />
-            <Chip label="Theme" />
-            <Chip label="Preview" />
-          </div>
-
-          <div
-            className="mz-preview-card__token-grid"
-            aria-label="Token swatches"
-          >
-            {TOKEN_SWATCHES.map((swatch) => (
-              <span key={`${mode}-${swatch.token}`} className="mz-token-item">
-                <span
-                  className="mz-token-item__dot"
-                  style={{ backgroundColor: `hsl(var(${swatch.token}))` }}
-                  aria-hidden="true"
+          <section className="mz-preview-card__section">
+            <div className="mz-preview-card__section-head">
+              <h5 className="mz-preview-card__section-title">Inputs</h5>
+              <p className="mz-preview-card__section-text">
+                Text entry, search, date, and selection controls
+              </p>
+            </div>
+            <div className="mz-preview-card__component-grid">
+              <div className="mz-preview-card__component-item">
+                <Input
+                  name={`theme-preview-email-${mode}`}
+                  label="Email"
+                  placeholder="name@company.com"
+                  value={email}
+                  onChange={(event) => onEmailChange(event.target.value)}
                 />
-                <span className="mz-token-item__label">{swatch.label}</span>
-              </span>
-            ))}
-          </div>
+              </div>
+
+              <div className="mz-preview-card__component-item">
+                <Search
+                  placeholder="Search components"
+                  value={searchValue}
+                  onChange={onSearchChange}
+                />
+              </div>
+
+              <div className="mz-preview-card__component-item">
+                <DatePicker
+                  name={`theme-preview-date-${mode}`}
+                  label="Start Date"
+                  value={startDate}
+                  onChange={(change) =>
+                    onStartDateChange(change.target.value ?? '')
+                  }
+                />
+              </div>
+
+              <div className="mz-preview-card__component-item">
+                <DropDown
+                  label="Country"
+                  value={selectedCountry}
+                  placeholder="Select country"
+                  options={[
+                    { label: 'United States', value: 'US' },
+                    { label: 'Canada', value: 'CA' },
+                    { label: 'Germany', value: 'DE' },
+                  ]}
+                  onChange={onSelectedCountryChange}
+                />
+              </div>
+            </div>
+          </section>
+
+          <section className="mz-preview-card__section">
+            <div className="mz-preview-card__section-head">
+              <h5 className="mz-preview-card__section-title">Actions</h5>
+              <p className="mz-preview-card__section-text">
+                Toggle, call-to-action buttons, and status chips
+              </p>
+            </div>
+
+            <div className="mz-preview-card__component-row">
+              <Checkbox
+                name={`theme-preview-terms-${mode}`}
+                label="Terms"
+                title="I agree to the terms"
+                checked={acceptedTerms}
+                onCheckChange={onAcceptedTermsChange}
+              />
+            </div>
+
+            <div className="mz-preview-card__actions">
+              <Button label="Primary" />
+              <Button label="Secondary" variant="outline" />
+              <Button label="Ghost" variant="ghost" />
+            </div>
+
+            <div className="mz-preview-card__chips">
+              <Chip label="UI" />
+              <Chip label="Theme" />
+              <Chip label="Preview" />
+              <Icon
+                icon={Bell}
+                className="h-4 w-4 text-muted-foreground"
+                aria-label="Alerts"
+              />
+              <Image src="/tech-icons/shadcnui.svg" alt="Tech logo" size="sm" />
+            </div>
+          </section>
+
+          <section className="mz-preview-card__section">
+            <div className="mz-preview-card__section-head">
+              <h5 className="mz-preview-card__section-title">Tokens</h5>
+              <p className="mz-preview-card__section-text">
+                Semantic color slots consumed by all components
+              </p>
+            </div>
+
+            <div
+              className="mz-preview-card__token-grid"
+              aria-label="Token swatches"
+            >
+              {TOKEN_SWATCHES.map((swatch) => (
+                <span key={`${mode}-${swatch.token}`} className="mz-token-item">
+                  <span
+                    className="mz-token-item__dot"
+                    style={{ backgroundColor: `hsl(var(${swatch.token}))` }}
+                    aria-hidden="true"
+                  />
+                  <span className="mz-token-item__label">{swatch.label}</span>
+                </span>
+              ))}
+            </div>
+          </section>
         </div>
       </div>
     </article>
@@ -287,8 +392,12 @@ function PreviewCard(props: PreviewCardProps) {
 
 export function ThemePlayground() {
   const [theme, setTheme] = useState<BuiltInThemeId>('default');
+  const [mode, setMode] = useState<Mode>('light');
   const [email, setEmail] = useState('');
   const [searchValue, setSearchValue] = useState('');
+  const [startDate, setStartDate] = useState('2026-04-19');
+  const [selectedCountry, setSelectedCountry] = useState('');
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   const activeThemeIndex = THEME_OPTIONS.findIndex(
     (option) => option.id === theme,
@@ -330,6 +439,7 @@ export function ThemePlayground() {
 
   useEffect(() => {
     setTheme(resolveInitialTheme());
+    setMode(resolveInitialMode());
 
     const legacyPreviewStylesheet = document.getElementById(
       LEGACY_PREVIEW_THEME_STYLESHEET_ID,
@@ -345,30 +455,38 @@ export function ThemePlayground() {
     globalThis.localStorage.setItem(THEME_STORAGE_KEY, theme);
   }, [theme]);
 
+  useEffect(() => {
+    globalThis.localStorage.setItem(MODE_STORAGE_KEY, mode);
+  }, [mode]);
+
   const activeTheme = useMemo(
     () =>
       THEME_OPTIONS.find((option) => option.id === theme) ?? THEME_OPTIONS[0],
     [theme],
   );
 
-  const panes: Array<{ mode: Mode; title: string; badge: string }> = [
-    { mode: 'light', title: 'Light Surface', badge: 'Light' },
-    { mode: 'dark', title: 'Dark Surface', badge: 'Dark' },
-  ];
-
   return (
     <section className="mz-theme-playground" aria-label="Theme playground">
       <header className="mz-theme-playground__header">
-        <div>
-          <p className="mz-theme-playground__kicker">
-            shadcn-style live preview
-          </p>
-          <h3 className="mz-theme-playground__title">Theme Playground</h3>
-          <p className="mz-theme-playground__description">
-            Pick a Mezmer theme and compare the same component surface in both
-            light and dark, matching the shadcn-style preview behavior.
-          </p>
-        </div>
+        <fieldset className="mz-theme-playground__mode-toggle-group">
+          <legend className="mz-theme-playground__sr-only">Preview mode</legend>
+          <button
+            type="button"
+            className={mode === 'light' ? 'is-active' : undefined}
+            onClick={() => setMode('light')}
+            aria-pressed={mode === 'light'}
+          >
+            Light
+          </button>
+          <button
+            type="button"
+            className={mode === 'dark' ? 'is-active' : undefined}
+            onClick={() => setMode('dark')}
+            aria-pressed={mode === 'dark'}
+          >
+            Dark
+          </button>
+        </fieldset>
       </header>
 
       <div
@@ -420,23 +538,25 @@ export function ThemePlayground() {
       </div>
 
       <div className="mz-theme-playground__preview-grid">
-        {panes.map((pane) => (
-          <PreviewCard
-            key={pane.mode}
-            mode={pane.mode}
-            title={pane.title}
-            badge={pane.badge}
-            email={email}
-            searchValue={searchValue}
-            onEmailChange={setEmail}
-            onSearchChange={setSearchValue}
-          />
-        ))}
+        <PreviewCard
+          mode={mode}
+          email={email}
+          searchValue={searchValue}
+          startDate={startDate}
+          selectedCountry={selectedCountry}
+          acceptedTerms={acceptedTerms}
+          onEmailChange={setEmail}
+          onSearchChange={setSearchValue}
+          onStartDateChange={setStartDate}
+          onSelectedCountryChange={setSelectedCountry}
+          onAcceptedTermsChange={setAcceptedTerms}
+        />
       </div>
 
       <footer className="mz-theme-playground__footer">
         Active theme: <strong>{activeTheme.label}</strong> (
-        {activeThemeIndex + 1}/{THEME_OPTIONS.length})
+        {activeThemeIndex + 1}/{THEME_OPTIONS.length}) · Mode:{' '}
+        <strong>{mode}</strong>
       </footer>
     </section>
   );
