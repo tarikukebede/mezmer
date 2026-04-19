@@ -284,28 +284,28 @@ export function Autocomplete<T extends AutocompleteOptionBase>(
             className="max-h-[240px]"
             onScroll={handleScroll}
           >
-            <ul className="m-0 list-none bg-background p-0" role="listbox">
+            <ul className="m-0 list-none bg-background p-0">
               {items.map((item) => {
                 const isSelected = selectedItem?.id === item.id;
 
                 return (
                   <li
                     key={item.id}
-                    className={cn('m-0 list-none', optionItemBaseClassName)}
+                    className={cn(
+                      'm-0 list-none',
+                      optionItemBaseClassName,
+                      isSelected
+                        ? optionItemSelectedClassName
+                        : optionItemDefaultClassName,
+                    )}
                   >
                     <button
                       type="button"
                       onClick={() => handleItemClick(item)}
-                      className={cn(
-                        'flex w-full items-center gap-2 px-0 py-0 text-left transition-colors',
-                        isSelected
-                          ? optionItemSelectedClassName
-                          : optionItemDefaultClassName,
-                      )}
+                      className="flex h-full w-full items-center gap-0 px-0 py-0 text-left"
                       aria-pressed={isSelected}
-                      aria-selected={isSelected}
                     >
-                      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center">
+                      <span className="inline-flex h-full w-9 shrink-0 items-center justify-center">
                         <Check
                           className={cn(
                             'h-4 w-4 transition-opacity',
@@ -315,7 +315,7 @@ export function Autocomplete<T extends AutocompleteOptionBase>(
                           )}
                         />
                       </span>
-                      <span className="min-w-0 flex-1">
+                      <span className="min-w-0 flex-1 truncate pr-2">
                         {renderOption ? renderOption(item) : getLabel(item)}
                       </span>
                     </button>

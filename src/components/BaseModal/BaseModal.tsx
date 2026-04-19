@@ -90,23 +90,7 @@ export function BaseModal(props: Readonly<BaseModalProps>) {
     onClose();
   };
 
-  const handleInteractOutside = (event: Event) => {
-    if (!preventOutsideClose) {
-      return;
-    }
-
-    event.preventDefault();
-  };
-
-  const handlePointerDownOutside = (event: Event) => {
-    if (!preventOutsideClose) {
-      return;
-    }
-
-    event.preventDefault();
-  };
-
-  const handleEscapeKeyDown = (event: KeyboardEvent) => {
+  const preventDefaultWhenOutsideCloseDisabled = (event: Event) => {
     if (!preventOutsideClose) {
       return;
     }
@@ -119,9 +103,9 @@ export function BaseModal(props: Readonly<BaseModalProps>) {
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent
-        onInteractOutside={handleInteractOutside}
-        onPointerDownOutside={handlePointerDownOutside}
-        onEscapeKeyDown={handleEscapeKeyDown}
+        onInteractOutside={preventDefaultWhenOutsideCloseDisabled}
+        onPointerDownOutside={preventDefaultWhenOutsideCloseDisabled}
+        onEscapeKeyDown={preventDefaultWhenOutsideCloseDisabled}
         className={cn('flex max-h-[90vh] w-full flex-col', maxWidth, className)}
       >
         {title || description ? (
@@ -148,9 +132,9 @@ export function BaseModal(props: Readonly<BaseModalProps>) {
                 className="h-9 min-w-[80px] py-2"
               />
             )}
-            {customButtons.map((button, index) => (
+            {customButtons.map((button) => (
               <Button
-                key={`custom-button-${index}`}
+                key={`custom-button-${button.label}-${button.variant ?? ButtonVariant.Default}`}
                 variant={button.variant ?? ButtonVariant.Default}
                 onClick={button.onClick}
                 disabled={button.disabled || button.loading || isLoading}

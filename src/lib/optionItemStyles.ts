@@ -1,5 +1,5 @@
 export const optionItemBaseClassName =
-  'min-h-9 border-b border-border px-0 py-0 text-[length:var(--mz-control-font-size)] text-foreground last:border-b-0';
+  'h-9 border-b border-border px-0 py-0 text-[length:var(--mz-control-font-size)] text-foreground last:border-b-0';
 
 export const optionItemSelectedClassName = 'bg-muted text-foreground';
 

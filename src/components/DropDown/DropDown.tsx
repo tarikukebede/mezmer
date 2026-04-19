@@ -94,12 +94,18 @@ export const DropDown = (props: Readonly<DropDownProps>) => {
                   key={option.value}
                   value={option.value}
                   className={cn(
-                    'relative cursor-pointer pl-0 pr-0 transition-colors focus:bg-muted focus:text-foreground data-[state=checked]:bg-muted data-[state=checked]:text-foreground [&>span:first-child]:hidden',
+                    'relative cursor-pointer rounded-none pl-0 pr-0 transition-colors focus:bg-muted focus:text-foreground data-[state=checked]:bg-muted data-[state=checked]:text-foreground [&>span:first-child]:hidden',
                     optionItemBaseClassName,
                   )}
                 >
-                  <span className="truncate">
-                    {renderOption ? renderOption(option) : option.label}
+                  <span className="inline-flex w-full items-center gap-0">
+                    <span
+                      aria-hidden="true"
+                      className="inline-flex h-full w-9 shrink-0"
+                    />
+                    <span className="min-w-0 flex-1 truncate pr-2">
+                      {renderOption ? renderOption(option) : option.label}
+                    </span>
                   </span>
                 </SelectItem>
               ))

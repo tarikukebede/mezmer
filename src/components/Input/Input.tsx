@@ -9,6 +9,61 @@ import { Label } from '@ui/label';
 import { Input as ShadcnInput } from '@ui/input';
 import { InputProps } from './types';
 
+const resolveInputAccess = (
+  requirements: string[] | undefined,
+  resolveAccess: InputProps['resolveAccess'],
+) => {
+  const normalizedRequirements = requirements ?? [];
+  const hasAccessResolver =
+    normalizedRequirements.length > 0 && Boolean(resolveAccess);
+
+  if (!hasAccessResolver) {
+    return {
+      hasViewPermission: true,
+      hasEditPermission: true,
+    };
+  }
+
+  const readRequirements = normalizedRequirements.filter((requirement) =>
+    requirement.endsWith('.read'),
+  );
+  const writeRequirements = normalizedRequirements.filter((requirement) =>
+    requirement.endsWith('.write'),
+  );
+
+  let viewRequirements = normalizedRequirements;
+  if (readRequirements.length > 0) {
+    viewRequirements = readRequirements;
+  } else if (writeRequirements.length > 0) {
+    viewRequirements = [];
+  }
+
+  const editRequirements =
+    writeRequirements.length > 0 ? writeRequirements : normalizedRequirements;
+
+  const hasViewPermission =
+    viewRequirements.length === 0 ||
+    viewRequirements.some((requirement) =>
+      resolveAccess?.(requirement, 'view'),
+    );
+
+  if (!hasViewPermission) {
+    return {
+      hasViewPermission,
+      hasEditPermission: false,
+    };
+  }
+
+  const hasEditPermission = editRequirements.some((requirement) =>
+    resolveAccess?.(requirement, 'edit'),
+  );
+
+  return {
+    hasViewPermission,
+    hasEditPermission,
+  };
+};
+
 export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   const {
     className,
@@ -32,43 +87,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     onChange(e);
   };
 
-  const requirements = accessRequirements ?? [];
-  const hasAccessResolver = requirements.length > 0 && Boolean(resolveAccess);
-
-  const readRequirements = requirements.filter((requirement) =>
-    requirement.endsWith('.read'),
+  const { hasViewPermission, hasEditPermission } = resolveInputAccess(
+    accessRequirements,
+    resolveAccess,
   );
-  const writeRequirements = requirements.filter((requirement) =>
-    requirement.endsWith('.write'),
-  );
-
-  const viewRequirements =
-    readRequirements.length > 0
-      ? readRequirements
-      : writeRequirements.length > 0
-        ? []
-        : requirements;
-
-  const editRequirements =
-    writeRequirements.length > 0 ? writeRequirements : requirements;
-
-  const hasViewPermission = !hasAccessResolver
-    ? true
-    : viewRequirements.length === 0
-      ? true
-      : viewRequirements.some((requirement) =>
-          resolveAccess?.(requirement, 'view'),
-        );
 
   if (!hasViewPermission) {
     return null;
   }
-
-  const hasEditPermission = !hasAccessResolver
-    ? true
-    : editRequirements.some((requirement) =>
-        resolveAccess?.(requirement, 'edit'),
-      );
 
   const isReadOnly = hasViewPermission && !hasEditPermission;
 
