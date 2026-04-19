@@ -10,6 +10,8 @@ Controlled text input wrapper with optional label, helper/error text, and access
 import { Input } from '@tarikukebede/mezmer';
 ```
 
+<ComponentExampleTabs component="input" />
+
 ## Required Props
 
 - `name: string`
@@ -31,7 +33,3 @@ import { Input } from '@tarikukebede/mezmer';
 
 - Associates label and input via `htmlFor`/`id`.
 - Sets `aria-invalid="true"` when error is present.
-
-## Example
-
-<ComponentExampleTabs component="input" />

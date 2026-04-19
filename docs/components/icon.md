@@ -10,6 +10,8 @@ Thin, typed wrapper around Lucide icons with prop forwarding.
 import { Icon } from '@tarikukebede/mezmer';
 ```
 
+<ComponentExampleTabs component="icon" />
+
 ## Required Props
 
 - `icon: LucideIcon | { default: LucideIcon }`
@@ -22,7 +24,3 @@ import { Icon } from '@tarikukebede/mezmer';
 ## Accessibility
 
 - Consumer-provided ARIA props are forwarded to the rendered icon.
-
-## Example
-
-<ComponentExampleTabs component="icon" />

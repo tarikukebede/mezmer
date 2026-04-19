@@ -10,6 +10,8 @@ Generic table built on TanStack Table with sorting, selection, pagination callba
 import { BaseTable } from '@tarikukebede/mezmer';
 ```
 
+<ComponentExampleTabs component="base-table" />
+
 ## Required Props
 
 - `data: T[]`
@@ -32,10 +34,6 @@ import { BaseTable } from '@tarikukebede/mezmer';
 ## Accessibility
 
 - Selection checkboxes expose accessible labels for header and rows.
-
-## Example
-
-<ComponentExampleTabs component="base-table" />
 
 ## RTK Query Integration
 

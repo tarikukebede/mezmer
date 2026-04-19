@@ -10,6 +10,8 @@ Theme-aware action button with optional leading icon, loading state, and injecta
 import { Button, ButtonVariant } from '@tarikukebede/mezmer';
 ```
 
+<ComponentExampleTabs component="button" />
+
 ## Common Props
 
 - `label?: string`
@@ -35,7 +37,3 @@ import { Button, ButtonVariant } from '@tarikukebede/mezmer';
 - All listed action requirements must pass for the action to stay enabled.
 - Action denied with `accessDeniedBehavior="hide"`: component returns `null`.
 - Action denied with `accessDeniedBehavior="disable"`: button remains visible but becomes disabled.
-
-## Example
-
-<ComponentExampleTabs component="button" />

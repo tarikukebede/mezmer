@@ -10,6 +10,8 @@ Composable modal shell for reusable dialogs with optional Save/Cancel actions, c
 import { BaseModal, ButtonVariant } from '@tarikukebede/mezmer';
 ```
 
+<ComponentExampleTabs component="base-modal" />
+
 ## Required Props
 
 - `isOpen: boolean`
@@ -45,7 +47,3 @@ import { BaseModal, ButtonVariant } from '@tarikukebede/mezmer';
 
 - If `accessRequirements` and `resolveAccess` deny `view`, the modal renders `null`.
 - Save and custom actions delegate to the shared `Button` action access behavior.
-
-## Example
-
-<ComponentExampleTabs component="base-modal" />

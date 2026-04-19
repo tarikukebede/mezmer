@@ -10,6 +10,8 @@ Theme-aware select wrapper with optional label, helper/error text, custom option
 import { DropDown } from '@tarikukebede/mezmer';
 ```
 
+<ComponentExampleTabs component="drop-down" />
+
 ## Required Props
 
 - `onChange: (value: string) => void`
@@ -39,7 +41,3 @@ import { DropDown } from '@tarikukebede/mezmer';
 - No resolver or no requirements: component is visible and editable (unless `disabled` is true).
 - View denied: component returns `null`.
 - View allowed but edit denied: component stays visible and is disabled.
-
-## Example
-
-<ComponentExampleTabs component="drop-down" />

@@ -10,6 +10,8 @@ Reusable async autocomplete input with injectable search and optional pagination
 import { Autocomplete } from '@tarikukebede/mezmer';
 ```
 
+<ComponentExampleTabs component="autocomplete" />
+
 ## Common Props
 
 - `name: string`
@@ -43,10 +45,6 @@ import { Autocomplete } from '@tarikukebede/mezmer';
 - Supports incremental pagination when scrolled near the bottom.
 - Calls `onSelectOption(item)` when an option is selected.
 - Calls `onSelectOption(null)` when the input is cleared.
-
-## Example
-
-<ComponentExampleTabs component="autocomplete" />
 
 ## RTK Query Integration
 

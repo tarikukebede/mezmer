@@ -10,6 +10,8 @@ Composable page-level layout wrapper with an optional header area for search, fi
 import { Page } from '@tarikukebede/mezmer';
 ```
 
+<ComponentExampleTabs component="page" />
+
 ## Common Props
 
 - `children: ReactNode`
@@ -40,7 +42,3 @@ import { Page } from '@tarikukebede/mezmer';
 - Header is shown by default.
 - Set `enableSearch={false}` to render only the page body.
 - `onSearch` receives the current input value whenever search text changes.
-
-## Example
-
-<ComponentExampleTabs component="page" />

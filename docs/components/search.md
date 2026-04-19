@@ -10,6 +10,8 @@ Reusable search input wrapper with a leading icon and string-based change callba
 import { Search } from '@tarikukebede/mezmer';
 ```
 
+<ComponentExampleTabs component="search" />
+
 ## Common Props
 
 - `placeholder?: string`
@@ -33,7 +35,3 @@ import { Search } from '@tarikukebede/mezmer';
 - Stops keydown propagation to avoid parent keyboard handler conflicts.
 - Still calls consumer `onKeyDown` after stopping propagation.
 - Calls `onChange` with the plain string value.
-
-## Example
-
-<ComponentExampleTabs component="search" />

@@ -10,6 +10,8 @@ Reusable details surface with a persistent header action area, optional custom c
 import { DetailsCard } from '@tarikukebede/mezmer';
 ```
 
+<ComponentExampleTabs component="details-card" />
+
 ## Required Props
 
 - `title: string`
@@ -48,7 +50,3 @@ import { DetailsCard } from '@tarikukebede/mezmer';
 - Header actions are delegated to `Button`, so access behavior matches the shared action-control contract.
 - Save and delete actions can receive dedicated access requirement lists.
 - Custom actions may provide `accessRequirements` for per-action gating.
-
-## Example
-
-<ComponentExampleTabs component="details-card" />

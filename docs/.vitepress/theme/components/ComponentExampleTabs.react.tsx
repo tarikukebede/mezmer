@@ -16,6 +16,7 @@ import {
   Page,
   Search,
 } from '../../../../src';
+import { CellType } from '../../../../src/components/BaseTable/components/BaseTableRow/components/BaseTableCell';
 import { Archive, Bell, Circle, Download, FileText, Plus } from 'lucide-react';
 
 export type ComponentExampleId =
@@ -246,8 +247,19 @@ function BaseTablePreview(): JSX.Element {
     <BaseTable<Row>
       data={rows}
       columns={[
-        { key: 'name', label: 'Name' },
-        { key: 'status', label: 'Status', sortable: true },
+        {
+          id: 'name',
+          header: 'Name',
+          accessorKey: 'name',
+          type: CellType.TEXT,
+        },
+        {
+          id: 'status',
+          header: 'Status',
+          accessorKey: 'status',
+          type: CellType.STATUS,
+          sortable: true,
+        },
       ]}
       onSortChange={() => undefined}
     />
@@ -515,7 +527,9 @@ type User = {
   },
   'base-table': {
     render: BaseTablePreview,
-    code: `type Row = { id: number; name: string; status: string };
+    code: `import { BaseTable } from '@tarikukebede/mezmer';
+
+type Row = { id: number; name: string; status: string };
 
 const rows: Row[] = [
   { id: 1, name: 'Payment Service', status: 'active' },
@@ -525,8 +539,19 @@ const rows: Row[] = [
 <BaseTable<Row>
   data={rows}
   columns={[
-    { key: 'name', label: 'Name' },
-    { key: 'status', label: 'Status', sortable: true },
+    {
+      id: 'name',
+      header: 'Name',
+      accessorKey: 'name',
+      type: CellType.TEXT,
+    },
+    {
+      id: 'status',
+      header: 'Status',
+      accessorKey: 'status',
+      type: CellType.STATUS,
+      sortable: true,
+    },
   ]}
   onSortChange={(sortBy, sortOrder) => console.log(sortBy, sortOrder)}
 />;`,

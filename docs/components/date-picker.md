@@ -10,6 +10,8 @@ Access-aware date picker composed from package shadcn primitives (`Popover` + `C
 import { DatePicker } from '@tarikukebede/mezmer';
 ```
 
+<ComponentExampleTabs component="date-picker" />
+
 ## Required Props
 
 - `name: string`
@@ -42,7 +44,3 @@ import { DatePicker } from '@tarikukebede/mezmer';
 - No `resolveAccess` or no `accessRequirements`: visible and interactive unless `disabled` is set.
 - View denied: renders `null`.
 - Edit denied: remains visible but becomes disabled.
-
-## Example
-
-<ComponentExampleTabs component="date-picker" />

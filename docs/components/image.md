@@ -10,6 +10,8 @@ Image component with size variants and fallback icon rendering when source is mi
 import { Image } from '@tarikukebede/mezmer';
 ```
 
+<ComponentExampleTabs component="image" />
+
 ## Common Props
 
 - `src?: string`
@@ -24,7 +26,3 @@ import { Image } from '@tarikukebede/mezmer';
 ## Accessibility
 
 - Forwards `alt` to the native `<img>` element.
-
-## Example
-
-<ComponentExampleTabs component="image" />

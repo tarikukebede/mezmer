@@ -10,6 +10,8 @@ Theme-aware checkbox with optional label/title, helper text, and error state.
 import { Checkbox } from '@tarikukebede/mezmer';
 ```
 
+<ComponentExampleTabs component="checkbox" />
+
 ## Required Props
 
 - `name: string`
@@ -31,7 +33,3 @@ import { Checkbox } from '@tarikukebede/mezmer';
 
 - Uses native checkbox input semantics.
 - Associates label with input using `htmlFor`.
-
-## Example
-
-<ComponentExampleTabs component="checkbox" />

@@ -10,6 +10,8 @@ Compact status/value chip with optional icon, variant and size controls, remove 
 import { Chip } from '@tarikukebede/mezmer';
 ```
 
+<ComponentExampleTabs component="chip" />
+
 ## Common Props
 
 - `label?: string`
@@ -26,7 +28,3 @@ import { Chip } from '@tarikukebede/mezmer';
 ## Accessibility
 
 - Remove action includes an `aria-label` (`Remove <label>` or `Remove chip`).
-
-## Example
-
-<ComponentExampleTabs component="chip" />
