@@ -2,6 +2,7 @@ import DefaultTheme from 'vitepress/theme';
 import type { Theme } from 'vitepress';
 import ThemePlayground from './components/ThemePlayground.vue';
 import ComponentExampleTabs from './components/ComponentExampleTabs.vue';
+import './custom.css';
 
 const theme: Theme = {
   ...DefaultTheme,

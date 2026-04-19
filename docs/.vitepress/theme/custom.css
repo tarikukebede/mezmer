@@ -1,0 +1,18 @@
+:root {
+  --vp-layout-max-width: 1680px;
+}
+
+/* Expand the docs content column to better fit rich component demos. */
+.VPDoc.has-aside .content-container {
+  max-width: 1120px;
+}
+
+.VPDoc:not(.has-sidebar) .content,
+.VPDoc:not(.has-sidebar) .content-container {
+  max-width: 1240px;
+}
+
+/* Keep examples usable when content still exceeds viewport width. */
+.component-example-tabs__preview {
+  overflow-x: auto;
+}

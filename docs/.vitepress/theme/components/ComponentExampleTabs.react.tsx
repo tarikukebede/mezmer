@@ -857,10 +857,6 @@ function BaseTablePreview(): JSX.Element {
   return (
     <div className="space-y-3">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-xs text-muted-foreground">
-          Mock server data with pagination, sorting, selection, and multi-type
-          columns.
-        </p>
         <div className="flex flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
           <label className="text-xs text-muted-foreground">
             <span>Scenario</span>
@@ -1095,13 +1091,11 @@ function InputPreview(): JSX.Element {
 }
 
 function PagePreview(): JSX.Element {
-  const [query, setQuery] = useState('');
-
   return (
-    <div className="space-y-4">
+    <div>
       <Page
         searchPlaceholder="Search users"
-        onSearch={(value) => setQuery(value)}
+        onSearch={() => undefined}
         actions={[
           {
             name: 'Create User',
@@ -1116,10 +1110,6 @@ function PagePreview(): JSX.Element {
       >
         <div className="rounded-md border p-4">Page content</div>
       </Page>
-
-      <div className="text-xs text-muted-foreground">
-        Latest query: {query || '-'}
-      </div>
     </div>
   );
 }
