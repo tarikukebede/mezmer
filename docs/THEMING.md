@@ -45,6 +45,14 @@ Optional style tokens used by core components (recommended):
 - `--mz-button-letter-spacing`
 - `--mz-button-shadow`
 - `--mz-button-shadow-hover`
+- `--mz-control-height`
+- `--mz-control-padding-x`
+- `--mz-control-padding-y`
+- `--mz-control-font-size`
+- `--mz-control-shadow`
+- `--mz-control-shadow-focus`
+- `--mz-checkbox-size`
+- `--mz-checkbox-radius`
 
 ## Using Built-In Themes
 

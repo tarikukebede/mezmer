@@ -19,6 +19,24 @@
   --mz-input: 114 20% 80%;
   --mz-ring: 142 58% 33%;
   --mz-radius: 0.65rem;
+  --mz-font-sans: 'Alegreya Sans', 'Segoe UI', Roboto, sans-serif;
+  --mz-font-mono: 'JetBrains Mono', 'SFMono-Regular', ui-monospace, monospace;
+  --mz-button-height: 2.625rem;
+  --mz-button-padding-x: 1rem;
+  --mz-button-padding-y: 0.625rem;
+  --mz-button-font-size: 0.875rem;
+  --mz-button-font-weight: 600;
+  --mz-button-letter-spacing: 0.006em;
+  --mz-button-shadow: 0 1px 2px hsl(var(--mz-foreground) / 0.1);
+  --mz-button-shadow-hover: 0 8px 16px hsl(var(--mz-foreground) / 0.16);
+  --mz-control-height: 2.7rem;
+  --mz-control-padding-x: 0.82rem;
+  --mz-control-padding-y: 0.56rem;
+  --mz-control-font-size: 0.9rem;
+  --mz-control-shadow: 0 1px 2px hsl(var(--mz-foreground) / 0.07);
+  --mz-control-shadow-focus: 0 0 0 3px hsl(var(--mz-ring) / 0.24);
+  --mz-checkbox-size: 1.05rem;
+  --mz-checkbox-radius: 0.3rem;
 }
 
 .dark {
@@ -41,4 +59,8 @@
   --mz-border: 126 14% 26%;
   --mz-input: 126 14% 26%;
   --mz-ring: 141 50% 58%;
+  --mz-button-shadow: 0 1px 2px hsl(0 0% 0% / 0.48);
+  --mz-button-shadow-hover: 0 10px 18px hsl(0 0% 0% / 0.56);
+  --mz-control-shadow: 0 1px 2px hsl(0 0% 0% / 0.34);
+  --mz-control-shadow-focus: 0 0 0 3px hsl(var(--mz-ring) / 0.3);
 }

@@ -47,6 +47,9 @@ Themes support styling beyond color. In addition to color and radius tokens, the
 - button sizing and rhythm tokens (`--mz-button-height`, `--mz-button-padding-x`, `--mz-button-padding-y`)
 - button typography tokens (`--mz-button-font-size`, `--mz-button-font-weight`, `--mz-button-letter-spacing`)
 - button elevation tokens (`--mz-button-shadow`, `--mz-button-shadow-hover`)
+- control layout tokens (`--mz-control-height`, `--mz-control-padding-x`, `--mz-control-padding-y`, `--mz-control-font-size`)
+- control elevation tokens (`--mz-control-shadow`, `--mz-control-shadow-focus`)
+- checkbox shape tokens (`--mz-checkbox-size`, `--mz-checkbox-radius`)
 
 When creating a custom theme with `pnpm theme:create`, copy and tune these tokens in the generated CSS so components remain visually polished out of the box.
 

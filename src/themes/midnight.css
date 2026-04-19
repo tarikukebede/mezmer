@@ -29,6 +29,14 @@
   --mz-button-letter-spacing: 0.012em;
   --mz-button-shadow: 0 1px 2px hsl(var(--mz-foreground) / 0.1);
   --mz-button-shadow-hover: 0 10px 18px hsl(var(--mz-foreground) / 0.18);
+  --mz-control-height: 2.75rem;
+  --mz-control-padding-x: 0.85rem;
+  --mz-control-padding-y: 0.56rem;
+  --mz-control-font-size: 0.9rem;
+  --mz-control-shadow: 0 1px 2px hsl(var(--mz-foreground) / 0.09);
+  --mz-control-shadow-focus: 0 0 0 3px hsl(var(--mz-ring) / 0.28);
+  --mz-checkbox-size: 1.05rem;
+  --mz-checkbox-radius: 0.32rem;
 }
 
 .dark {
@@ -53,4 +61,6 @@
   --mz-ring: 246 86% 70%;
   --mz-button-shadow: 0 1px 2px hsl(0 0% 0% / 0.5);
   --mz-button-shadow-hover: 0 12px 20px hsl(0 0% 0% / 0.6);
+  --mz-control-shadow: 0 1px 2px hsl(0 0% 0% / 0.4);
+  --mz-control-shadow-focus: 0 0 0 3px hsl(var(--mz-ring) / 0.36);
 }

@@ -35,6 +35,14 @@
     "button-font-weight",
     "button-letter-spacing",
     "button-shadow",
-    "button-shadow-hover"
+    "button-shadow-hover",
+    "control-height",
+    "control-padding-x",
+    "control-padding-y",
+    "control-font-size",
+    "control-shadow",
+    "control-shadow-focus",
+    "checkbox-size",
+    "checkbox-radius"
   ]
 }

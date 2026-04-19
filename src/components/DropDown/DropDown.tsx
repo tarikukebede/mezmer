@@ -45,7 +45,7 @@ export const DropDown = (props: Readonly<DropDownProps>) => {
     <div className={cn('space-y-2', className)}>
       {label && (
         <div className="space-y-1">
-          <Label className="text-xs text-muted-foreground">
+          <Label className="text-sm font-medium text-foreground/85">
             {label}
             {required && <span className="text-destructive"> *</span>}
           </Label>
@@ -59,14 +59,14 @@ export const DropDown = (props: Readonly<DropDownProps>) => {
       >
         <SelectTrigger
           className={cn(
-            'text-xs [&>span]:text-muted-foreground',
+            '[&>span]:text-muted-foreground',
             error && 'border-destructive',
           )}
           aria-invalid={error ? 'true' : undefined}
         >
           <SelectValue placeholder={placeholder}>
             {selectedOption && (
-              <span className="text-xs text-foreground">
+              <span className="text-[length:var(--mz-control-font-size)] text-foreground">
                 {renderOption
                   ? renderOption(selectedOption)
                   : selectedOption.label}
@@ -77,7 +77,7 @@ export const DropDown = (props: Readonly<DropDownProps>) => {
         <SelectContent>
           <div className="max-h-[200px] overflow-y-auto border-t border-border pt-1">
             {options.length === 0 ? (
-              <div className="px-2 py-6 text-center text-xs text-muted-foreground">
+              <div className="px-2 py-6 text-center text-sm text-muted-foreground">
                 No options found
               </div>
             ) : (
@@ -85,9 +85,9 @@ export const DropDown = (props: Readonly<DropDownProps>) => {
                 <div key={option.value}>
                   <SelectItem
                     value={option.value}
-                    className="cursor-pointer py-2 text-xs transition-colors hover:bg-accent focus:bg-accent"
+                    className="cursor-pointer py-2 text-sm transition-colors hover:bg-accent focus:bg-accent"
                   >
-                    <span className="truncate text-xs">
+                    <span className="truncate text-sm">
                       {renderOption ? renderOption(option) : option.label}
                     </span>
                   </SelectItem>
