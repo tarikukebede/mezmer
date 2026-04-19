@@ -6,6 +6,10 @@ import {
   SelectValue,
 } from '@ui/select';
 
+import {
+  formErrorTextClassName,
+  formHelperTextClassName,
+} from '@lib/feedbackText';
 import { Label } from '@ui/label';
 import { cn } from '@lib/utils';
 import type { DropDownProps } from './types';
@@ -59,7 +63,7 @@ export const DropDown = (props: Readonly<DropDownProps>) => {
       >
         <SelectTrigger
           className={cn(
-            '[&>span]:text-muted-foreground',
+            '[&>span]:text-[length:var(--mz-control-font-size)] [&>span]:text-muted-foreground',
             error && 'border-destructive',
           )}
           aria-invalid={error ? 'true' : undefined}
@@ -77,7 +81,7 @@ export const DropDown = (props: Readonly<DropDownProps>) => {
         <SelectContent>
           <div className="max-h-[200px] overflow-y-auto border-t border-border pt-1">
             {options.length === 0 ? (
-              <div className="px-2 py-6 text-center text-sm text-muted-foreground">
+              <div className="px-2 py-6 text-center text-[length:var(--mz-control-font-size)] text-muted-foreground">
                 No options found
               </div>
             ) : (
@@ -85,9 +89,9 @@ export const DropDown = (props: Readonly<DropDownProps>) => {
                 <div key={option.value}>
                   <SelectItem
                     value={option.value}
-                    className="cursor-pointer py-2 text-sm transition-colors hover:bg-accent focus:bg-accent"
+                    className="cursor-pointer py-2 text-[length:var(--mz-control-font-size)] transition-colors hover:bg-accent focus:bg-accent"
                   >
-                    <span className="truncate text-sm">
+                    <span className="truncate text-[length:var(--mz-control-font-size)]">
                       {renderOption ? renderOption(option) : option.label}
                     </span>
                   </SelectItem>
@@ -100,9 +104,13 @@ export const DropDown = (props: Readonly<DropDownProps>) => {
           </div>
         </SelectContent>
       </Select>
-      {error && <p className="mt-1 text-xs text-destructive">{error}</p>}
-      {helperText && !error && (
-        <p className="text-xs text-muted-foreground opacity-60">{helperText}</p>
+      {(error || helperText) && (
+        <div className="space-y-1">
+          {error && <p className={formErrorTextClassName}>{error}</p>}
+          {helperText && (
+            <p className={formHelperTextClassName}>{helperText}</p>
+          )}
+        </div>
       )}
     </div>
   );

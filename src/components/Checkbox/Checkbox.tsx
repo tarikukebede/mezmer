@@ -1,5 +1,9 @@
 import { forwardRef, type ChangeEvent } from 'react';
 import { Check } from 'lucide-react';
+import {
+  formErrorTextClassName,
+  formHelperTextClassName,
+} from '@lib/feedbackText';
 import { cn } from '@lib/utils';
 import { Label } from '@ui/label';
 import { CheckBoxProps } from './types';
@@ -72,9 +76,13 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckBoxProps>(
           </span>
           {title && <span className="text-sm text-foreground">{title}</span>}
         </div>
-        {error && <p className="text-xs text-destructive">{error}</p>}
-        {helperText && (
-          <p className="text-xs text-muted-foreground">{helperText}</p>
+        {(error || helperText) && (
+          <div className="space-y-1">
+            {error && <p className={formErrorTextClassName}>{error}</p>}
+            {helperText && (
+              <p className={formHelperTextClassName}>{helperText}</p>
+            )}
+          </div>
         )}
       </div>
     );

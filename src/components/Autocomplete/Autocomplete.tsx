@@ -278,36 +278,45 @@ export function Autocomplete<T extends AutocompleteOptionBase>(
             className="max-h-[240px]"
             onScroll={handleScroll}
           >
-            <ul className="m-0 list-none p-1" role="listbox">
-              {items.map((item) => (
-                <li
-                  key={item.id}
-                  className="m-0 list-none border-b border-border last:border-b-0"
-                >
-                  <button
-                    type="button"
-                    onClick={() => handleItemClick(item)}
-                    className="flex w-full items-center justify-between gap-2 rounded-sm bg-background p-2 text-left transition-colors hover:bg-accent/50"
-                    aria-pressed={selectedItem?.id === item.id}
-                    aria-selected={selectedItem?.id === item.id}
+            <ul className="m-0 list-none bg-background p-0" role="listbox">
+              {items.map((item) => {
+                const isSelected = selectedItem?.id === item.id;
+
+                return (
+                  <li
+                    key={item.id}
+                    className="m-0 list-none border-b border-border last:border-b-0"
                   >
-                    <span className="min-w-0 flex-1">
-                      {renderOption ? renderOption(item) : getLabel(item)}
-                    </span>
-                    {selectedItem?.id === item.id ? (
-                      <Check className="h-4 w-4 shrink-0 text-primary" />
-                    ) : null}
-                  </button>
-                </li>
-              ))}
+                    <button
+                      type="button"
+                      onClick={() => handleItemClick(item)}
+                      className={cn(
+                        'flex w-full items-center justify-between gap-2 px-2.5 py-2 text-left transition-colors',
+                        isSelected
+                          ? 'bg-muted text-foreground'
+                          : 'bg-background text-foreground hover:bg-background',
+                      )}
+                      aria-pressed={isSelected}
+                      aria-selected={isSelected}
+                    >
+                      <span className="min-w-0 flex-1">
+                        {renderOption ? renderOption(item) : getLabel(item)}
+                      </span>
+                      {isSelected ? (
+                        <Check className="h-4 w-4 shrink-0 text-primary" />
+                      ) : null}
+                    </button>
+                  </li>
+                );
+              })}
               {isLoading && (
-                <li className="list-none py-2 space-y-2">
+                <li className="list-none space-y-2 border-b border-border px-2.5 py-2 last:border-b-0">
                   <Skeleton className="h-8 w-full" />
                   <Skeleton className="h-8 w-full" />
                 </li>
               )}
               {showEmptyState && (
-                <li className="list-none p-2 text-center text-muted-foreground">
+                <li className="list-none border-b border-border px-2.5 py-2 text-center text-muted-foreground last:border-b-0">
                   {emptyMessage}
                 </li>
               )}

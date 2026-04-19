@@ -81,6 +81,12 @@ describe('Input', () => {
     expect(screen.getByText('Assistive note')).toBeTruthy();
   });
 
+  it('renders info text when provided', () => {
+    renderInput({ name: 'infoField', infoText: 'Additional context' });
+
+    expect(screen.getByText('Additional context')).toBeTruthy();
+  });
+
   it('renders helper text and error text together when both are provided', () => {
     renderInput({
       name: 'username',

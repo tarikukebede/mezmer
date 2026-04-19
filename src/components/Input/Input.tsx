@@ -1,5 +1,10 @@
 import { forwardRef, type ChangeEvent, type KeyboardEvent } from 'react';
 import { cn } from '@lib/utils';
+import {
+  formErrorTextClassName,
+  formHelperTextClassName,
+  formInfoTextClassName,
+} from '@lib/feedbackText';
 import { Label } from '@ui/label';
 import { Input as ShadcnInput } from '@ui/input';
 import { InputProps } from './types';
@@ -10,6 +15,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     label,
     error,
     helperText,
+    infoText,
     endAdornment,
     name,
     value = '',
@@ -83,7 +89,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
           type={rest.type ?? 'text'}
           className={cn(
             error && 'border-destructive',
-            'text-xs placeholder:text-muted-foreground/60 placeholder:text-xs',
+            'text-[length:var(--mz-control-font-size)] placeholder:text-[length:var(--mz-control-font-size)] placeholder:text-muted-foreground/60',
             endAdornment && 'pr-10',
             className,
           )}
@@ -104,9 +110,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
           </div>
         ) : null}
       </div>
-      {error && <p className="mt-1 text-xs text-destructive">{error}</p>}
-      {helperText && (
-        <p className="text-xs text-muted-foreground opacity-60">{helperText}</p>
+      {(error || helperText || infoText) && (
+        <div className="space-y-1">
+          {error && <p className={formErrorTextClassName}>{error}</p>}
+          {helperText && (
+            <p className={formHelperTextClassName}>{helperText}</p>
+          )}
+          {infoText && <p className={formInfoTextClassName}>{infoText}</p>}
+        </div>
       )}
     </div>
   );

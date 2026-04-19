@@ -35,7 +35,7 @@ export function Search(props: Readonly<SearchProps>) {
         onKeyDown={handleKeyDown}
         {...(value === undefined ? {} : { value })}
         className={cn(
-          'pl-9 placeholder:text-xs placeholder:text-muted-foreground/60',
+          'pl-9 placeholder:text-muted-foreground/60',
           inputClassName,
         )}
         disabled={disabled}

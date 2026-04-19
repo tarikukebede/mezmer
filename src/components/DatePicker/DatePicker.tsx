@@ -1,5 +1,9 @@
 import * as React from 'react';
 import { CalendarIcon } from 'lucide-react';
+import {
+  formErrorTextClassName,
+  formHelperTextClassName,
+} from '@lib/feedbackText';
 import { cn } from '@lib/utils';
 import { Button } from '@ui/button';
 import { Calendar } from '@ui/calendar';
@@ -106,9 +110,13 @@ export function DatePicker(props: Readonly<DatePickerProps>) {
           />
         </PopoverContent>
       </Popover>
-      {error && <p className="mt-1 text-xs text-destructive">{error}</p>}
-      {helperText && (
-        <p className="text-xs text-muted-foreground opacity-60">{helperText}</p>
+      {(error || helperText) && (
+        <div className="space-y-1">
+          {error && <p className={formErrorTextClassName}>{error}</p>}
+          {helperText && (
+            <p className={formHelperTextClassName}>{helperText}</p>
+          )}
+        </div>
       )}
     </div>
   );
