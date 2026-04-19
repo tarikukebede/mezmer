@@ -249,4 +249,22 @@ describe('BaseTableRow', () => {
       ).disabled,
     ).toBe(true);
   });
+
+  it('applies theme background class to the row container', () => {
+    const columns: Column<RowModel>[] = [
+      { id: 'name', header: 'Name', accessorKey: 'name', type: CellType.TEXT },
+    ];
+
+    render(
+      <table>
+        <tbody>
+          <BaseTableRow item={rowItem} columns={columns} />
+        </tbody>
+      </table>,
+    );
+
+    const row = screen.getByText('alpha user').closest('tr');
+    expect(row).not.toBeNull();
+    expect(row?.className.includes('bg-background')).toBe(true);
+  });
 });

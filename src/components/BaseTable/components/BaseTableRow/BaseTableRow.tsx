@@ -223,9 +223,9 @@ export const BaseTableRow = <T extends object>({
   return (
     <TableRow
       className={cn(
-        'border-b transition-colors',
+        'border-b bg-background transition-colors',
         rowInactive
-          ? 'cursor-not-allowed opacity-60'
+          ? 'cursor-not-allowed bg-muted/35 opacity-60'
           : 'cursor-pointer hover:bg-muted/50',
         selected && 'bg-muted/80',
       )}

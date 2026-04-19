@@ -192,6 +192,22 @@ describe('BaseTable', () => {
     expect(Boolean(screen.getByText('Nothing to show'))).toBe(true);
   });
 
+  it('applies theme background class to data rows', () => {
+    render(
+      <BaseTable<TestRow>
+        data={rows}
+        columns={columns}
+        queryParams={queryParams}
+      />,
+    );
+
+    const betaCell = screen.getByText('Beta');
+    const betaRow = betaCell.closest('tr');
+
+    expect(betaRow).not.toBeNull();
+    expect(betaRow?.className.includes('bg-background')).toBe(true);
+  });
+
   it('renders the action column as a menu without a visible header', () => {
     const onEdit = vi.fn();
     const actionColumns: Column<TestRow>[] = [

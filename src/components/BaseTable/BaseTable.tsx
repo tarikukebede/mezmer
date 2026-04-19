@@ -380,9 +380,9 @@ export const BaseTable = <T extends object>({
                 <TableRow
                   key={row.id}
                   className={cn(
-                    'border-b border-border/70 transition-colors',
+                    'border-b border-border/70 bg-background transition-colors',
                     rowInactive
-                      ? 'cursor-not-allowed bg-muted/20 text-muted-foreground opacity-65'
+                      ? 'cursor-not-allowed bg-muted/35 text-muted-foreground opacity-65'
                       : 'cursor-pointer hover:bg-muted/45',
                     activeRow === row.id && 'bg-muted/65',
                   )}
@@ -442,7 +442,7 @@ export const BaseTable = <T extends object>({
               );
             })
           ) : (
-            <TableRow className="hover:bg-transparent">
+            <TableRow className="bg-background hover:bg-transparent">
               <TableCell
                 colSpan={availableColumns.length + (enableSelection ? 1 : 0)}
                 className="h-[220px]"
